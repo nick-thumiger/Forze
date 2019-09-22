@@ -68,31 +68,27 @@ class System:
     #Add an entry
     def add_entry(self, table, typ, diameter, strength, size, w_pp, w_total, storage):
         query = f"INSERT INTO `{table}` (`item_id`, `type`, `diameter`, `strength`, `size`, `weight_pp`, `weight_total`, `storage`) VALUES (NULL, '{typ}', '{diameter}', '{strength}', '{size}', '{w_pp}', '{w_total}', '{storage}');"
-        makeQuery(self._cursor, query)
+        makeCommit(self._connection, self._cursor, query)
         return
     
     #Delete an entry
-    def delete_entry(self, ):
-
+    def delete_entry(self, table, itemID):
+        query = f"DELETE FROM `{table}` WHERE `item_id` = {itemID}"
+        makeCommit(self._connection, self._cursor, query)
         return
     
-    #Increase quantity
-    def add_quantity(self, ):
-
-        return
-    
-    #Decrease quantity
-    def dec_quantity(self, ):
-
+    #Set new entity total weight
+    def set_quantity(self, table, itemID, newWeight):
+        query = f"UPDATE `{table}` SET `weight_total` = {newWeight} WHERE `item_id` = {itemID}"
+        makeCommit(self._connection, self._cursor, query)
         return
     
     #Returns array of conditional formating values
     def get_conditional_formatting(self, ):
 
         return
-    
-#print(get_column_names("Bolts"))
-#print(get_column_items("Bolts","item_id"))
-#print('speed test')
+
 sys = System()
-sys.add_entry("Bolts", "Allan Bolt", "M6", 12.9, 12.9, 5.4, 5363, 500)
+#sys.delete_entry("Bolts", 15)
+#sys.add_entry("Bolts", "Allan Bolt", "M6", 12.9, 12.9, 5.4, 5363, 500)
+#sys.set_quantity("Bolts", 16, 6000)

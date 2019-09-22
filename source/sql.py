@@ -30,14 +30,20 @@ def sqlDisconnect(cursor, connection):
 #Make an SQL Query
 def makeQuery(cursor, query):
     try:
-        conn = sqlConnect()
-        cursor = sqlCursor(conn)
         cursor.execute(query)
         records = cursor.fetchall()
-        sqlDisconnect(cursor, conn)
     except Exception as err:
         raise builtInException(err)
     return records
+
+#Make an SQL commit
+def makeCommit(connection, cursor, query):
+    try:
+        cursor.execute(query)
+        connection.commit()
+    except Exception as err:
+        raise builtInException(err)
+    return
 
 #removes SQL seperators and formatters from outputted string data
 def asciiSeperator(instr):
