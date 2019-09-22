@@ -1,24 +1,55 @@
 import mysql.connector
 from mysql.connector import Error
+from exceptions import *
+from datetime import datetime
 
+#Establishes a connection to the SQL hosting site
 def sqlConnect():
-    try:
-        connection = mysql.connector.connect(host='db4free.net', database='forze_inventory', user='nijaiki', password='NiJaiki2019')
-        print(connection)
+    connection = mysql.connector.connect(host='db4free.net', database='forze_inventory', user='nijaiki', password='NiJaiki2019')
+    
+    if (connection == None):
+        raise mixedException("sqlConnect(): could not connect to server", "Error. A connection to the server could not be established. Please try later, or contact support.")
 
-        if connection.is_connected():
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version ", db_Info)
-            cursor = connection.cursor()
-            cursor.execute("select database();")
-            record = cursor.fetchone()
-            print("Your connected to database: ", record)
+    return connection
 
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
+#Establishes a connection to the relevant database, and generates a cursor
+def sqlCursor(connection):
+    if (connection.is_connected()):
+        cursor = connection.cursor()
+    if cursor == None:
+        raise mixedException("sqlCursor(): could not instantiate cursor", "Error. A connection to the server could not be established. Please try later, or contact support.")
+    return cursor
+
+#Closes the connection to the SQL server
+def sqlDisconnect(cursor, connection):
+    if (connection.is_connected()):
+        cursor.close()
+        connection.close()
     return
+
+#Make an SQL Query
+def makeQuery(cursor, query):
+    try:
+        conn = sqlConnect()
+        cursor = sqlCursor(conn)
+        cursor.execute(query)
+        records = cursor.fetchall()
+        sqlDisconnect(cursor, conn)
+    except Exception as err:
+        raise builtInException(err)
+    return records
+
+#removes SQL seperators and formatters from outputted string data
+def asciiSeperator(instr):
+    outstr = ""
+    for c in str(instr):
+        if (ord(c) >= 65 and ord(c) <= 90) or (ord(c) >= 97 and ord(c) <= 122) or (ord(c) >= 48 and ord(c) <= 57) or ord(c) == 95 or ord(c) == 46:
+            outstr = outstr + c
+    return outstr
+
+#removes SQL seperators and formatters from outputted array data
+def listAsciiSeperator(arr):
+    lis = []
+    for string in arr:
+        lis.append(asciiSeperator(string))
+    return lis
