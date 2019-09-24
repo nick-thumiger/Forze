@@ -88,7 +88,28 @@ class System:
 
         return
 
+    #checks credentials
+    def check_credentials(self, username, password):
+        query = f"SELECT * FROM `users` WHERE `username` = '{username}' AND `pw_hash` = {password}"
+        try:
+            self._cursor.execute(query)
+            records = self._cursor.fetchone()
+        except Exception as err:
+            raise builtInException(err)
+        result = [asciiSeperator(x) for x in records]
+        return result
+
+    #checks account existance. return 1 if exists already.
+    def checkExistance(self, username):
+        query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
+        result = makeQuery(self._cursor, query)
+        if len(result) == 0
+            return 0
+        else
+            return 1
+
 sys = System()
 #sys.delete_entry("Bolts", 15)
 #sys.add_entry("Bolts", "Allan Bolt", "M6", 12.9, 12.9, 5.4, 5363, 500)
 #sys.set_quantity("Bolts", 16, 6000)
+#print(sys.check_credentials("Nickle225", 64))

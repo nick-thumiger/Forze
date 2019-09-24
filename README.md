@@ -1,2 +1,0 @@
-# Forze
-Forze Inventory Management
