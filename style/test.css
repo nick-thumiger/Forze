@@ -5,7 +5,7 @@
 }
 
 th {
-    background-color: #4CAF50;
+    background-color: #1e90ff;
     color: white;
 }
 
@@ -27,7 +27,8 @@ th, td {
 }
 
 .navigationDiv {
-    width: 20%
+    width: 20%;
+    height: 100%;
 }
 
 .sideNav {
@@ -46,7 +47,8 @@ th, td {
 }
 
 .navItem :hover {
-    background-color: #4CAF50;
+    background-color: #6495ed;
     color: white;
+    padding: 8px 16px;
 }
   
