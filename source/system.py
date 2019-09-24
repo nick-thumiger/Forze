@@ -103,9 +103,9 @@ class System:
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
         result = makeQuery(self._cursor, query)
-        if len(result) == 0
+        if len(result) == 0:
             return 0
-        else
+        else:
             return 1
 
 sys = System()

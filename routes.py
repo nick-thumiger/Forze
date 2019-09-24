@@ -17,7 +17,7 @@ app.config['MAIL_PASSWORD'] = 'your password'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 # Intialize Mail
-mail = Mail(app)
+# mail = Mail(app)
 # Enable account activation?
 account_activation_required = False
 
@@ -35,7 +35,7 @@ Home / Welcome page
 '''
 @app.route('/', methods=["GET", "POST"])
 def home():
-    return render_template('home.html')
+    return render_template('index.html')
 
 '''
 login screen
