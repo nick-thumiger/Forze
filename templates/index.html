@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Seddit</title>
+    <title>Forze</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- You can add your styles and scripts here -->
     <!-- <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
@@ -48,64 +48,38 @@
     <div id="root">      
         <div class="navigationDiv">
             <ul class="sideNav">
-                <li class="navItem"><a href="www.google.com" class="navItemText">Screw 1</a></li>
-                <li class="navItem"><a href="www.google.com" class="navItemText">Hammer</a></li>
-                <li class="navItem"><a href="www.google.com" class="navItemText">Loosey</a></li>
-                <li class="navItem"><a href="www.google.com" class="navItemText">Grey Nurse</a></li>
-                <li class="navItem"><a href="www.google.com" class="navItemText">Clown Fish</a></li>
+                {% for type in unique_types %}
+                    <li class="navItem"><a href="www.google.com" class="navItemText">{{type}}</a></li>
+                {% endfor %}
             </ul>
         </div>
         <div class="tableDiv">
             <table class="dataTable" >
                     <tr>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Age</th>
+                        {% for header in columnNames%}
+                            <th>{{header}}</th>
+                        {% endfor %}
                         <th style="width:4%"></th>
                         <th style="width:2.5%"></th>
                     </tr>
-                    <tr>
-                        <td>Jill</td>
-                        <td>Smith</td>
-                        <td>75</td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                    </tr>
-                    <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>25</td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                    </tr>
-                    <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>53</td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                    </tr>
-                    <tr>
-                        <td>Stem</td>
-                        <td>Racks</td>
-                        <td>19</td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                    </tr>
-                    <tr>
-                        <td>Eve</td>
-                        <td>Sally</td>
-                        <td>35</td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                    </tr>
-                    <tr>
+
+                    {% for row in dataList %}
+                        <tr>
+                            {% for data in row %}
+                                <td>{{data}}</td>
+                            {% endfor %}
+                            <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                        </tr>   
+                    {% endfor %}
+
+                    <!-- <tr>
                         <td><a>Add more...</a></td>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
-                    </tr>
+                    </tr> -->
     
                 </table>
         </div>
@@ -130,8 +104,6 @@
             </div>
         </div>
     </div>
-          
-    <script type="module" src="src/index.js" crossorigin="use-credentials"></script>
 </body>
 
 </html>

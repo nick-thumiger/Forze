@@ -33,9 +33,19 @@ def page_not_found(e=None):
 '''
 Home / Welcome page
 '''
-@app.route('/', methods=["GET", "POST"])
-def home():
-    return render_template('index.html')
+@app.route('/<category>/<item_type>')
+def home(category, item_type):
+    # print(sys.sort_by_columns('Bolts', ['type']))
+    # print(sys.get_column_names('Bolts'))
+
+    dataList = system.sort_by_columns('Bolts', ['type'])
+    columnNames = system.get_column_names('Bolts')
+
+    
+    unique_types= ["Allan", "Cunt", "McFuckSticks"]
+
+
+    return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
 
 '''
 login screen
