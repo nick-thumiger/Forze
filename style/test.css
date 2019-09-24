@@ -1,15 +1,20 @@
+html, body { 
+    height: 100%;
+}  
+
 #root {
     flex-direction: row;
     display: flex;
     flex: 1;
+    height: 100%;
 }
 
 th {
-    background-color: #1e90ff;
+    background-color: #41b1f0;
     color: white;
 }
 
-tr:hover {background-color: #f5f5f5;}
+tr:hover {background-color: #f8f9fa!important;}
 
 th, td {
     border-bottom: 1px solid #ddd;
@@ -30,25 +35,27 @@ th, td {
     width: 20%;
     height: 100%;
 }
-
+  
 .sideNav {
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
     list-style-type: none;
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: #f1f1f1;
+    height: 100%;
+    background-color: #f5f5f5!important;
 }
 
-.navItem {
+.navItem .navItemText{
     display: block;
     color: #000;
     padding: 8px 16px;
-    text-decoration: none;  
+    text-decoration: none;
 }
 
-.navItem :hover {
-    background-color: #6495ed;
+.navItem .navItemText:hover {
+    background-color: #555;
     color: white;
-    padding: 8px 16px;
 }
   
