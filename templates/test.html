@@ -11,53 +11,48 @@
     <link rel="stylesheet" type="text/css" media="screen" href="styles/post.css" /> -->
     <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="../style/test.css" />
-    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="flex: 1">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; ">
+        <div>
+            <a class="navbar-brand" href="#">
+                <img src="../assets/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
+            </a>
         </div>
-    </nav>          
+        <div style=" display : flex; flex-direction : row;">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-grow: 0">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../assets/hamburger_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Bolts</a>
+                            <a class="dropdown-item" href="#">Screws</a>
+                            <a class="dropdown-item" href="#">Calculators</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 5%">Logged in as McPingDong</p>
+            
+        </div>
+    </nav>
+  
     <div id="root">      
         <div class="navigationDiv">
             <ul class="sideNav">
-                <li class="navItem"><span class="navItem">Screw 1</span></li>
-                <li class="navItem"><span class="navItem">Screw 2</span></li>
-                <li class="navItem"><span class="navItem">Screw 3</span></li>
-                <li class="navItem"><span class="navItem">Screw 4</span></li>
-                <li class="navItem"><span class="navItem">Screw 5</span></li>
+                <li class="navItem"><a href="www.google.com" class="navItemText">Screw 1</a></li>
+                <li class="navItem"><a href="www.google.com" class="navItemText">Hammer</a></li>
+                <li class="navItem"><a href="www.google.com" class="navItemText">Loosey</a></li>
+                <li class="navItem"><a href="www.google.com" class="navItemText">Grey Nurse</a></li>
+                <li class="navItem"><a href="www.google.com" class="navItemText">Clown Fish</a></li>
             </ul>
         </div>
         <div class="tableDiv">
@@ -66,20 +61,76 @@
                         <th>Firstname</th>
                         <th>Lastname</th>
                         <th>Age</th>
+                        <th style="width:4%"></th>
+                        <th style="width:2.5%"></th>
                     </tr>
                     <tr>
                         <td>Jill</td>
                         <td>Smith</td>
-                        <td>50</td>
+                        <td>75</td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                     </tr>
                     <tr>
                         <td>Eve</td>
                         <td>Jackson</td>
-                        <td>94</td>
+                        <td>25</td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                     </tr>
+                    <tr>
+                        <td>Eve</td>
+                        <td>Jackson</td>
+                        <td>53</td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                    </tr>
+                    <tr>
+                        <td>Stem</td>
+                        <td>Racks</td>
+                        <td>19</td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                    </tr>
+                    <tr>
+                        <td>Eve</td>
+                        <td>Sally</td>
+                        <td>35</td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                        <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../assets/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                    </tr>
+                    <tr>
+                        <td><a>Add more...</a></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+    
                 </table>
         </div>
     </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+            </div>
+            </div>
+        </div>
+    </div>
+          
     <script type="module" src="src/index.js" crossorigin="use-credentials"></script>
 </body>
 
