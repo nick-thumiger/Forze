@@ -224,7 +224,9 @@ def register():
             hash = hashlib.sha1(hash.encode())
             password = hash.hexdigest();
             # Check if account exists using MySQL
+            print("hello1")
             account = system.checkExistance(username)
+            print("hello2")
             # If account exists show error and validation checks
             if account:
                 return 'Account already exists!'
@@ -251,6 +253,7 @@ def register():
             else:
                 # Account doesnt exists and the form data is valid, now insert new account into accounts table
                 makeCommit(system.connection, system.cursor, f"INSERT INTO `users` VALUES (NULL, '{fname}', '{lname}', '{username}', '{email}', '{password}', '', '')")
+                print("hello3")
                 return 'You have successfully registered!'
         elif request.method == 'POST':
             # Form is empty... (no POST data)
