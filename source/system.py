@@ -1,5 +1,5 @@
-from sql import *
-from exceptions import *
+from source.sql import *
+from source.exceptions import *
 import time
 
 class System:
