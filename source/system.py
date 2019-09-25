@@ -140,11 +140,7 @@ class System:
 
         query += ");"
 
-        print(query)
-        # query = f"INSERT INTO `{table}` (`item_id`, `type`, `diameter`, `strength`, `size`, `weight_pp`, `weight_total`, `storage`) VALUES (NULL, '{typ}', '{diameter}', '{strength}', '{size}', '{w_pp}', '{w_total}', '{storage}');"
-
         makeCommit(self._connection, self._cursor, query)
-
 
     #Delete an entry
     def delete_entry(self, table, itemID):
@@ -169,12 +165,19 @@ class System:
         new_quantity = float(new_weight_total)/float(new_weight_pp)
 
         quantity_change = int(new_quantity-curr_quantity)
+        if quantity_change:
+            return
         date = datetime.now()
 
         query = f"INSERT INTO `user_changes` (`user_id`, `item_id`, `quantity`, `time`) VALUES ('{userID}', '{itemID}', '{quantity_change}', '{date}');"
         # print(query)
         makeCommit(self._connection, self._cursor, query)
 
+    def get_data_type_of_column(self, table, column):
+        query = f"SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{table}' AND COLUMN_NAME = '{column}'"
+        rawresult = makeQuerySingleItem(self._cursor, query)
+        result = [asciiSeperator(x) for x in rawresult]
+        return result
 
     #Set entry value
     def set_value(self, table, itemID, column, newValue, userID=1):

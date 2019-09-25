@@ -1,4 +1,5 @@
-let apiURL = 'http://127.0.0.1:5100';
+// let apiURL = 'http://127.0.0.1:5100';
+let apiURL = 'http://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditID = null;
@@ -78,17 +79,43 @@ let triggerEditModal = (category, id) => {
             i += 1;
         })
 
-
         let num1 = parseFloat(e.response[e.response.length-1]);
         let num2 = parseFloat(e.response[e.response.length-2]);
 
         let quantity = parseInt(num1/num2);
 
-        // console.log(quantity);
-
         document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
     .catch((e) => console.error(e));
+}
+
+let submitDelete = () => {
+    const payload = {
+        'table' : currentEditCategory,
+        'item_id' : currentEditID
+    }
+
+    const settings = {
+        'method' : "POST",
+        'headers' : { "Content-Type" : "application/json" },
+        'body' : JSON.stringify(payload)
+    }    
+
+    let url = apiURL+`/delete_item`;
+
+    fetch(url, settings)
+    .then((e) => {
+        if (e.status === 200) {
+            return e.text();
+        } else {
+            throw new Error("An error has occured");
+        }
+    })
+    .then(e => {
+        console.log(e);
+        location.reload();
+    })
+    .catch((e) => console.error(e));    
 }
 
 let submitEdit = () => {

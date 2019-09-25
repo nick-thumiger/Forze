@@ -34,6 +34,20 @@ app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
 
+@app.route('/delete_item', methods=['POST'])
+def delete_item():
+    req_data = request.get_json()
+
+    try:
+        table = req_data['table']
+        item_id = req_data['item_id']
+
+        system.delete_entry(table, item_id)
+
+        return 'Success'
+    except CustomException as err:
+        return err.log
+
 @app.route('/add_item', methods=['POST'])
 def add_item():
     req_data = request.get_json()
@@ -72,10 +86,10 @@ def edit_item():
         else:
             system.set_value(table,item_id,columns,values)
 
-
         return 'Success'
+
     except CustomException as err:
-        return err.log
+        return err.log()
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
@@ -117,6 +131,10 @@ View Table
 def view_table(category, item_type):
     if loggedin() or autoLog:
         dataList = system.get_category_table(category, item_type, ['type'])
+
+        if (len(dataList) == 0):
+            return redirect(url_for('home'))
+    
         # dataList = system.sort_by_columns(category)
         columnNames = system.get_pretty_column_names(category)
         unique_types = system.get_unique_column_items(category,'type')
