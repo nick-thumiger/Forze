@@ -123,11 +123,29 @@ class System:
         return result
     
     #Add an entry
-    def add_entry(self, table, typ, diameter, strength, size, w_pp, w_total, storage):
-        query = f"INSERT INTO `{table}` (`item_id`, `type`, `diameter`, `strength`, `size`, `weight_pp`, `weight_total`, `storage`) VALUES (NULL, '{typ}', '{diameter}', '{strength}', '{size}', '{w_pp}', '{w_total}', '{storage}');"
+    def add_entry(self, table, column, newValue):
+        query = f"INSERT INTO `{table}` ("
+
+        for i in column:
+            query += f"`{i}`, "
+
+        query = query[:-2]
+
+        query += f") VALUES ("
+
+        for i in newValue:
+            query += f"'{i}', "
+
+        query = query[:-2]
+
+        query += ");"
+
+        print(query)
+        # query = f"INSERT INTO `{table}` (`item_id`, `type`, `diameter`, `strength`, `size`, `weight_pp`, `weight_total`, `storage`) VALUES (NULL, '{typ}', '{diameter}', '{strength}', '{size}', '{w_pp}', '{w_total}', '{storage}');"
+
         makeCommit(self._connection, self._cursor, query)
-        return
-    
+
+
     #Delete an entry
     def delete_entry(self, table, itemID):
         query = f"DELETE FROM `{table}` WHERE `item_id` = {itemID}"

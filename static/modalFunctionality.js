@@ -152,3 +152,68 @@ let submitEdit = () => {
     })
     .catch((e) => console.error(e));    
 }
+
+let triggerAddModal = (category) => {
+    currentEditCategory = category;
+}
+
+let submitAdd = () => {
+    let loop = true;
+    let i = 0;
+
+    let columns = [];
+    let values = [];
+
+    while (loop) {
+        let t  = document.getElementById(`add_${i}`);
+        let k  = document.getElementById(`add_target_${i}`);
+
+        if (t === null) {
+            break;
+        }
+
+        let temp = k.textContent;
+        temp = temp.replace(" ","_");
+        temp = temp.toLowerCase();
+
+        values.push(t.value);
+        columns.push(temp);
+
+        i += 1;
+    }
+
+    let quantityValue  = values[values.length-1];
+    values.pop();
+    columns.pop();
+
+    let totalValue = values[values.length-2]*quantityValue;
+    values[values.length-1] = totalValue;
+
+    const payload = {
+        'columns' : columns,
+        'values' : values,
+        'table' : currentEditCategory
+    }
+
+    const settings = {
+        'method' : "POST",
+        'headers' : { "Content-Type" : "application/json" },
+        'body' : JSON.stringify(payload)
+    }    
+
+    let url = apiURL+`/add_item`;
+
+    fetch(url, settings)
+    .then((e) => {
+        if (e.status === 200) {
+            return e.text();
+        } else {
+            throw new Error("An error has occured");
+        }
+    })
+    .then(e => {
+        console.log(e);
+        location.reload();
+    })
+    .catch((e) => console.error(e));    
+}

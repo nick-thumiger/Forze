@@ -72,10 +72,19 @@
                                 <td>{{data}}</td>
                             {% endfor %}
                             <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                            <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('Bolts', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                             <td></td>
                         </tr>   
-                    {% endfor %}    
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
+                        {% for data in dataList[0]['data'] %}
+                            <td></td>
+                        {% endfor %}
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </table>
         </div>
     </div>
@@ -121,6 +130,33 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" onclick="submitEdit()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="addModalCenter" tabindex="-1" role="dialog" aria-labelledby="addModalCenter" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="add-modal-target" class="modal-body">
+                    {% for i in range(columnNames|length) %}
+                        <div class="input-group">
+                            <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                <span class="input-group-text" id="add_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                            </div>
+                            <input type="text" class="form-control" id="add_{{i}}">
+                        </div>
+        
+                    {% endfor %}                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" onclick="submitAdd()" class="btn btn-primary" data-dismiss="modal">Submit</button>
                 </div>
                 </div>
             </div>

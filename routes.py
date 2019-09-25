@@ -29,6 +29,26 @@ mail = Mail(app)
 # Enable account activation?
 account_activation_required = True
 
+@app.route('/add_item', methods=['POST'])
+def add_item():
+    req_data = request.get_json()
+
+    try:
+        columns = req_data['columns']
+        values = req_data['values']
+        table = req_data['table']
+
+        if len(columns) != len(values):
+            raise Exception('unequal line lengths')
+
+        # add_entry(self, table, typ, diameter, strength, size, w_pp, w_total, storage):
+
+        system.add_entry(table, columns,values)
+
+        return 'Success'
+    except CustomException as err:
+        return err.log
+
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
     req_data = request.get_json()
