@@ -91,7 +91,8 @@ View Table
 @app.route('/<category>/<item_type>', methods=['GET'])
 def view_table(category, item_type):
     if loggedin() or autoLog:
-        dataList = system.sort_by_columns(category, ['type'])
+        dataList = system.get_category_table(category, item_type, ['type'])
+        # dataList = system.sort_by_columns(category)
         columnNames = system.get_pretty_column_names(category)
         unique_types = system.get_unique_column_items(category,'type')
         columnNames.append("Quantity")
@@ -101,8 +102,8 @@ def view_table(category, item_type):
             item['data'].append(quantity)
 
         if 'username' in session.keys():
-            return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
-        return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
+            return render_template('index.html', category=category, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
+        return render_template('index.html', category=category, unique_types=unique_types, dataList=dataList, columnNames=columnNames)
  
     return redirect(url_for('login'))
 

@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; ">
         <div>
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href={{ url_for('home') }} >
                 <img src="../static/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
             </a>
         </div>
@@ -49,7 +49,7 @@
         <div class="navigationDiv">
             <ul class="sideNav">
                 {% for type in unique_types %}
-                    <li class="navItem"><a href="www.google.com" class="navItemText">{{type}}</a></li>
+                    <li class="navItem"><a href={{ url_for('view_table', category=category, item_type=type) }} class="navItemText">{{type}}</a></li>
                 {% endfor %}
             </ul>
         </div>

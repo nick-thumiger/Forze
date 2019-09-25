@@ -84,10 +84,30 @@ class System:
                 'id': item[0],
                 'data': item[1:]
             })
-            # item.remove(item[0])
 
         return new_res
     
+    def get_category_table(self, category, item_type, orderBy):
+        columnStr = ""
+        for element in orderBy:
+            columnStr = columnStr + element + ", "
+            
+        temp = columnStr[:-2]
+
+        query = f"SELECT * FROM {category} WHERE `type` = '{item_type}' ORDER BY {temp}"
+        rawresult = makeQuery(self._cursor, query)
+        result = [listAsciiSeperator(x) for x in rawresult]
+
+        new_res = []
+
+        for item in result:
+            new_res.append({
+                'id': item[0],
+                'data': item[1:]
+            })
+
+        return new_res
+
     #Gets the list of changes that were made, and by whom
     def get_user_changes(self, itemID):
         query = f"SELECT `first_name`, `last_name`, `quantity`, `time` FROM `users` JOIN `user_changes` ON `users`.`user_id` = `user_changes`.`user_id` WHERE `user_changes`.`item_id` = {itemID}"
