@@ -1,10 +1,16 @@
 import sys
 sys.path.append('source')
 
-from flask import render_template, request, redirect, url_for, abort, Flask, session
+from flask import render_template, request, redirect, url_for, abort, Flask, session, make_response
 from server import app, system
 from system import *
 from sql import *
+from flask_mail import Mail, Message
+import re
+import uuid
+import hashlib
+from datetime import datetime, timedelta 
+from exceptions import *
 
 '''
 Setup email server
@@ -12,14 +18,14 @@ Setup email server
 # Enter your email server details below
 app.config['MAIL_SERVER']= 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
-app.config['MAIL_PASSWORD'] = 'your password'
+app.config['MAIL_USERNAME'] = 'forze.inventory@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qhkeyhdclbqncpkn'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 # Intialize Mail
 mail = Mail(app)
 # Enable account activation?
-account_activation_required = False
+account_activation_required = True
 
 
 '''
@@ -31,55 +37,54 @@ def page_not_found(e=None):
     return render_template('404.html', errorStr = e), 404
 
 '''
-Home / Welcome page
-'''
-@app.route('/', methods=["GET", "POST"])
-def home():
-    return render_template('home.html')
-
-'''
 login screen
 '''
 @app.route('/pythonlogin/', methods=['GET', 'POST'])
 def login():
-    # Output message if something goes wrong...
-    msg = ''
-    # Check if "username" and "password" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
-        username = request.form['username']
-        password = request.form['password']
-        # Get the hashed password
-        hash = password + app.secret_key
-        hash = hashlib.sha1(hash.encode())
-        password = hash.hexdigest();
-        # Check if account exists using MySQL
-        account = system.check_credentials(username, password)
+    try:
+        # Output message if something goes wrong...
+        msg = ''
+        # Check if "username" and "password" POST requests exist (user submitted form)
+        if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+            # Create variables for easy access
+            username = request.form['username']
+            password = request.form['password']
+            # Get the hashed password
+            hash = password + app.secret_key
+            hash = hashlib.sha1(hash.encode())
+            password = hash.hexdigest();
+            # Check if account exists using MySQL
+            account = system.check_credentials(username, password)
 
-    # If account exists in accounts table in out database
-        if len(account) > 0:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['id'] = account(0)
-            session['username'] = account(3)
-            
-            if 'rememberme' in request.form:
+        # If account exists in accounts table in out database
+            if account != None:
+                #check if account is activated
+                if account[6] != "activated":
+                    return "Please check your emails and activate your account."
+                
+                # Create session data, we can access this data in other routes
+                session['loggedin'] = True
+                session['id'] = account[0]
+                session['username'] = account[3]
+           
                 # Create hash to store as cookie
-                hash = account['username'] + request.form['password'] + app.secret_key
+                hash = account[3] + request.form['password'] + app.secret_key
                 hash = hashlib.sha1(hash.encode())
                 hash = hash.hexdigest();
                 # the cookie expires in 90 days
-                expire_date = datetime.datetime.now() + datetime.timedelta(days=90)
+                expire_date = datetime.now() + timedelta(days=90)
                 resp = make_response('Success', 200)
                 resp.set_cookie('rememberme', hash, expires=expire_date)
                 # Update remember-me in accounts table to the cookie hash
-                system.makeQuery(f"UPDATE `users` SET `rememberme` = '{hash}' WHERE `user_id` = '{account(0)}'")
+                makeCommit(system._connection, system._cursor, f"UPDATE `users` SET `rememberme` = '{hash}' WHERE `user_id` = '{account[0]}'")
                 return resp
-            # Redirect to home page
-            return 'Logged in successfully!'
-        else:
-            # Account doesnt exist or username/password incorrect
-            return 'Incorrect username/password!'
+            else:
+                # Account doesnt exist or username/password incorrect
+                return 'Incorrect username/password!'
+    except CustomException as err:
+        return err.log()
+    except Exception as err:
+        return builtInException(err).log()
     return render_template('index.html', msg=msg)
 
 '''
@@ -95,6 +100,8 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
+        fname = request.form['fname']
+        lname = request.form['lname']
         # Hash the password
         hash = password + app.secret_key
         hash = hashlib.sha1(hash.encode())
@@ -114,20 +121,19 @@ def register():
             # Account activation enabled
             # Generate a random unique id for activation code
             activation_code = uuid.uuid4()
-            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s, %s, "")', (username, password, email, activation_code))
-            mysql.connection.commit()
-            # Change your_email@gmail.com
-            email = Message('Account Activation Required', sender = 'your_email@gmail.com', recipients = [email])
+            makeCommit(system.connection, system.cursor, f"INSERT INTO `users` VALUES (NULL, '{fname}', '{lname}', '{username}', '{email}', '{password}', '', '{activation_code}')")
+            address = email
+            email = Message('Account Activation Required', sender = 'forze.inventory@gmail.com', recipients = [email])
             # change yourdomain.com to your website, to test locally you can go to: http://localhost:5000/pythonlogin/activate/<email>/<code>
-            activate_link = 'http://yourdomain.com/pythonlogin/activate/' + str(email) + '/' + str(activation_code)
+            ######################################################################################################
+            activate_link = 'http://yourdomain.com/pythonlogin/activate/' + str(address) + '/' + str(activation_code)
             # change the email body below
-            email.body = '<p>Please click the following link to activate your account: <a href="' + str(activate_link) + '">' + str(activate_link) + '</a></p>'
+            email.body = 'Welcome to the forze inventory management system! Please click the following link to activate your account: ' + str(activate_link)
             mail.send(email)
             return 'Please check your email to activate your account!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s, "", "")', (username, password, email))
-            mysql.connection.commit()
+            makeCommit(system.connection, system.cursor, f"INSERT INTO `users` VALUES (NULL, '{fname}', '{lname}', '{username}', '{email}', '{password}', '', '')")
             return 'You have successfully registered!'
     elif request.method == 'POST':
         # Form is empty... (no POST data)
@@ -135,6 +141,77 @@ def register():
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
 
+# http://localhost:5000/pythinlogin/activate/<email>/<code> - this page will activate a users account if the correct activation code and email are provided
+@app.route('/pythonlogin/activate/<string:email>/<string:code>', methods=['GET'])
+def activate(email, code):
+    # Check if the email and code provided exist in the accounts table
+    account = makeQuery(system.cursor, f"SELECT * FROM `users` WHERE `email` = '{email}' AND `activation_code` = '{code}'")
+    if len(account) > 0:
+        # account exists, update the activation code to "activated"
+        makeCommit(system.connection, system.cursor, f"UPDATE `users` SET `activation_code` = 'activated' WHERE `email` = '{email}' AND `activation_code` = '{code}'")
+        # print message, or you could redirect to the login page...
+        return redirect(url_for('login'))
+    return 'Account doesn\'t exist with that email or incorrect activation code!'
+
+# http://localhost:5000/pythinlogin/home - this will be the home page, only accessible for loggedin users
+@app.route('/pythonlogin/home')
+def home():
+    # Check if user is loggedin
+    if loggedin():
+        # User is loggedin show them the home page
+        return render_template('home.html', username=session['username'])
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
+
+# http://localhost:5000/pythinlogin/profile - this will be the profile page, only accessible for loggedin users
+@app.route('/pythonlogin/profile')
+def profile():
+    # Check if user is loggedin
+    if loggedin():
+        # We need all the account info for the user so we can display it on the profile page
+        account = makeQuery(system.cursor, f"SELECT * FROM `users` WHERE `user_id` = '{session['id']}'")
+        #account = [listAsciiSeperator(x) for x in rawresult]
+        #print(account)
+        if len(account) == 0:
+            err = systemException("ERROR: No user matches user_id in the 'profile' page.").log()
+        else:
+            err = ""
+        # Show the profile page with account info
+        return render_template('profile.html', account=account, err=err)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
+
+'''
+Edit Profile
+'''
+@app.route('/pythonlogin/profile/edit', methods=['GET', 'POST'])
+def edit_profile():
+    # Check if user is loggedin
+    if loggedin():
+        # We need all the account info for the user so we can display it on the profile page`
+        # Output message
+        msg = ''
+        # Check if "username", "password" and "email" POST requests exist (user submitted form)
+        if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form :
+            # Create variables for easy access
+            username = request.form['username']
+            password = request.form['password']
+            email = request.form['email']
+            
+            if email == "" or username == "" or password == "":
+                msg = "Please enter all fields, including the new password (it can be the same as the old password)"
+            else:
+                # Hash the password
+                hash = password + app.secret_key
+                hash = hashlib.sha1(hash.encode())
+                password = hash.hexdigest();
+                # update account with the new details
+                makeCommit(system.connection, system.cursor, f"UPDATE `users` SET `username` = '{username}', `pw_hash` = '{password}', `email` = '{email}' WHERE `user_id` = '{session['id']}'")
+                msg = 'Updated!'
+        account = makeQuery(system.cursor, f"SELECT * FROM `users` WHERE `user_id` = '{session['id']}'")
+        # Show the profile page with account info
+        return render_template('profile-edit.html', account=account, msg=msg)
+    return redirect(url_for('login'))
 
 '''
 Logout
@@ -145,5 +222,28 @@ def logout():
    session.pop('loggedin', None)
    session.pop('id', None)
    session.pop('username', None)
+   # Remove cookie data "remember me"
+   resp = make_response(redirect(url_for('login')))
+   resp.set_cookie('rememberme', expires=0)
    # Redirect to login page
    return redirect(url_for('login'))
+
+'''
+Loggedin
+'''
+# Check if logged in function, update session if cookie for "remember me" exists
+def loggedin():
+    if 'loggedin' in session:
+        return True;
+    elif 'rememberme' in request.cookies:
+        # check if remembered, cookie has to match the "rememberme" field
+        rawresult = makeQuery(system.cursor, "SELECT * FROM `users` WHERE `rememberme` = '{request.cookies['rememberme']}'")
+        account = [asciiSeperator(x) for x in rawresult]
+        if len(account) > 0:
+            # update session variables
+            session['loggedin'] = True
+            session['id'] = account(0)
+            session['username'] = account(3)
+            return True
+    # account not logged in return false
+    return False

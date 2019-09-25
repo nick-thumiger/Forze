@@ -8,7 +8,7 @@ class CustomException(Exception):
         self._msg2 = str()          #Msg2 is for user
 
     @property
-    def log(self, errType):
+    def log(self, errType=""):
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         print(f'{errType}: {dt_string}: {self._msg1}')

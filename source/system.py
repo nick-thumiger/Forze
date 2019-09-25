@@ -90,22 +90,25 @@ class System:
 
     #checks credentials
     def check_credentials(self, username, password):
-        query = f"SELECT * FROM `users` WHERE `username` = '{username}' AND `pw_hash` = {password}"
+        query = f"SELECT * FROM `users` WHERE `username` = '{username}' AND `pw_hash` = '{password}'"
         try:
             self._cursor.execute(query)
             records = self._cursor.fetchone()
+            if records != None:
+                result = [asciiSeperator(x) for x in records]
+            else:
+                result = None
         except Exception as err:
             raise builtInException(err)
-        result = [asciiSeperator(x) for x in records]
         return result
 
     #checks account existance. return 1 if exists already.
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
         result = makeQuery(self._cursor, query)
-        if len(result) == 0
+        if len(result) == 0:
             return 0
-        else
+        else:
             return 1
 
 sys = System()
