@@ -1,5 +1,5 @@
-// let apiURL = 'http://127.0.0.1:5100';
-let apiURL = 'http://forze.pythonanywhere.com';
+let apiURL = 'http://127.0.0.1:5100';
+// let apiURL = 'http://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditID = null;
@@ -137,8 +137,25 @@ let submitEdit = () => {
         temp = temp.replace(" ","_");
         temp = temp.toLowerCase();
 
-        values.push(t.value);
-        columns.push(temp);
+        console.log(temp);
+        console.log(t.value);
+
+        let url = apiURL+'/check_valid';
+
+        fetch(url)
+        .then((e) => {
+            if (e.status === 200) {
+                return e.text();
+            } else {
+                throw new Error("An error has occured");
+            }
+        })
+        .then(e => {
+            console.log(e);
+            values.push(t.value);
+            columns.push(temp);
+        })
+        .catch((e) => console.error(e));
 
         i += 1;
     }

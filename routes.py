@@ -66,7 +66,7 @@ def add_item():
 
         return 'Success'
     except CustomException as err:
-        return err.log
+        return err.log()
 
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
