@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from source.exceptions import *
 from init import bootstrap_system
 
-autoLog = True
+autoLog = False
 
 '''
 Setup email server
@@ -34,18 +34,48 @@ app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
 
+@app.route('/add_item', methods=['POST'])
+def add_item():
+    req_data = request.get_json()
+
+    try:
+        columns = req_data['columns']
+        values = req_data['values']
+        table = req_data['table']
+
+        if len(columns) != len(values):
+            raise Exception('unequal line lengths')
+
+        # add_entry(self, table, typ, diameter, strength, size, w_pp, w_total, storage):
+
+        system.add_entry(table, columns,values)
+
+        return 'Success'
+    except CustomException as err:
+        return err.log
+
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
     req_data = request.get_json()
 
-    print(req_data['test'])
-    # res = {
-    #     "response" : system.get_entry_by_id(category, item_id)
-    # }
+    try:
+        columns = req_data['columns']
+        values = req_data['values']
+        table = req_data['table']
+        item_id = req_data['item_id']
 
-    sys.set_value('Bolts',1,['diameter', 'type'], [7, 'Allan'])
+        if len(columns) != len(values):
+            raise Exception('unequal line lengths')
 
-    return 'Success'
+        if 'id' in session.keys():
+            system.set_value(table,item_id,columns,values,session['id'])
+        else:
+            system.set_value(table,item_id,columns,values)
+
+
+        return 'Success'
+    except CustomException as err:
+        return err.log
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
@@ -74,15 +104,32 @@ def page_not_found(e=None):
     return render_template('404.html', errorStr = e), 404
 
 '''
-Home / Welcome page
+Home Page
 '''
-@app.route('/<category>/<item_type>', methods=['GET', 'POST'])
-def home(category, item_type):
+@app.route('/', methods=['GET'])
+def home():
+    return redirect(url_for('view_table', category='Bolts', item_type='Allan'))
+
+'''
+View Table
+'''
+@app.route('/<category>/<item_type>', methods=['GET'])
+def view_table(category, item_type):
     if loggedin() or autoLog:
-        dataList = system.sort_by_columns('Bolts', ['type'])
-        columnNames = system.get_column_names('Bolts')
-        unique_types = system.get_unique_column_items('Bolts','type')
-        return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
+        dataList = system.get_category_table(category, item_type, ['type'])
+        # dataList = system.sort_by_columns(category)
+        columnNames = system.get_pretty_column_names(category)
+        unique_types = system.get_unique_column_items(category,'type')
+        columnNames.append("Quantity")
+
+        for item in dataList:
+            quantity = round(float(item['data'][-1])/float(item['data'][-2]))
+            item['data'].append(quantity)
+
+        if 'username' in session.keys():
+            return render_template('index.html', category=category, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
+        return render_template('index.html', category=category, unique_types=unique_types, dataList=dataList, columnNames=columnNames)
+ 
     return redirect(url_for('login'))
 
 '''
@@ -124,16 +171,18 @@ def login():
                 resp = make_response('Success', 200)
                 resp.set_cookie('rememberme', hash, expires=expire_date)
                 # Update remember-me in accounts table to the cookie hash
-                makeCommit(system._connection, system._cursor, f"UPDATE `users` SET `rememberme` = '{hash}' WHERE `user_id` = '{account[0]}'")
+                query = f"UPDATE `users` SET `rememberme` = '{hash}' WHERE `user_id` = '{account[0]}'"
+                makeCommit(system._connection, system._cursor, query)
+
                 return resp
             else:
                 # Account doesnt exist or username/password incorrect
-                raise systemException("oooooooohhhhhhhhhhhhhhhhhhhhhhh yeah baby")
                 return 'Incorrect username/password!'
     except CustomException as err:
         return err.log()
     except Exception as err:
         return builtInException(err).log()
+
     return render_template('login.html', msg=msg)
 
 '''

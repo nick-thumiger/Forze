@@ -1,6 +1,8 @@
 from source.sql import *
 from source.exceptions import *
 import time
+from datetime import datetime, timedelta 
+
 
 class System:
     def __init__(self):
@@ -17,6 +19,25 @@ class System:
     @property
     def cursor(self):
         return self._cursor 
+
+    #Gets all of the column names and prettifies them...
+    #RETURNS: list of the column names 
+    def get_pretty_column_names(self, table):
+        raw_columns = self.get_column_names(table)
+
+        pretty_columns = []
+        for k in raw_columns:
+            k = k.split("_")
+
+            for i in range(len(k)):
+                k[i] = k[i].capitalize()
+
+            k = " ".join(k)
+
+            pretty_columns.append(k)
+
+        return pretty_columns
+
 
     #Gets all of the column names
     #RETURNS: list of the column names 
@@ -63,10 +84,30 @@ class System:
                 'id': item[0],
                 'data': item[1:]
             })
-            # item.remove(item[0])
 
         return new_res
     
+    def get_category_table(self, category, item_type, orderBy):
+        columnStr = ""
+        for element in orderBy:
+            columnStr = columnStr + element + ", "
+            
+        temp = columnStr[:-2]
+
+        query = f"SELECT * FROM {category} WHERE `type` = '{item_type}' ORDER BY {temp}"
+        rawresult = makeQuery(self._cursor, query)
+        result = [listAsciiSeperator(x) for x in rawresult]
+
+        new_res = []
+
+        for item in result:
+            new_res.append({
+                'id': item[0],
+                'data': item[1:]
+            })
+
+        return new_res
+
     #Gets the list of changes that were made, and by whom
     def get_user_changes(self, itemID):
         query = f"SELECT `first_name`, `last_name`, `quantity`, `time` FROM `users` JOIN `user_changes` ON `users`.`user_id` = `user_changes`.`user_id` WHERE `user_changes`.`item_id` = {itemID}"
@@ -82,25 +123,63 @@ class System:
         return result
     
     #Add an entry
-    def add_entry(self, table, typ, diameter, strength, size, w_pp, w_total, storage):
-        query = f"INSERT INTO `{table}` (`item_id`, `type`, `diameter`, `strength`, `size`, `weight_pp`, `weight_total`, `storage`) VALUES (NULL, '{typ}', '{diameter}', '{strength}', '{size}', '{w_pp}', '{w_total}', '{storage}');"
+    def add_entry(self, table, column, newValue):
+        query = f"INSERT INTO `{table}` ("
+
+        for i in column:
+            query += f"`{i}`, "
+
+        query = query[:-2]
+
+        query += f") VALUES ("
+
+        for i in newValue:
+            query += f"'{i}', "
+
+        query = query[:-2]
+
+        query += ");"
+
+        print(query)
+        # query = f"INSERT INTO `{table}` (`item_id`, `type`, `diameter`, `strength`, `size`, `weight_pp`, `weight_total`, `storage`) VALUES (NULL, '{typ}', '{diameter}', '{strength}', '{size}', '{w_pp}', '{w_total}', '{storage}');"
+
         makeCommit(self._connection, self._cursor, query)
-        return
-    
+
+
     #Delete an entry
     def delete_entry(self, table, itemID):
         query = f"DELETE FROM `{table}` WHERE `item_id` = {itemID}"
         makeCommit(self._connection, self._cursor, query)
         return
     
-    #Set new entity total weight
-    def set_quantity(self, table, itemID, newWeight):
-        query = f"UPDATE `{table}` SET `weight_total` = {newWeight} WHERE `item_id` = {itemID}"
+    # #Set new entity total weight
+    # def set_quantity(self, table, itemID, newWeight):
+    #     query = f"UPDATE `{table}` SET `weight_total` = {newWeight} WHERE `item_id` = {itemID}"
+    #     makeCommit(self._connection, self._cursor, query)
+    #     return
+
+    def add_user_entry(self, table, userID, itemID, newValues):
+        entry = self.get_entry_by_id(table, itemID)
+        curr_weight_total = entry[-1]
+        curr_weight_pp = entry[-2]
+        curr_quantity = float(curr_weight_total)/float(curr_weight_pp)
+
+        new_weight_total = newValues[-1]
+        new_weight_pp = newValues[-2]
+        new_quantity = float(new_weight_total)/float(new_weight_pp)
+
+        quantity_change = int(new_quantity-curr_quantity)
+        date = datetime.now()
+
+        query = f"INSERT INTO `user_changes` (`user_id`, `item_id`, `quantity`, `time`) VALUES ('{userID}', '{itemID}', '{quantity_change}', '{date}');"
+        # print(query)
         makeCommit(self._connection, self._cursor, query)
-        return
+
 
     #Set entry value
-    def set_value(self, table, itemID, column, newValue):
+    def set_value(self, table, itemID, column, newValue, userID=1):
+        self.add_user_entry(table, userID, itemID, newValue)
+
         query = f"UPDATE `{table}` SET "
 
         for i in range(len(column)):
