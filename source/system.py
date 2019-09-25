@@ -121,7 +121,10 @@ class System:
     #checks account existance. return 1 if exists already.
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
+        
+        
         result = makeQuery(self._cursor, query)
+        print(result)
         if len(result) == 0:
             return 0
         else:
