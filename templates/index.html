@@ -1,32 +1,104 @@
 ﻿<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Login</title>
-		<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<script src="{{ url_for('static', filename='script.js') }}"></script>
-	</head>
-	<body>
-		<div class="login">
-			<h1>Login</h1>
-			<div class="links">
-				<a href="{{ url_for('login') }}" class="active">Login</a>
-				<a href="{{ url_for('register') }}">Register</a>
-			</div>
-			<form class="ajax-form" action="{{ url_for('login') }}" method="post">
-				<label for="username">
-					<i class="fas fa-user"></i>
-				</label>
-				<input type="text" name="username" placeholder="Username" id="username" required>
-				<label for="password">
-					<i class="fas fa-lock"></i>
-				</label>
-				<input type="password" name="password" placeholder="Password" id="password" required>
-                <div class="msg">{{ msg }}</div>
-                    <input type="submit" value="Login">
-            </form>
-		</div>
-	</body>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Forze</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- You can add your styles and scripts here -->
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="styles/post.css" /> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='test.css') }}">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='modalFunctionality.js') }}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; ">
+        <div>
+            <a class="navbar-brand" href="#">
+                <img src="../static/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
+            </a>
+        </div>
+        <div style=" display : flex; flex-direction : row;">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-grow: 0">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../static/hamburger_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Bolts</a>
+                            <a class="dropdown-item" href="#">Screws</a>
+                            <a class="dropdown-item" href="#">Calculators</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 5%">Logged in as McPingDong</p>
+            
+        </div>
+    </nav>
+  
+    <div id="root">      
+        <div class="navigationDiv">
+            <ul class="sideNav">
+                {% for type in unique_types %}
+                    <li class="navItem"><a href="www.google.com" class="navItemText">{{type}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tableDiv">
+            <table class="dataTable" >
+                    <tr>
+                        <th  style="width:2.5%"></th>
+                        {% for header in columnNames%}
+                            <th>{{header}}</th>
+                        {% endfor %}
+                        <th style="width:4%"></th>
+                        <th style="width:2.5%"></th>
+                        <th  style="width:2.5%"></th>
+                    </tr>
+
+                    {% for row in dataList %}
+                        <tr>
+                            <td></td>
+                            {% for data in row['data'] %}
+                                <td>{{data}}</td>
+                            {% endfor %}
+                            <td><a href="#"><img data-toggle="modal" onclick="triggerModal({{ row['id'] }})" data-target="#editModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td></td>
+                        </tr>   
+                    {% endfor %}    
+                </table>
+        </div>
+    </div>
+    <div>
+        <div class="modal fade" id="editModalCenter" tabindex="-1" role="dialog" aria-labelledby="editModalCenter" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">History</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modal-target" class="modal-body">
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>

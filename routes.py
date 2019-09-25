@@ -23,10 +23,17 @@ app.config['MAIL_PASSWORD'] = 'qhkeyhdclbqncpkn'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 # Intialize Mail
-mail = Mail(app)
+# mail = Mail(app)
 # Enable account activation?
 account_activation_required = True
 
+@app.route('/get_history/<item_id>', methods=['GET'])
+def get_history(item_id):
+    res = {
+        "response" : system.get_user_changes(item_id)
+    }
+
+    return res
 
 '''
 Dedicated page for "page not found"
@@ -35,6 +42,17 @@ Dedicated page for "page not found"
 @app.errorhandler(404)
 def page_not_found(e=None):
     return render_template('404.html', errorStr = e), 404
+
+'''
+Home / Welcome page
+'''
+@app.route('/<category>/<item_type>', methods=['GET', 'POST'])
+def home(category, item_type):
+    dataList = system.sort_by_columns('Bolts', ['type'])
+    columnNames = system.get_column_names('Bolts')
+    unique_types = system.get_unique_column_items('Bolts','type')
+
+    return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
 
 '''
 login screen
@@ -85,7 +103,7 @@ def login():
         return err.log()
     except Exception as err:
         return builtInException(err).log()
-    return render_template('index.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 '''
 Register

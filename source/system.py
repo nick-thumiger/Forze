@@ -24,6 +24,9 @@ class System:
         query = f"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{table}'"
         rawresult = makeQuery(self._cursor, query)
         result = [asciiSeperator(x) for x in rawresult]
+
+        result.remove('item_id')
+
         return result
 
     #Gets all the entries in a given column
@@ -46,10 +49,23 @@ class System:
         columnStr = ""
         for element in order:
             columnStr = columnStr + element + ", "
-        query = f"SELECT * FROM {table} ORDER BY {columnStr}"
+            
+        temp = columnStr[:-2]
+
+        query = f"SELECT * FROM {table} ORDER BY {temp}"
         rawresult = makeQuery(self._cursor, query)
         result = [listAsciiSeperator(x) for x in rawresult]
-        return result
+
+        new_res = []
+
+        for item in result:
+            new_res.append({
+                'id': item[0],
+                'data': item[1:]
+            })
+            # item.remove(item[0])
+
+        return new_res
     
     #Gets the list of changes that were made, and by whom
     def get_user_changes(self, itemID):
@@ -112,7 +128,3 @@ class System:
             return 1
 
 sys = System()
-#sys.delete_entry("Bolts", 15)
-#sys.add_entry("Bolts", "Allan Bolt", "M6", 12.9, 12.9, 5.4, 5363, 500)
-#sys.set_quantity("Bolts", 16, 6000)
-#print(sys.check_credentials("Nickle225", 64))

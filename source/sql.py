@@ -49,7 +49,7 @@ def makeCommit(connection, cursor, query):
 def asciiSeperator(instr):
     outstr = ""
     for c in str(instr):
-        if (ord(c) >= 65 and ord(c) <= 90) or (ord(c) >= 97 and ord(c) <= 122) or (ord(c) >= 48 and ord(c) <= 57) or ord(c) == 95 or ord(c) == 46:
+        if (ord(c) >= 65 and ord(c) <= 90) or (ord(c) >= 97 and ord(c) <= 122) or (ord(c) >= 48 and ord(c) <= 57) or ord(c) == 95 or ord(c) == 46 or ord(c) == 32 or ord(c) == 58 or ord(c) == 45:
             outstr = outstr + c
     return outstr
 
