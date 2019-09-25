@@ -31,16 +31,22 @@ account_activation_required = True
 
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
-    req_data = request.get_json()
+    req_data = request.get_json();
 
-    print(req_data['test'])
-    # res = {
-    #     "response" : system.get_entry_by_id(category, item_id)
-    # }
+    try:
+        columns = req_data['columns']
+        values = req_data['values']
+        table = req_data['table']
+        item_id = req_data['item_id']
 
-    sys.set_value('Bolts',1,['diameter', 'type'], [7, 'Allan'])
+        if len(columns) != len(values):
+            raise Exception('unequal line lengths')
 
-    return 'Success'
+        system.set_value(table,item_id,columns,values)
+
+        return 'Success'
+    except CustomException as err:
+        return err.log
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
@@ -128,9 +134,9 @@ def login():
                 # Account doesnt exist or username/password incorrect
                 return 'Incorrect username/password!'
     except CustomException as err:
-        return err.log()
+        return err.log
     except Exception as err:
-        return builtInException(err).log()
+        return builtInException(err).log
     return render_template('login.html', msg=msg)
 
 '''

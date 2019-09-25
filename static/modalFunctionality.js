@@ -84,6 +84,9 @@ let submitEdit = () => {
     let loop = true;
     let i = 0;
 
+    let columns = [];
+    let values = [];
+
     while (loop) {
         let t  = document.getElementById(`edit_${i}`);
         let k  = document.getElementById(`edit_target_${i}`);
@@ -92,38 +95,38 @@ let submitEdit = () => {
             break;
         }
 
-        const payload = {
-            'test' : t.value,
-        }
-    
-        const settings = {
-            'method' : "POST",
-            'headers' : { "Content-Type" : "application/json" },
-            'body' : JSON.stringify(payload)
-        }    
-
-        let url = apiURL+`/edit_item`;
-
-        fetch(url, settings)
-        .then((e) => {
-            if (e.status === 200) {
-                return e.text();
-            } else {
-                throw new Error("An error has occured");
-            }
-        })
-        .then(e => {
-            console.log(e);
-        })
-        .catch((e) => console.error(e));
-    
-
-        console.log(t.value);
-        console.log(k.textContent);
+        values.push(t.value);
+        columns.push(k.textContent);
 
         i += 1;
     }
-    
-    console.log(currentEditCategory);
-    console.log(currentEditID);
+
+    const payload = {
+        'columns' : columns,
+        'values' : values,
+        'table' : currentEditCategory,
+        'item_id' : currentEditID
+    }
+
+    const settings = {
+        'method' : "POST",
+        'headers' : { "Content-Type" : "application/json" },
+        'body' : JSON.stringify(payload)
+    }    
+
+    let url = apiURL+`/edit_item`;
+
+    fetch(url, settings)
+    .then((e) => {
+        if (e.status === 200) {
+            return e.text();
+        } else {
+            throw new Error("An error has occured");
+        }
+    })
+    .then(e => {
+        console.log(e);
+        location.reload();
+    })
+    .catch((e) => console.error(e));    
 }
