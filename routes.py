@@ -27,6 +27,9 @@ app.config['MAIL_USE_SSL'] = True
 # Enable account activation?
 account_activation_required = True
 
+'''
+Get the user history for a particular entry
+'''
 @app.route('/get_history/<item_id>', methods=['GET'])
 def get_history(item_id):
     res = {
@@ -48,11 +51,13 @@ Home / Welcome page
 '''
 @app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
-    dataList = system.sort_by_columns('Bolts', ['type'])
-    columnNames = system.get_column_names('Bolts')
-    unique_types = system.get_unique_column_items('Bolts','type')
+    if loggedin():
+        dataList = system.sort_by_columns('Bolts', ['type'])
+        columnNames = system.get_column_names('Bolts')
+        unique_types = system.get_unique_column_items('Bolts','type')
 
-    return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
+        return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
+    return redirect(url_for('login'))
 
 '''
 login screen
@@ -172,14 +177,14 @@ def activate(email, code):
     return 'Account doesn\'t exist with that email or incorrect activation code!'
 
 # http://localhost:5000/pythinlogin/home - this will be the home page, only accessible for loggedin users
-@app.route('/pythonlogin/home')
-def home():
-    # Check if user is loggedin
-    if loggedin():
-        # User is loggedin show them the home page
-        return render_template('home.html', username=session['username'])
-    # User is not loggedin redirect to login page
-    return redirect(url_for('login'))
+#@app.route('/pythonlogin/home')
+#def home():
+#    # Check if user is loggedin
+#    if loggedin():
+#        # User is loggedin show them the home page
+#        return render_template('home.html', username=session['username'])
+#    # User is not loggedin redirect to login page
+#    return redirect(url_for('login'))
 
 # http://localhost:5000/pythinlogin/profile - this will be the profile page, only accessible for loggedin users
 @app.route('/pythonlogin/profile')
@@ -260,8 +265,8 @@ def loggedin():
         if len(account) > 0:
             # update session variables
             session['loggedin'] = True
-            session['id'] = account(0)
-            session['username'] = account(3)
+            session['id'] = account[0]
+            session['username'] = account[3]
             return True
     # account not logged in return false
     return False
