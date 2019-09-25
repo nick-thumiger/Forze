@@ -58,7 +58,6 @@ def get_history(item_id):
     res = {
         "response" : system.get_user_changes(item_id)
     }
-
     return res
 
 '''
@@ -74,13 +73,12 @@ Home / Welcome page
 '''
 @app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
-    try:
-        if loggedin() or autoLog:
-            dataList = system.sort_by_columns('Bolts', ['type'])
-            columnNames = system.get_column_names('Bolts')
-            unique_types = system.get_unique_column_items('Bolts','type')
-            return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
-        return redirect(url_for('login'))
+    if loggedin() or autoLog:
+        dataList = system.sort_by_columns('Bolts', ['type'])
+        columnNames = system.get_column_names('Bolts')
+        unique_types = system.get_unique_column_items('Bolts','type')
+        return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
+    return redirect(url_for('login'))
 
 '''
 login screen
