@@ -7,7 +7,6 @@ class CustomException(Exception):
         self._msg1 = msg1           #Msg1 is for staff
         self._msg2 = str()          #Msg2 is for user
 
-    @property
     def log(self, errType=""):
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")

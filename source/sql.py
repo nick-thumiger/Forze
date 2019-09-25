@@ -23,6 +23,7 @@ def sqlCursor(connection):
 #Closes the connection to the SQL server
 def sqlDisconnect(cursor, connection):
     if (connection.is_connected()):
+        print("yeet")
         cursor.close()
         connection.close()
     return
@@ -32,6 +33,15 @@ def makeQuery(cursor, query):
     try:
         cursor.execute(query)
         records = cursor.fetchall()
+    except Exception as err:
+        raise builtInException(err)
+    return records
+
+#Make an SQL Query
+def makeQuerySingleItem(cursor, query):
+    try:
+        cursor.execute(query)
+        records = cursor.fetchone()
     except Exception as err:
         raise builtInException(err)
     return records

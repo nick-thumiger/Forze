@@ -77,7 +77,7 @@ class System:
     #gets the database entry given the item ID
     def get_entry_by_id(self, table, itemID):
         query = f"SELECT * FROM `{table}` WHERE `item_id`={itemID}"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuerySingleItem(self._cursor, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
     
@@ -98,6 +98,22 @@ class System:
         query = f"UPDATE `{table}` SET `weight_total` = {newWeight} WHERE `item_id` = {itemID}"
         makeCommit(self._connection, self._cursor, query)
         return
+
+    #Set entry value
+    def set_value(self, table, itemID, column, newValue):
+        query = f"UPDATE `{table}` SET "
+
+        for i in range(len(column)):
+            query += f"`{column[i]}` = \"{newValue[i]}\", "
+
+        query = query[:-2]
+
+        query += f" WHERE `item_id` = {itemID}"
+
+        makeCommit(self._connection, self._cursor, query)
+        return
+
+    ####EDIT ENTRY
     
     #Returns array of conditional formating values
     def get_conditional_formatting(self, ):
@@ -121,11 +137,8 @@ class System:
     #checks account existance. return 1 if exists already.
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
-        
-        
-        result = makeQuery(self._cursor, query)
-        print(result)
-        if len(result) == 0:
+        result = makeQuerySingleItem(self._cursor, query)
+        if result == None:
             return 0
         else:
             return 1

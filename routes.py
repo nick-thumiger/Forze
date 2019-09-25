@@ -12,6 +12,8 @@ import hashlib
 from datetime import datetime, timedelta 
 from exceptions import *
 
+autoLog = True
+
 '''
 Setup email server
 '''
@@ -23,9 +25,30 @@ app.config['MAIL_PASSWORD'] = 'qhkeyhdclbqncpkn'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 # Intialize Mail
-# mail = Mail(app)
+mail = Mail(app)
 # Enable account activation?
 account_activation_required = True
+
+@app.route('/edit_item', methods=['POST'])
+def edit_item():
+    req_data = request.get_json()
+
+    print(req_data['test'])
+    # res = {
+    #     "response" : system.get_entry_by_id(category, item_id)
+    # }
+
+    sys.set_value('Bolts',1,['diameter', 'type'], [7, 'Allan'])
+
+    return 'Success'
+
+@app.route('/get_item/<category>/<item_id>', methods=['GET'])
+def get_item(category, item_id):
+    res = {
+        "response" : system.get_entry_by_id(category, item_id)
+    }
+
+    return res
 
 '''
 Get the user history for a particular entry
@@ -51,13 +74,13 @@ Home / Welcome page
 '''
 @app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
-    if loggedin():
-        dataList = system.sort_by_columns('Bolts', ['type'])
-        columnNames = system.get_column_names('Bolts')
-        unique_types = system.get_unique_column_items('Bolts','type')
-
-        return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
-    return redirect(url_for('login'))
+    try:
+        if loggedin() or autoLog:
+            dataList = system.sort_by_columns('Bolts', ['type'])
+            columnNames = system.get_column_names('Bolts')
+            unique_types = system.get_unique_column_items('Bolts','type')
+            return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
+        return redirect(url_for('login'))
 
 '''
 login screen
@@ -75,7 +98,7 @@ def login():
             # Get the hashed password
             hash = password + app.secret_key
             hash = hashlib.sha1(hash.encode())
-            password = hash.hexdigest();
+            password = hash.hexdigest()
             # Check if account exists using MySQL
             account = system.check_credentials(username, password)
 
@@ -94,7 +117,7 @@ def login():
                 # Create hash to store as cookie
                 hash = account[3] + request.form['password'] + app.secret_key
                 hash = hashlib.sha1(hash.encode())
-                hash = hash.hexdigest();
+                hash = hash.hexdigest()
                 # the cookie expires in 90 days
                 expire_date = datetime.now() + timedelta(days=90)
                 resp = make_response('Success', 200)
@@ -104,6 +127,7 @@ def login():
                 return resp
             else:
                 # Account doesnt exist or username/password incorrect
+                raise systemException("oooooooohhhhhhhhhhhhhhhhhhhhhhh yeah baby")
                 return 'Incorrect username/password!'
     except CustomException as err:
         return err.log()
@@ -163,12 +187,11 @@ def register():
         elif request.method == 'POST':
             # Form is empty... (no POST data)
             return 'Please fill out the form!'
-        # Show registration form with message (if any)
         return render_template('register.html', msg=msg)
     except CustomException as err:
-        err.log()
+        return err.log()
     except Exception as err:
-        systemException(str(err)).log()
+        return systemException(str(err)).log()
         
 
 # http://localhost:5000/pythinlogin/activate/<email>/<code> - this page will activate a users account if the correct activation code and email are provided
@@ -234,7 +257,7 @@ def edit_profile():
                 # Hash the password
                 hash = password + app.secret_key
                 hash = hashlib.sha1(hash.encode())
-                password = hash.hexdigest();
+                password = hash.hexdigest()
                 # update account with the new details
                 makeCommit(system.connection, system.cursor, f"UPDATE `users` SET `username` = '{username}', `pw_hash` = '{password}', `email` = '{email}' WHERE `user_id` = '{session['id']}'")
                 msg = 'Updated!'
