@@ -21,6 +21,13 @@ app.config['MAIL_USE_SSL'] = True
 # Enable account activation?
 account_activation_required = False
 
+@app.route('/get_history/<item_id>', methods=['GET'])
+def get_history(item_id):
+    res = {
+        "response" : system.get_user_changes(item_id)
+    }
+
+    return res
 
 '''
 Dedicated page for "page not found"
@@ -35,16 +42,9 @@ Home / Welcome page
 '''
 @app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
-    if request.args.get('mail', None):
-        result = process_text(request.args['mail'])
-
-
     dataList = system.sort_by_columns('Bolts', ['type'])
     columnNames = system.get_column_names('Bolts')
     unique_types = system.get_unique_column_items('Bolts','type')
-
-    print(dataList)
-    # print(system.)
 
     return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
 
