@@ -2,15 +2,14 @@ import sys
 sys.path.append('source')
 
 from flask import render_template, request, redirect, url_for, abort, Flask, session, make_response
-from server import app, system
-from system import *
-from sql import *
-from flask_mail import Mail, Message
+from source.system import *
+from source.sql import *
 import re
 import uuid
 import hashlib
-from datetime import datetime, timedelta 
-from exceptions import *
+from datetime import datetime, timedelta
+from source.exceptions import *
+from init import bootstrap_system
 
 autoLog = False
 
@@ -18,16 +17,22 @@ autoLog = False
 Setup email server
 '''
 # Enter your email server details below
-app.config['MAIL_SERVER']= 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'forze.inventory@gmail.com'
-app.config['MAIL_PASSWORD'] = 'qhkeyhdclbqncpkn'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
+# app.config['MAIL_SERVER']= 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 465
+# app.config['MAIL_USERNAME'] = 'forze.inventory@gmail.com'
+# app.config['MAIL_PASSWORD'] = 'qhkeyhdclbqncpkn'
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
 # Intialize Mail
-mail = Mail(app)
+# mail = Mail(app)
 # Enable account activation?
-account_activation_required = True
+account_activation_required = False
+
+
+app = Flask(__name__)
+app.secret_key = 'very-secret-123'  # Used to add entropy
+system = bootstrap_system()
+
 
 @app.route('/add_item', methods=['POST'])
 def add_item():
@@ -151,14 +156,12 @@ def login():
             if account != None:
                 #check if account is activated
                 print(account[7])
-                if account[7] != "activated":
-                    return "Please check your emails and activate your account."
-                
+
                 # Create session data, we can access this data in other routes
                 session['loggedin'] = True
                 session['id'] = account[0]
                 session['username'] = account[3]
-           
+
                 # Create hash to store as cookie
                 hash = account[3] + request.form['password'] + app.secret_key
                 hash = hashlib.sha1(hash.encode())
@@ -239,7 +242,7 @@ def register():
         return err.log()
     except Exception as err:
         return systemException(str(err)).log()
-        
+
 
 # http://localhost:5000/pythinlogin/activate/<email>/<code> - this page will activate a users account if the correct activation code and email are provided
 @app.route('/pythonlogin/activate/<string:email>/<string:code>', methods=['GET'])
@@ -297,7 +300,7 @@ def edit_profile():
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
-            
+
             if email == "" or username == "" or password == "":
                 msg = "Please enter all fields, including the new password (it can be the same as the old password)"
             else:
