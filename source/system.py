@@ -1,5 +1,5 @@
-from sql import *
-from exceptions import *
+from source.sql import *
+from source.exceptions import *
 import time
 from datetime import datetime, timedelta 
 
@@ -178,8 +178,8 @@ class System:
     #checks account existance. return 1 if exists already.
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
-        result = makeQuery(self._cursor, query)
-        if len(result) == 0:
+        result = makeQuerySingleItem(self._cursor, query)
+        if result == None:
             return 0
         else:
             return 1
