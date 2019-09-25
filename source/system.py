@@ -56,10 +56,16 @@ class System:
         rawresult = makeQuery(self._cursor, query)
         result = [listAsciiSeperator(x) for x in rawresult]
 
-        for item in result:
-            item.remove(item[0])
+        new_res = []
 
-        return result
+        for item in result:
+            new_res.append({
+                'id': item[0],
+                'data': item[1:]
+            })
+            # item.remove(item[0])
+
+        return new_res
     
     #Gets the list of changes that were made, and by whom
     def get_user_changes(self, itemID):

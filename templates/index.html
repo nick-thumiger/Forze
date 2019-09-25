@@ -14,6 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='modalFunctionality.js') }}"></script>
 
 </head>
 
@@ -56,53 +57,51 @@
         <div class="tableDiv">
             <table class="dataTable" >
                     <tr>
+                        <th  style="width:2.5%"></th>
                         {% for header in columnNames%}
                             <th>{{header}}</th>
                         {% endfor %}
                         <th style="width:4%"></th>
                         <th style="width:2.5%"></th>
+                        <th  style="width:2.5%"></th>
                     </tr>
 
                     {% for row in dataList %}
                         <tr>
-                            {% for data in row %}
+                            <td></td>
+                            {% for data in row['data'] %}
                                 <td>{{data}}</td>
                             {% endfor %}
-                            <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td><a href="#"><img data-toggle="modal" data-target="#editModalCenter{{ row['id'] }}" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                             <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td></td>
                         </tr>   
-                    {% endfor %}
-
-                    <!-- <tr>
-                        <td><a>Add more...</a></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr> -->
-    
+                    {% endfor %}    
                 </table>
         </div>
     </div>
-
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-            </div>
+    <div>
+        {% for item in history_modal_data %}
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </body>
 

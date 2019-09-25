@@ -33,17 +33,18 @@ def page_not_found(e=None):
 '''
 Home / Welcome page
 '''
-@app.route('/<category>/<item_type>')
+@app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
-    # print(sys.sort_by_columns('Bolts', ['type']))
-    # print(sys.get_column_names('Bolts'))
+    if request.args.get('mail', None):
+        result = process_text(request.args['mail'])
+
 
     dataList = system.sort_by_columns('Bolts', ['type'])
     columnNames = system.get_column_names('Bolts')
+    unique_types = system.get_unique_column_items('Bolts','type')
 
-    
-    unique_types= ["Allan", "Cunt", "McFuckSticks"]
-
+    print(dataList)
+    # print(system.)
 
     return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
 
