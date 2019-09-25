@@ -5,7 +5,7 @@ from datetime import datetime
 
 #Establishes a connection to the SQL hosting site
 def sqlConnect():
-    connection = mysql.connector.connect(host='Forze.mysql.pythonanywhere-services.com', database='Forze$forze_inventory', user='Forze', password='NiJaiki2019')
+    connection = mysql.connector.connect(host='Forze.mysql.pythonanywhere-services.com', database='Forze$default', user='Forze', password='NiJaiki2019')
 
     if (connection == None):
         raise mixedException("sqlConnect(): could not connect to server", "Error. A connection to the server could not be established. Please try later, or contact support.")
