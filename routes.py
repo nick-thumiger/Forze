@@ -21,6 +21,15 @@ app.config['MAIL_USE_SSL'] = True
 # Enable account activation?
 account_activation_required = False
 
+@app.route('/get_item/<category>/<item_id>', methods=['GET'])
+def get_item(category, item_id):
+    res = {
+        "response" : system.get_entry_by_id(category, item_id)
+    }
+
+    return res
+
+
 @app.route('/get_history/<item_id>', methods=['GET'])
 def get_history(item_id):
     res = {

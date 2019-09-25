@@ -77,7 +77,7 @@ class System:
     #gets the database entry given the item ID
     def get_entry_by_id(self, table, itemID):
         query = f"SELECT * FROM `{table}` WHERE `item_id`={itemID}"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuerySingleItem(self._cursor, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
     
@@ -98,6 +98,8 @@ class System:
         query = f"UPDATE `{table}` SET `weight_total` = {newWeight} WHERE `item_id` = {itemID}"
         makeCommit(self._connection, self._cursor, query)
         return
+
+    ####EDIT ENTRY
     
     #Returns array of conditional formating values
     def get_conditional_formatting(self, ):

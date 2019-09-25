@@ -58,7 +58,7 @@
             <table class="dataTable" >
                     <tr>
                         <th  style="width:2.5%"></th>
-                        {% for header in columnNames%}
+                        {% for header in columnNames %}
                             <th>{{header}}</th>
                         {% endfor %}
                         <th style="width:4%"></th>
@@ -72,8 +72,8 @@
                             {% for data in row['data'] %}
                                 <td>{{data}}</td>
                             {% endfor %}
-                            <td><a href="#"><img data-toggle="modal" onclick="triggerModal({{ row['id'] }})" data-target="#editModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                            <td><a href="#"><img data-toggle="modal" data-target="#exampleModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                            <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('Bolts', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                             <td></td>
                         </tr>   
                     {% endfor %}    
@@ -81,20 +81,47 @@
         </div>
     </div>
     <div>
-        <div class="modal fade" id="editModalCenter" tabindex="-1" role="dialog" aria-labelledby="editModalCenter" aria-hidden="true">
+        <div class="modal fade" id="historyModalCenter" tabindex="-1" role="dialog" aria-labelledby="historyModalCenter" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">History</h5>
+                    <h5 class="modal-title">Item History</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div id="modal-target" class="modal-body">
+                <div id="history-modal-target" class="modal-body">
                 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editModalCenter" tabindex="-1" role="dialog" aria-labelledby="editModalCenter" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="edit-modal-target" class="modal-body">
+                    {% for i in range(columnNames|length) %}
+                        <div class="input-group">
+                            <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                <span class="input-group-text" style="width:100%">{{columnNames[i]}}</span>
+                            </div>
+                            <input type="text" class="form-control" id="edit_{{i}}">
+                        </div>
+        
+                    {% endfor %}                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Submit</button>
                 </div>
                 </div>
             </div>

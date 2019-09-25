@@ -1,11 +1,9 @@
 let apiURL = 'http://127.0.0.1:5100';
 
-let triggerModal = (id) => {
-    let modal_container = document.getElementById('modal-target');
+let triggerHistoryModal = (id) => {
+    let modal_container = document.getElementById('history-modal-target');
 
     let url = apiURL+`/get_history/${id}`;
-
-    console.log(url);
 
     fetch(url)
 	.then((e) => {
@@ -16,14 +14,10 @@ let triggerModal = (id) => {
 		}
     })
     .then((e) => {
-        console.log(e);
-
-        console.log(e['response'].length);
         if (e['response'].length === 0) {
             _innerHTML = `
                 <p>There have been no changes to this item's history</p>
             `;
-
         } else {
             _innerHTML = `
             <table style="width : 100%">
@@ -48,14 +42,42 @@ let triggerModal = (id) => {
                 </tr>`;
             })
         }
-
-        console.log(_innerHTML);
  
         modal_container.innerHTML = _innerHTML;
     })
 	.catch((e) => console.error(e));
-
 }
 
+let triggerEditModal = (category, id) => {
+    // console.log('yeet');
+    // let modal_container = document.getElementById('edit-modal-target');
 
-// console.log('yeet')
+    let url = apiURL+`/get_item/${category}/${id}`;
+
+    fetch(url)
+	.then((e) => {
+		if (e.status === 200) {
+			return e.json();
+		} else {
+            throw new Error("An error has occured");
+		}
+    })
+    .then(e => {
+        i = 0;
+        e.response.shift();
+
+        e.response.map(k => {
+            let t = document.getElementById(`edit_${i}`);
+            t.setAttribute('value', k);
+            // console.log(i);
+            // console.log(t);
+            // t.innerHTML = `<span>${k}</span>`
+
+            i += 1;
+        })
+        console.log(e);
+
+
+    })
+    .catch((e) => console.error(e));
+}
