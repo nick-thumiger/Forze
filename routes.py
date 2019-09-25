@@ -79,10 +79,17 @@ def page_not_found(e=None):
     return render_template('404.html', errorStr = e), 404
 
 '''
-Home / Welcome page
+Home Page
 '''
-@app.route('/<category>/<item_type>', methods=['GET', 'POST'])
-def home(category, item_type):
+@app.route('/', methods=['GET'])
+def home():
+    return redirect(url_for('view_table', category='Bolts', item_type='Allan'))
+
+'''
+View Table
+'''
+@app.route('/<category>/<item_type>', methods=['GET'])
+def view_table(category, item_type):
     if loggedin() or autoLog:
         dataList = system.sort_by_columns(category, ['type'])
         columnNames = system.get_pretty_column_names(category)
@@ -142,14 +149,16 @@ def login():
                 # Update remember-me in accounts table to the cookie hash
                 query = f"UPDATE `users` SET `rememberme` = '{hash}' WHERE `user_id` = '{account[0]}'"
                 makeCommit(system._connection, system._cursor, query)
+
                 return resp
             else:
                 # Account doesnt exist or username/password incorrect
                 return 'Incorrect username/password!'
     except CustomException as err:
-        return err.log
+        return err.log()
     except Exception as err:
-        return builtInException(err).log
+        return builtInException(err).log()
+
     return render_template('login.html', msg=msg)
 
 '''
