@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
-from exceptions import *
+from source.exceptions import *
 from datetime import datetime
 
 #Establishes a connection to the SQL hosting site
