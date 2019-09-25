@@ -5,6 +5,7 @@ let currentEditID = null;
 let attributesLength = null;
 
 let triggerHistoryModal = (id) => {
+    console.log(id);
     let modal_container = document.getElementById('history-modal-target');
 
     let url = apiURL+`/get_history/${id}`;
@@ -76,6 +77,16 @@ let triggerEditModal = (category, id) => {
         
             i += 1;
         })
+
+
+        let num1 = parseFloat(e.response[e.response.length-1]);
+        let num2 = parseFloat(e.response[e.response.length-2]);
+
+        let quantity = parseInt(num1/num2);
+
+        // console.log(quantity);
+
+        document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
     .catch((e) => console.error(e));
 }
@@ -95,11 +106,22 @@ let submitEdit = () => {
             break;
         }
 
+        let temp = k.textContent;
+        temp = temp.replace(" ","_");
+        temp = temp.toLowerCase();
+
         values.push(t.value);
-        columns.push(k.textContent);
+        columns.push(temp);
 
         i += 1;
     }
+
+    let quantityValue  = values[values.length-1];
+    values.pop();
+    columns.pop();
+
+    let totalValue = values[values.length-2]*quantityValue;
+    values[values.length-1] = totalValue;
 
     const payload = {
         'columns' : columns,

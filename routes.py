@@ -31,7 +31,7 @@ account_activation_required = True
 
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
-    req_data = request.get_json();
+    req_data = request.get_json()
 
     try:
         columns = req_data['columns']
@@ -42,7 +42,11 @@ def edit_item():
         if len(columns) != len(values):
             raise Exception('unequal line lengths')
 
-        system.set_value(table,item_id,columns,values)
+        if 'id' in session.keys():
+            system.set_value(table,item_id,columns,values,session['id'])
+        else:
+            system.set_value(table,item_id,columns,values)
+
 
         return 'Success'
     except CustomException as err:
@@ -81,11 +85,17 @@ Home / Welcome page
 @app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
     if loggedin() or autoLog:
-        dataList = system.sort_by_columns('Bolts', ['type'])
-        columnNames = system.get_column_names('Bolts')
-        unique_types = system.get_unique_column_items('Bolts','type')
+        dataList = system.sort_by_columns(category, ['type'])
+        columnNames = system.get_pretty_column_names(category)
+        unique_types = system.get_unique_column_items(category,'type')
+        columnNames.append("Quantity")
+
+        for item in dataList:
+            quantity = round(float(item['data'][-1])/float(item['data'][-2]))
+            item['data'].append(quantity)
 
         return render_template('index.html', unique_types=unique_types, dataList=dataList, columnNames=columnNames)
+ 
     return redirect(url_for('login'))
 
 '''
