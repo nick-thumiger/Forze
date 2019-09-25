@@ -1,5 +1,9 @@
 let apiURL = 'http://127.0.0.1:5100';
 
+let currentEditCategory = null;
+let currentEditID = null;
+let attributesLength = null;
+
 let triggerHistoryModal = (id) => {
     let modal_container = document.getElementById('history-modal-target');
 
@@ -49,8 +53,8 @@ let triggerHistoryModal = (id) => {
 }
 
 let triggerEditModal = (category, id) => {
-    // console.log('yeet');
-    // let modal_container = document.getElementById('edit-modal-target');
+    currentEditCategory = category;
+    currentEditID = id;
 
     let url = apiURL+`/get_item/${category}/${id}`;
 
@@ -69,15 +73,33 @@ let triggerEditModal = (category, id) => {
         e.response.map(k => {
             let t = document.getElementById(`edit_${i}`);
             t.setAttribute('value', k);
-            // console.log(i);
-            // console.log(t);
-            // t.innerHTML = `<span>${k}</span>`
-
+        
             i += 1;
         })
-        console.log(e);
-
-
     })
     .catch((e) => console.error(e));
+}
+
+let submitEdit = () => {
+    let loop = true;
+    let i = 0;
+
+    while (loop) {
+        let t  = document.getElementById(`edit_${i}`);
+        let k  = document.getElementById(`edit_target_${i}`);
+
+        if (t === null) {
+            break;
+        }
+
+        
+
+        console.log(t.value);
+        console.log(k.textContent);
+
+        i += 1;
+    }
+    
+    console.log(currentEditCategory);
+    console.log(currentEditID);
 }
