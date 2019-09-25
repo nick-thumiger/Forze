@@ -108,13 +108,16 @@ class System:
 
     #checks credentials
     def check_credentials(self, username, password):
-        query = f"SELECT * FROM `users` WHERE `username` = '{username}' AND `pw_hash` = {password}"
+        query = f"SELECT * FROM `users` WHERE `username` = '{username}' AND `pw_hash` = '{password}'"
         try:
             self._cursor.execute(query)
             records = self._cursor.fetchone()
+            if records != None:
+                result = [asciiSeperator(x) for x in records]
+            else:
+                result = None
         except Exception as err:
             raise builtInException(err)
-        result = [asciiSeperator(x) for x in records]
         return result
 
     #checks account existance. return 1 if exists already.
