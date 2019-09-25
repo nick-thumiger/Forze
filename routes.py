@@ -12,6 +12,8 @@ import hashlib
 from datetime import datetime, timedelta 
 from exceptions import *
 
+autoLog = True
+
 '''
 Setup email server
 '''
@@ -23,9 +25,22 @@ app.config['MAIL_PASSWORD'] = 'qhkeyhdclbqncpkn'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 # Intialize Mail
-# mail = Mail(app)
+mail = Mail(app)
 # Enable account activation?
 account_activation_required = True
+
+@app.route('/edit_item', methods=['POST'])
+def edit_item():
+    req_data = request.get_json()
+
+    print(req_data['test'])
+    # res = {
+    #     "response" : system.get_entry_by_id(category, item_id)
+    # }
+
+    sys.set_value('Bolts',1,['diameter', 'type'], [7, 'Allan'])
+
+    return 'Success'
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
@@ -59,7 +74,7 @@ Home / Welcome page
 '''
 @app.route('/<category>/<item_type>', methods=['GET', 'POST'])
 def home(category, item_type):
-    if loggedin():
+    if loggedin() or autoLog:
         dataList = system.sort_by_columns('Bolts', ['type'])
         columnNames = system.get_column_names('Bolts')
         unique_types = system.get_unique_column_items('Bolts','type')
@@ -264,6 +279,9 @@ Loggedin
 '''
 # Check if logged in function, update session if cookie for "remember me" exists
 def loggedin():
+
+    return True
+
     if 'loggedin' in session:
         return True
     elif 'rememberme' in request.cookies:

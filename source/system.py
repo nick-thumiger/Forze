@@ -99,6 +99,20 @@ class System:
         makeCommit(self._connection, self._cursor, query)
         return
 
+    #Set entry value
+    def set_value(self, table, itemID, column, newValue):
+        query = f"UPDATE `{table}` SET "
+
+        for i in range(len(column)):
+            query += f"`{column[i]}` = \"{newValue[i]}\", "
+
+        query = query[:-2]
+
+        query += f" WHERE `item_id` = {itemID}"
+
+        makeCommit(self._connection, self._cursor, query)
+        return
+
     ####EDIT ENTRY
     
     #Returns array of conditional formating values

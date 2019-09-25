@@ -92,7 +92,31 @@ let submitEdit = () => {
             break;
         }
 
-        
+        const payload = {
+            'test' : t.value,
+        }
+    
+        const settings = {
+            'method' : "POST",
+            'headers' : { "Content-Type" : "application/json" },
+            'body' : JSON.stringify(payload)
+        }    
+
+        let url = apiURL+`/edit_item`;
+
+        fetch(url, settings)
+        .then((e) => {
+            if (e.status === 200) {
+                return e.text();
+            } else {
+                throw new Error("An error has occured");
+            }
+        })
+        .then(e => {
+            console.log(e);
+        })
+        .catch((e) => console.error(e));
+    
 
         console.log(t.value);
         console.log(k.textContent);
