@@ -191,8 +191,8 @@ class System:
         query = query[:-2]
 
         query += f" WHERE `item_id` = {itemID}"
-
-        makeCommit(self._connection, self._cursor, query)
+        print(query)
+        # makeCommit(self._connection, self._cursor, query)
         return
 
     ####EDIT ENTRY

@@ -61,6 +61,37 @@ def add_item():
 
     return 'Success'
 
+@app.route('/update_quantity', methods=['POST'])
+def update_quantity():
+    req_data = request.get_json()
+
+    try:
+        table = req_data['table']
+        item_id = req_data['item_id']
+        diff_quantity = req_data['quantity']
+        user_id = req_data['user_id']
+
+        temp = system.get_entry_by_id(table, item_id)
+        total_weight = float(temp[-1])
+        pp_weight = float(temp[-2])
+        curr_quantity = int(total_weight/pp_weight)
+
+        new_quantity = curr_quantity+diff_quantity
+        new_weight = new_quantity*pp_weight
+
+        if user_id == None:
+            system.set_value(table,item_id,['weight_total'],new_weight,user_id])
+        elif 'id' in session.keys():
+            system.set_value(table,item_id,['weight_total'],new_weight,session['id']])
+        else:
+            system.set_value(table,item_id,columns,values)
+
+        return 'Success'
+
+    except Exception as err:
+        print(str(err))
+        return ("Fail", "400 Error")
+
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
     req_data = request.get_json()
@@ -94,7 +125,7 @@ def get_item(category, item_id):
         "response" : system.get_entry_by_id(category, item_id)
     }
 
-    return json.dumps(res)
+    return json.dumps(res)    
 
 @app.route('/get_columns/<category>', methods=['GET'])
 def get_columns(category):
