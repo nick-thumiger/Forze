@@ -20,6 +20,9 @@ class System:
     def cursor(self):
         return self._cursor
 
+    def disconnectDB(self):
+        sqlDisconnect(self.cursor, self.connection)
+
     #Gets all of the column names and prettifies them...
     #RETURNS: list of the column names
     def get_pretty_column_names(self, table):

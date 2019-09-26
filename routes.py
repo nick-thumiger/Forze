@@ -159,6 +159,7 @@ Home Page
 '''
 @app.route('/', methods=['GET'])
 def home():
+    system.disconnectDB()
     return redirect(url_for('view_table', category='Bolts', item_type='Allan'))
 
 '''
