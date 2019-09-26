@@ -140,22 +140,25 @@ let submitEdit = () => {
         console.log(temp);
         console.log(t.value);
 
-        let url = apiURL+'/check_valid';
+        values.push(t.value);
+        columns.push(temp);    
 
-        fetch(url)
-        .then((e) => {
-            if (e.status === 200) {
-                return e.text();
-            } else {
-                throw new Error("An error has occured");
-            }
-        })
-        .then(e => {
-            console.log(e);
-            values.push(t.value);
-            columns.push(temp);
-        })
-        .catch((e) => console.error(e));
+        // let url = apiURL+'/check_valid';
+
+        // fetch(url)
+        // .then((e) => {
+        //     if (e.status === 200) {
+        //         return e.text();
+        //     } else {
+        //         throw new Error("An error has occured");
+        //     }
+        // })
+        // .then(e => {
+        //     console.log(e);
+        //     values.push(t.value);
+        //     columns.push(temp);
+        // })
+        // .catch((e) => console.error(e));
 
         i += 1;
     }

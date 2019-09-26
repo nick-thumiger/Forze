@@ -38,35 +38,27 @@ system = bootstrap_system()
 def delete_item():
     req_data = request.get_json()
 
-    try:
-        table = req_data['table']
-        item_id = req_data['item_id']
+    table = req_data['table']
+    item_id = req_data['item_id']
 
-        system.delete_entry(table, item_id)
+    system.delete_entry(table, item_id)
 
-        return 'Success'
-    except CustomException as err:
-        return err.log
+    return 'Success'
 
 @app.route('/add_item', methods=['POST'])
 def add_item():
     req_data = request.get_json()
 
-    try:
-        columns = req_data['columns']
-        values = req_data['values']
-        table = req_data['table']
+    columns = req_data['columns']
+    values = req_data['values']
+    table = req_data['table']
 
-        if len(columns) != len(values):
-            raise Exception('unequal line lengths')
+    if len(columns) != len(values):
+        raise Exception('unequal line lengths')
 
-        # add_entry(self, table, typ, diameter, strength, size, w_pp, w_total, storage):
+    system.add_entry(table, columns,values)
 
-        system.add_entry(table, columns,values)
-
-        return 'Success'
-    except CustomException as err:
-        return err.log()
+    return 'Success'
 
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
@@ -78,6 +70,9 @@ def edit_item():
         table = req_data['table']
         item_id = req_data['item_id']
 
+        print(values)
+        print(columns)
+
         if len(columns) != len(values):
             raise Exception('unequal line lengths')
 
@@ -88,8 +83,9 @@ def edit_item():
 
         return 'Success'
 
-    except CustomException as err:
-        return err.log()
+    except Exception as err:
+        print(str(err))
+        return ("Fail", "400 Error")
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
@@ -97,7 +93,7 @@ def get_item(category, item_id):
         "response" : system.get_entry_by_id(category, item_id)
     }
 
-    return res
+    return (res, "200 Ok")
 
 '''
 Get the user history for a particular entry
@@ -107,7 +103,7 @@ def get_history(item_id):
     res = {
         "response" : system.get_user_changes(item_id)
     }
-    return res
+    return (res, "200 Ok")
 
 '''
 Dedicated page for "page not found"
