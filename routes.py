@@ -68,7 +68,7 @@ def update_quantity():
     try:
         table = req_data['table']
         item_id = req_data['item_id']
-        diff_quantity = req_data['quantity']
+        diff_quantity = int(req_data['quantity'])
         user_id = req_data['user_id']
 
         temp = system.get_entry_by_id(table, item_id)
@@ -76,8 +76,8 @@ def update_quantity():
         pp_weight = float(temp[-2])
         curr_quantity = int(total_weight/pp_weight)
 
-        new_quantity = curr_quantity+diff_quantity
-        new_weight = new_quantity*pp_weight
+        new_quantity = int(curr_quantity+diff_quantity)
+        new_weight = float(new_quantity*pp_weight)
 
         if user_id == None:
             system.set_value(table,item_id,['weight_total'],new_weight,user_id)
