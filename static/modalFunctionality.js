@@ -1,5 +1,5 @@
-let apiURL = 'http://127.0.0.1:5100';
-// let apiURL = 'http://forze.pythonanywhere.com';
+// let apiURL = 'http://127.0.0.1:5100';
+let apiURL = 'http://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditID = null;
