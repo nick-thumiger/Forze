@@ -90,12 +90,16 @@ def edit_item():
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
-    print(category)
-    print(item_id)
-
-    print("left")
     res = {
         "response" : system.get_entry_by_id(category, item_id)
+    }
+
+    return json.dumps(res)
+
+@app.route('/get_columns/<category>', methods=['GET'])
+def get_columns(category):
+    res = {
+        "response" : system.get_pretty_column_names(category)
     }
 
     return json.dumps(res)
