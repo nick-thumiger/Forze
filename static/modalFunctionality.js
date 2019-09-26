@@ -83,12 +83,10 @@ let triggerEditModal = (category, id) => {
             i += 1;
         })
 
-        // let num1 = parseFloat(e.response[e.response.length-1]);
-        // let num2 = parseFloat(e.response[e.response.length-2]);
+        let num1 = parseFloat(e.response[e.response.length-1]);
+        let num2 = parseFloat(e.response[e.response.length-2]);
 
-        // let quantity = parseInt(num1/num2);
-
-        let quantity = "nicks a bitch"
+        let quantity = parseInt(num1/num2);
 
         document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
@@ -230,7 +228,7 @@ let submitAdd = () => {
 
         temp = temp.replace(re,"_");
         temp = temp.toLowerCase();
-        console.log(temp)
+        // console.log(temp)
 
         values.push(t.value);
         columns.push(temp);
