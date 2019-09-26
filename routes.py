@@ -99,11 +99,6 @@ def get_item(category, item_id):
     }
 
     return json.dumps(res)
-<<<<<<< HEAD
-#    return "Success"
-#    return (res, "200 Ok")
-=======
->>>>>>> 75a089681742c83abab49fb259a2553522bcb83d
 
 '''
 Get the user history for a particular entry
