@@ -80,7 +80,7 @@ def update_quantity():
         new_weight = new_quantity*pp_weight
 
         if user_id == None:
-            system.set_value(table,item_id,['weight_total'],new_weight,user_id])
+            system.set_value(table,item_id,['weight_total'],new_weight,user_id)
         elif 'id' in session.keys():
             system.set_value(table,item_id,['weight_total'],new_weight,session['id']])
         else:
