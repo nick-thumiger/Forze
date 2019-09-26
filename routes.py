@@ -98,11 +98,7 @@ def get_item(category, item_id):
         "response" : system.get_entry_by_id(category, item_id)
     }
 
-<<<<<<< Updated upstream
     return (res, "200 Ok")
-=======
-    return json.dump(res)
->>>>>>> Stashed changes
 
 '''
 Get the user history for a particular entry
