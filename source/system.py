@@ -184,14 +184,17 @@ class System:
 
     #Set entry value
     def set_value(self, table, itemID, column, newValue, userID=1):
+        print('184: another left____')
         self.add_user_entry(table, userID, itemID, newValue)
-
+        print('186: right ___')
         query = f"UPDATE `{table}` SET "
 
         for i in range(len(column)):
             query += f"`{column[i]}` = \"{newValue[i]}\", "
 
+        print('192: left')
         query = query[:-2]
+        print('194: right')
 
         query += f" WHERE `item_id` = {itemID}"
         print(query)

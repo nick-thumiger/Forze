@@ -79,12 +79,14 @@ def update_quantity():
         new_quantity = int(curr_quantity+diff_quantity)
         new_weight = float(new_quantity*pp_weight)
 
+        print('left_____')
+
         if user_id == None:
-            system.set_value(table,item_id,['weight_total'],[new_weight],user_id)
+            system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight],user_id)
         elif 'id' in session.keys():
-            system.set_value(table,item_id,['weight_total'],[new_weight],session['id'])
+            system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight],session['id'])
         else:
-            system.set_value(table,item_id,['weight_total'],[new_weight])
+            system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight])
 
         return 'Success'
 
@@ -125,7 +127,7 @@ def get_item(category, item_id):
         "response" : system.get_entry_by_id(category, item_id)
     }
 
-    return json.dumps(res)    
+    return json.dumps(res)
 
 @app.route('/get_columns/<category>', methods=['GET'])
 def get_columns(category):
