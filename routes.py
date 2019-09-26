@@ -10,6 +10,7 @@ import hashlib
 from datetime import datetime, timedelta
 from source.exceptions import *
 from init import bootstrap_system
+import json
 
 autoLog = False
 
@@ -89,11 +90,19 @@ def edit_item():
 
 @app.route('/get_item/<category>/<item_id>', methods=['GET'])
 def get_item(category, item_id):
+    print(category)
+    print(item_id)
+
+    print("left")
     res = {
         "response" : system.get_entry_by_id(category, item_id)
     }
 
+<<<<<<< Updated upstream
     return (res, "200 Ok")
+=======
+    return json.dump(res)
+>>>>>>> Stashed changes
 
 '''
 Get the user history for a particular entry
@@ -130,7 +139,7 @@ def view_table(category, item_type):
 
         if (len(dataList) == 0):
             return redirect(url_for('home'))
-    
+
         # dataList = system.sort_by_columns(category)
         columnNames = system.get_pretty_column_names(category)
         unique_types = system.get_unique_column_items(category,'type')
@@ -143,7 +152,7 @@ def view_table(category, item_type):
         if 'username' in session.keys():
             return render_template('index.html', category=category, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=session['username'])
         return render_template('index.html', category=category, unique_types=unique_types, dataList=dataList, columnNames=columnNames)
- 
+
     return redirect(url_for('login'))
 
 '''

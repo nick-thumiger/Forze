@@ -1,7 +1,7 @@
 from source.sql import *
 from source.exceptions import *
 import time
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 
 
 class System:
@@ -11,17 +11,17 @@ class System:
 
     def __dest__(self):
         sqlDisconnect(self._cursor, self._connection)
-        
+
     @property
     def connection(self):
         return self._connection
 
     @property
     def cursor(self):
-        return self._cursor 
+        return self._cursor
 
     #Gets all of the column names and prettifies them...
-    #RETURNS: list of the column names 
+    #RETURNS: list of the column names
     def get_pretty_column_names(self, table):
         raw_columns = self.get_column_names(table)
 
@@ -40,7 +40,7 @@ class System:
 
 
     #Gets all of the column names
-    #RETURNS: list of the column names 
+    #RETURNS: list of the column names
     def get_column_names(self, table):
         query = f"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{table}'"
         rawresult = makeQuery(self._cursor, query)
@@ -57,20 +57,20 @@ class System:
         rawresult = makeQuery(self._cursor, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
-    
+
     #Gets all of the unique entries in a given column
     def get_unique_column_items(self, table, columnName):
         query = f"SELECT DISTINCT `{columnName}` FROM `{table}`"
         rawresult = makeQuery(self._cursor, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
-    
+
     #Sorts the dataset of a given table by the columns given
     def sort_by_columns(self, table, order):
         columnStr = ""
         for element in order:
             columnStr = columnStr + element + ", "
-            
+
         temp = columnStr[:-2]
 
         query = f"SELECT * FROM {table} ORDER BY {temp}"
@@ -86,12 +86,12 @@ class System:
             })
 
         return new_res
-    
+
     def get_category_table(self, category, item_type, orderBy):
         columnStr = ""
         for element in orderBy:
             columnStr = columnStr + element + ", "
-            
+
         temp = columnStr[:-2]
 
         query = f"SELECT * FROM {category} WHERE `type` = '{item_type}' ORDER BY {temp}"
@@ -121,7 +121,7 @@ class System:
         rawresult = makeQuerySingleItem(self._cursor, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
-    
+
     #Add an entry
     def add_entry(self, table, column, newValue):
         query = f"INSERT INTO `{table}` ("
@@ -147,7 +147,7 @@ class System:
         query = f"DELETE FROM `{table}` WHERE `item_id` = {itemID}"
         makeCommit(self._connection, self._cursor, query)
         return
-    
+
     # #Set new entity total weight
     # def set_quantity(self, table, itemID, newWeight):
     #     query = f"UPDATE `{table}` SET `weight_total` = {newWeight} WHERE `item_id` = {itemID}"
@@ -196,7 +196,7 @@ class System:
         return
 
     ####EDIT ENTRY
-    
+
     #Returns array of conditional formating values
     def get_conditional_formatting(self, ):
 

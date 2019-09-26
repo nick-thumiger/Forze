@@ -36,7 +36,7 @@ let triggerHistoryModal = (id) => {
                     <th style="width : 2%"></th>
                 </tr>
                 `;
-    
+
             e['response'].map(e => {
                 _innerHTML += `<tr>
                 <td></td>`;
@@ -48,7 +48,7 @@ let triggerHistoryModal = (id) => {
                 </tr>`;
             })
         }
- 
+
         modal_container.innerHTML = _innerHTML;
     })
 	.catch((e) => console.error(e));
@@ -63,26 +63,32 @@ let triggerEditModal = (category, id) => {
     fetch(url)
 	.then((e) => {
 		if (e.status === 200) {
-			return e.json();
+			return e.text();
 		} else {
             throw new Error("An error has occured");
 		}
     })
     .then(e => {
+        return JSON.parse(e);
+    })
+    .then(e => {
+        // console.log('yeet');
         i = 0;
         e.response.shift();
 
         e.response.map(k => {
             let t = document.getElementById(`edit_${i}`);
             t.setAttribute('value', k);
-        
+
             i += 1;
         })
 
-        let num1 = parseFloat(e.response[e.response.length-1]);
-        let num2 = parseFloat(e.response[e.response.length-2]);
+        // let num1 = parseFloat(e.response[e.response.length-1]);
+        // let num2 = parseFloat(e.response[e.response.length-2]);
 
-        let quantity = parseInt(num1/num2);
+        // let quantity = parseInt(num1/num2);
+
+        let quantity = "nicks a bitch"
 
         document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
@@ -99,7 +105,7 @@ let submitDelete = () => {
         'method' : "POST",
         'headers' : { "Content-Type" : "application/json" },
         'body' : JSON.stringify(payload)
-    }    
+    }
 
     let url = apiURL+`/delete_item`;
 
@@ -115,7 +121,7 @@ let submitDelete = () => {
         console.log(e);
         location.reload();
     })
-    .catch((e) => console.error(e));    
+    .catch((e) => console.error(e));
 }
 
 let submitEdit = () => {
@@ -181,7 +187,7 @@ let submitEdit = () => {
         'method' : "POST",
         'headers' : { "Content-Type" : "application/json" },
         'body' : JSON.stringify(payload)
-    }    
+    }
 
     let url = apiURL+`/edit_item`;
 
@@ -197,7 +203,7 @@ let submitEdit = () => {
         console.log(e);
         location.reload();
     })
-    .catch((e) => console.error(e));    
+    .catch((e) => console.error(e));
 }
 
 let triggerAddModal = (category) => {
@@ -246,7 +252,7 @@ let submitAdd = () => {
         'method' : "POST",
         'headers' : { "Content-Type" : "application/json" },
         'body' : JSON.stringify(payload)
-    }    
+    }
 
     let url = apiURL+`/add_item`;
 
@@ -262,5 +268,5 @@ let submitAdd = () => {
         console.log(e);
         location.reload();
     })
-    .catch((e) => console.error(e));    
+    .catch((e) => console.error(e));
 }
