@@ -1,7 +1,7 @@
 import sys
 sys.path.append('source')
 
-from flask import render_template, request, redirect, url_for, abort, Flask, session, make_response
+from flask import render_template, request, redirect, url_for, abort, Flask, session, make_response, Response
 from source.system import *
 from source.sql import *
 import re
@@ -34,6 +34,18 @@ app = Flask(__name__)
 app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
+@app.route('/authenticate', methods=['POST'])
+def delete_item():
+    req_data = request.get_json()
+
+    username = req_data['username']
+    password = req_data['password']
+
+    userID = system.check_auth(username, password)
+    if userID != None:
+        return Response("Invalid username/password", status=400)
+
+    return Response(f"\{'id':'{userID}'\}", status=200, mimetype='application/json')
 
 @app.route('/delete_item', methods=['POST'])
 def delete_item():
@@ -78,8 +90,6 @@ def update_quantity():
 
         new_quantity = int(curr_quantity+diff_quantity)
         new_weight = float(new_quantity*pp_weight)
-
-        print('left_____')
 
         if user_id == None:
             system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight],user_id)

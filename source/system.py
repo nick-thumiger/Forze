@@ -68,6 +68,11 @@ class System:
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
+    # userID = system.check_auth(username, password)
+
+    def check_auth(self, username, password):
+        return 1
+
     #Sorts the dataset of a given table by the columns given
     def sort_by_columns(self, table, order):
         columnStr = ""
