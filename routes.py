@@ -99,8 +99,11 @@ def get_item(category, item_id):
     }
 
     return json.dumps(res)
+<<<<<<< HEAD
 #    return "Success"
 #    return (res, "200 Ok")
+=======
+>>>>>>> 75a089681742c83abab49fb259a2553522bcb83d
 
 '''
 Get the user history for a particular entry
@@ -110,7 +113,8 @@ def get_history(item_id):
     res = {
         "response" : system.get_user_changes(item_id)
     }
-    return (res, "200 Ok")
+
+    return "200 Ok"
 
 '''
 Dedicated page for "page not found"
