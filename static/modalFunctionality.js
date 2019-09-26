@@ -226,8 +226,11 @@ let submitAdd = () => {
         }
 
         let temp = k.textContent;
-        temp = temp.replace(" ","_");
+        var re = new RegExp(" ", 'g');
+
+        temp = temp.replace(re,"_");
         temp = temp.toLowerCase();
+        console.log(temp)
 
         values.push(t.value);
         columns.push(temp);
