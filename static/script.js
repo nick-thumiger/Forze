@@ -9,7 +9,7 @@ $(document).ready(function() {
                 data: form.serialize(),
                 success: function(data) {
                     if (data == "Success") {
-                        window.location.href = "home";
+                        window.location.href = "/";
                     } else {
                         $(".msg").text(data);
                     }
