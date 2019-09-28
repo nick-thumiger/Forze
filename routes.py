@@ -41,7 +41,7 @@ def authenticate():
     username = req_data['username']
     password = req_data['password']
 
-    userToken = system.check_auth(username, password)
+    userToken = system.check_auth(username, password, app.secret_key)
     if userToken == None:
         return Response("Invalid username/password", status=400)
 
