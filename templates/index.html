@@ -14,45 +14,67 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='modalFunctionality.js') }}"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; ">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; border-bottom: 1px solid #ddd;">
         <div>
             <a class="navbar-brand" href={{ url_for('home') }} >
                 <img src="../static/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
             </a>
         </div>
+        
         <div style=" display : flex; flex-direction : row;">
+            {% if username != None %}
+            <p style="margin-top: 5%">Logged in as {{username}}</p>
+            {% endif %}
+            <button class="btn"><i class="fa fa-search fa-2x"></i></button>
+            <button class="btn"><i class="fa fa-gear fa-2x"></i></button>
+            <button class="btn"><i class="fa fa-user fa-2x"></i></button>
+            <a href="forze.pythonanywhere.com/logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
+            
             <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-grow: 0">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="../static/hamburger_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Bolts</a>
-                            <a class="dropdown-item" href="#">Screws</a>
-                            <a class="dropdown-item" href="#">Calculators</a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            {% if category_list != None %}
+                            {% for cat in category_list %}
+                            <a class="dropdown-item" href="/{{cat}}/*">{{cat}}</a>
+                            {% endfor %}
+                            {% endif %}
+                        
                         </div>
                     </li>
                 </ul>
             </div>
+<<<<<<< HEAD
 
             <p style="margin-top: 5%">Logged in as {{username}}</p>
 
+=======
+            
+>>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
         </div>
     </nav>
 
     <div id="root">
         <div class="navigationDiv">
             <ul class="sideNav">
-                {% for type in unique_types %}
-                    <li class="navItem"><a href={{ url_for('view_table', category=category, item_type=type) }} class="navItemText">{{type}}</a></li>
-                {% endfor %}
+                {% if unique_types != None %}
+                    {% for type in unique_types %}
+                        <li class="navItem"><a href={{ url_for('view_table', category=category, item_type=type) }} class="navItemText">{{type}}</a></li>
+                    {% endfor %}
+                {% else %}
+                <li class="navItem" align="center"><p style="text-align:center;">Select a type from the menu on the right to get started!</p></li>
+                {% endif %}
             </ul>
         </div>
+<<<<<<< HEAD
         <div class="tableDiv" style="overflow-y: scroll">
             <table class="dataTable" >
                     <thead>
@@ -88,7 +110,75 @@
                             <td></td>
                         </tr>
                     </tbody>
+=======
+        <div class="tableDiv">
+            {% if msg != "" %}
+                <b><font color="red">{{msg}}</font></b>
+            {% endif %}
+            
+            {% if dataList != None %}
+            <table class="dataTable" >
+                    <tr>
+                        <th  style="width:2.5%"></th>
+                        {% if columnNames != None %}
+                            {% for header in columnNames %}
+                                <th>{{header}}</th>
+                            {% endfor %}
+                        {% endif %}
+                        <th style="width:4%"></th>
+                        <th style="width:2.5%"></th>
+                        <th  style="width:2.5%"></th>
+                    </tr>
+                    
+                    
+                        {% for row in dataList %}
+                            <tr>
+                                <td></td>
+                                {% for data in row['data'] %}
+                                    <td>{{data}}</td>
+                                {% endfor %}
+                                <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                                <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                                <td></td>
+                            </tr>   
+                        {% endfor %}
+                    
+                    
+                    {% if category != None %}
+                    <tr>
+                        <td></td>
+                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
+                        {% if dataList != None %}    
+                            {% for data in dataList[0]['data'] %}
+                                <td></td>
+                            {% endfor %}
+                        {% endif %}
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% endif %}
+
+                    
+>>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
                 </table>
+            {% endif %}
+
+            {% if dataList == None and item_type != "*" and item_type != None%}
+            <table class="dataTable" >
+                <tr>
+                    <td></td>
+                    <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
+                    {% if dataList != None %}
+                    {% for data in dataList[0]['data'] %}
+                    <td></td>
+                    {% endfor %}
+                    {% endif %}
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            {% endif %}
+
         </div>
     </div>
     <div>
@@ -120,15 +210,24 @@
                     </button>
                 </div>
                 <div id="edit-modal-target" class="modal-body">
-                    {% for i in range(columnNames|length) %}
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
-                                <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                    {% if columnNames != None %}
+                        {% for i in range(columnNames|length) %}
+                            <div class="input-group">
+                                <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                    <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                                </div>
+                                <input type="text" class="form-control" id="edit_{{i}}">
                             </div>
+<<<<<<< HEAD
                             <input type="text" class="form-control" id="edit_{{i}}">
                         </div>
 
                     {% endfor %}
+=======
+        
+                        {% endfor %}
+                    {% endif %}
+>>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -148,15 +247,24 @@
                     </button>
                 </div>
                 <div id="add-modal-target" class="modal-body">
-                    {% for i in range(columnNames|length) %}
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
-                                <span class="input-group-text" id="add_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                    {% if columnNames != None %}
+                        {% for i in range(columnNames|length) %}
+                            <div class="input-group">
+                                <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                    <span class="input-group-text" id="add_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                                </div>
+                                <input type="text" class="form-control" id="add_{{i}}">
                             </div>
+<<<<<<< HEAD
                             <input type="text" class="form-control" id="add_{{i}}">
                         </div>
 
                     {% endfor %}
+=======
+        
+                        {% endfor %}
+                    {% endif %}
+>>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

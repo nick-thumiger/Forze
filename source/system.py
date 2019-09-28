@@ -2,6 +2,9 @@ from source.sql import *
 from source.exceptions import *
 import time
 from datetime import datetime, timedelta
+
+# dbname = "Forze$default"
+dbname = "forze_inventory"
 import hashlib
 
 class System:
@@ -16,9 +19,17 @@ class System:
     def connection(self):
         return self._connection
 
+    @connection.setter
+    def connection(self, val):
+        self._connection = val
+
     @property
     def cursor(self):
         return self._cursor
+
+    @cursor.setter
+    def cursor(self, val):
+        self._cursor = val
 
     def disconnectDB(self):
         sqlDisconnect(self.cursor, self.connection)
@@ -46,7 +57,7 @@ class System:
     #RETURNS: list of the column names
     def get_column_names(self, table):
         query = f"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{table}'"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
 
         result.remove('item_id')
@@ -57,14 +68,14 @@ class System:
     #RETURNS: List of entries in the given column
     def get_column_items(self, table, columnName):
         query = f"SELECT `{columnName}` FROM `{table}`"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
     #Gets all of the unique entries in a given column
     def get_unique_column_items(self, table, columnName):
         query = f"SELECT DISTINCT `{columnName}` FROM `{table}`"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
@@ -95,7 +106,7 @@ class System:
         temp = columnStr[:-2]
 
         query = f"SELECT * FROM {table} ORDER BY {temp}"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuery(self, query)
         result = [listAsciiSeperator(x) for x in rawresult]
 
         new_res = []
@@ -116,7 +127,7 @@ class System:
         temp = columnStr[:-2]
 
         query = f"SELECT * FROM {category} WHERE `type` = '{item_type}' ORDER BY {temp}"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuery(self, query)
         result = [listAsciiSeperator(x) for x in rawresult]
 
         new_res = []
@@ -132,14 +143,14 @@ class System:
     #Gets the list of changes that were made, and by whom
     def get_user_changes(self, itemID):
         query = f"SELECT `first_name`, `last_name`, `quantity`, `time` FROM `users` JOIN `user_changes` ON `users`.`user_id` = `user_changes`.`user_id` WHERE `user_changes`.`item_id` = {itemID}"
-        rawresult = makeQuery(self._cursor, query)
+        rawresult = makeQuery(self, query)
         result = [listAsciiSeperator(x) for x in rawresult]
         return result
 
     #gets the database entry given the item ID
     def get_entry_by_id(self, table, itemID):
         query = f"SELECT * FROM `{table}` WHERE `item_id`={itemID}"
-        rawresult = makeQuerySingleItem(self._cursor, query)
+        rawresult = makeQuerySingleItem(self, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
@@ -161,13 +172,23 @@ class System:
 
         query += ");"
 
-        makeCommit(self._connection, self._cursor, query)
+        makeCommit(self, query)
 
     #Delete an entry
     def delete_entry(self, table, itemID):
         query = f"DELETE FROM `{table}` WHERE `item_id` = {itemID}"
-        makeCommit(self._connection, self._cursor, query)
+        makeCommit(self, query)
         return
+
+    #Get a list of categories
+    def get_category_list(self):
+        query = f"SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema` ='{dbname}'"
+        rawresult = makeQuery(self, query)
+        result = [asciiSeperator(x) for x in rawresult]
+        result.remove('user_changes')
+        result.remove('users')
+        result.remove('types')
+        return result
 
     # #Set new entity total weight
     # def set_quantity(self, table, itemID, newWeight):
@@ -192,11 +213,11 @@ class System:
 
         query = f"INSERT INTO `user_changes` (`user_id`, `item_id`, `quantity`, `time`) VALUES ('{userID}', '{itemID}', '{quantity_change}', '{date}');"
         # print(query)
-        makeCommit(self._connection, self._cursor, query)
+        makeCommit(self, query)
 
     def get_data_type_of_column(self, table, column):
         query = f"SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{table}' AND COLUMN_NAME = '{column}'"
-        rawresult = makeQuerySingleItem(self._cursor, query)
+        rawresult = makeQuerySingleItem(self, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
@@ -211,8 +232,7 @@ class System:
         query = query[:-2]
 
         query += f" WHERE `item_id` = {itemID}"
-        # print(query)
-        makeCommit(self._connection, self._cursor, query)
+        makeCommit(self, query)
         return
 
     ####EDIT ENTRY
@@ -226,8 +246,7 @@ class System:
     def check_credentials(self, username, password):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}' AND `pw_hash` = '{password}'"
         try:
-            self._cursor.execute(query)
-            records = self._cursor.fetchone()
+            records = makeQuerySingleItem(self,query)
             if records != None:
                 result = [asciiSeperator(x) for x in records]
             else:
@@ -239,10 +258,8 @@ class System:
     #checks account existance. return 1 if exists already.
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
-        result = makeQuerySingleItem(self._cursor, query)
+        result = makeQuerySingleItem(self, query)
         if result == None:
             return 0
         else:
             return 1
-
-sys = System()

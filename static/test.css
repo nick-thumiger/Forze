@@ -59,3 +59,21 @@ th, td {
     background-color: #555;
     color: white;
 }
+<<<<<<< HEAD
+=======
+
+.btn {
+    background-color: #f8f9fa;
+    border: none;
+    color: black;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: #7c7c7d;
+    }
+  
+>>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
