@@ -41,7 +41,7 @@ def authenticate():
     username = req_data['username']
     password = req_data['password']
 
-    res = system.check_auth(username, password)
+    res = system.check_auth(username, password, app.secret_key)
 
     if res == None:
         return Response("Invalid username/password", status=400)
@@ -89,6 +89,7 @@ def update_quantity():
     try:
         table = req_data['table']
         item_id = req_data['item_id']
+        print(req_data)
         diff_quantity = int(req_data['quantity'])
         user_id = req_data['user_id']
 
