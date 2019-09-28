@@ -141,7 +141,7 @@ def edit_item():
         return ("Fail", "400 Error")
 
 @app.route('/get_item_ID', methods=['GET'])
-def get_item(category, itemID):
+def get_item_ID():
     itemID = request.args.get('itemID')
     return itemID
 
@@ -234,7 +234,7 @@ def view_table(category, item_type):
                 dataList = system.get_category_table(category, item_type, ['type'])
             except Exception as err:
                 raise mixedException("Invalid SQL category routes query", "The category requested is invalid. Please try again. Contact support if the issue persists.")
-            
+
             # dataList = system.sort_by_columns(category)
             columnNames = system.get_pretty_column_names(category)
             unique_types = system.get_unique_column_items(category,'type')
