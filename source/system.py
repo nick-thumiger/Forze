@@ -185,7 +185,7 @@ class System:
         new_weight_pp = newValues[-2]
         new_quantity = float(new_weight_total)/float(new_weight_pp)
 
-        quantity_change = int(new_quantity-curr_quantity)
+        quantity_change = int(new_quantity)-int(curr_quantity)
         if quantity_change == 0:
             return
         date = datetime.now()
