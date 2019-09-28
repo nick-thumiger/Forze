@@ -5,13 +5,6 @@ let currentEditCategory = null;
 let currentEditID = null;
 let attributesLength = null;
 
-let count = 0;
-
-let tick = () => {
-    console.log(count);
-    count ++;
-}
-
 let triggerHistoryModal = (id) => {
     let modal_container = document.getElementById('history-modal-target');
 
