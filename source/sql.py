@@ -24,7 +24,6 @@ def sqlCursor(connection):
 #Closes the connection to the SQL server
 def sqlDisconnect(cursor, connection):
     if (connection.is_connected()):
-        print("yeet")
         cursor.close()
         connection.close()
     return

@@ -1,7 +1,7 @@
 import sys
 sys.path.append('source')
 
-from flask import render_template, request, redirect, url_for, abort, Flask, session, make_response
+from flask import render_template, request, redirect, url_for, abort, Flask, session, make_response, Response
 from source.system import *
 from source.sql import *
 import re
@@ -34,6 +34,27 @@ app = Flask(__name__)
 app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
+@app.route('/authenticate', methods=['POST'])
+def authenticate():
+    req_data = request.get_json()
+
+    username = req_data['username']
+    password = req_data['password']
+
+    res = system.check_auth(username, password, app.secret_key)
+
+    if res == None:
+        return Response("Invalid username/password", status=400)
+
+    userToken = res[0]
+    userID = res[1]
+
+    body = {
+        'token':userToken,
+        'id':userID
+    }
+
+    return Response(json.dumps(body), status=200, mimetype='application/json')
 
 @app.route('/delete_item', methods=['POST'])
 def delete_item():
@@ -60,6 +81,37 @@ def add_item():
     system.add_entry(table, columns,values)
 
     return 'Success'
+
+@app.route('/update_quantity', methods=['POST'])
+def update_quantity():
+    req_data = request.get_json()
+
+    try:
+        table = req_data['table']
+        item_id = req_data['item_id']
+        diff_quantity = int(req_data['quantity'])
+        user_id = req_data['user_id']
+
+        temp = system.get_entry_by_id(table, item_id)
+        total_weight = float(temp[-1])
+        pp_weight = float(temp[-2])
+        curr_quantity = int(total_weight/pp_weight)
+
+        new_quantity = int(curr_quantity+diff_quantity)
+        new_weight = float(new_quantity*pp_weight)
+
+        if user_id != None:
+            system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight],user_id)
+        elif 'id' in session.keys():
+            system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight],session['id'])
+        else:
+            system.set_value(table,item_id,['weight_per_piece','weight_total'],[pp_weight, new_weight])
+
+        return 'Success'
+
+    except Exception as err:
+        print(str(err))
+        return ("Fail", "400 Error")
 
 @app.route('/edit_item', methods=['POST'])
 def edit_item():
@@ -113,7 +165,7 @@ def get_history(item_id):
         "response" : system.get_user_changes(item_id)
     }
 
-    return "200 Ok"
+    return Response(json.dumps(res), status=200, mimetype='application/json')
 
 '''
 Dedicated page for "page not found"

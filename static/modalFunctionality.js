@@ -6,7 +6,6 @@ let currentEditID = null;
 let attributesLength = null;
 
 let triggerHistoryModal = (id) => {
-    console.log(id);
     let modal_container = document.getElementById('history-modal-target');
 
     let url = apiURL+`/get_history/${id}`;
@@ -138,7 +137,7 @@ let submitEdit = () => {
         }
 
         let temp = k.textContent;
-        temp = temp.replace(" ","_");
+        temp = temp.replace(new RegExp(' ', 'g'),"_");
         temp = temp.toLowerCase();
 
         console.log(temp);
@@ -146,23 +145,6 @@ let submitEdit = () => {
 
         values.push(t.value);
         columns.push(temp);    
-
-        // let url = apiURL+'/check_valid';
-
-        // fetch(url)
-        // .then((e) => {
-        //     if (e.status === 200) {
-        //         return e.text();
-        //     } else {
-        //         throw new Error("An error has occured");
-        //     }
-        // })
-        // .then(e => {
-        //     console.log(e);
-        //     values.push(t.value);
-        //     columns.push(temp);
-        // })
-        // .catch((e) => console.error(e));
 
         i += 1;
     }

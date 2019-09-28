@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 # dbname = "Forze$default"
 dbname = "forze_inventory"
+import hashlib
 
 class System:
     def __init__(self):
@@ -29,6 +30,9 @@ class System:
     @cursor.setter
     def cursor(self, val):
         self._cursor = val
+
+    def disconnectDB(self):
+        sqlDisconnect(self.cursor, self.connection)
 
     #Gets all of the column names and prettifies them...
     #RETURNS: list of the column names
@@ -74,6 +78,24 @@ class System:
         rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
+
+    def check_auth(self, username, password, secret_key):
+        remembermeHash = username + password + secret_key
+        remembermeHash = hashlib.sha1(remembermeHash.encode())
+        remembermeHash = remembermeHash.hexdigest()
+
+        # Check if account exists using MySQL
+
+        passwordHash = password + secret_key
+        passwordHash = hashlib.sha1(passwordHash.encode())
+        passwordHash = passwordHash.hexdigest()
+
+        account = self.check_credentials(username, passwordHash)
+
+        if account != None:
+            return [remembermeHash, account[0]]
+
+        return None
 
     #Sorts the dataset of a given table by the columns given
     def sort_by_columns(self, table, order):
@@ -184,8 +206,8 @@ class System:
         new_weight_pp = newValues[-2]
         new_quantity = float(new_weight_total)/float(new_weight_pp)
 
-        quantity_change = int(new_quantity-curr_quantity)
-        if quantity_change:
+        quantity_change = int(new_quantity)-int(curr_quantity)
+        if quantity_change == 0:
             return
         date = datetime.now()
 
@@ -202,7 +224,6 @@ class System:
     #Set entry value
     def set_value(self, table, itemID, column, newValue, userID=1):
         self.add_user_entry(table, userID, itemID, newValue)
-
         query = f"UPDATE `{table}` SET "
 
         for i in range(len(column)):
@@ -211,7 +232,6 @@ class System:
         query = query[:-2]
 
         query += f" WHERE `item_id` = {itemID}"
-
         makeCommit(self, query)
         return
 
@@ -243,5 +263,3 @@ class System:
             return 0
         else:
             return 1
-
-sys = System()
