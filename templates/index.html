@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -41,11 +41,11 @@
             </div>
 
             <p style="margin-top: 5%">Logged in as {{username}}</p>
-            
+
         </div>
     </nav>
-  
-    <div id="root">      
+
+    <div id="root">
         <div class="navigationDiv">
             <ul class="sideNav">
                 {% for type in unique_types %}
@@ -53,19 +53,21 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="tableDiv">
+        <div class="tableDiv" style="overflow-y: scroll">
             <table class="dataTable" >
-                    <tr>
-                        <th  style="width:2.5%"></th>
-                        {% for header in columnNames %}
-                            <th>{{header}}</th>
-                        {% endfor %}
-                        <th style="width:4%"></th>
-                        <th style="width:2.5%"></th>
-                        <th  style="width:2.5%"></th>
-                    </tr>
-
-                    {% for row in dataList %}
+                    <thead>
+                        <tr>
+                            <th  style="position: sticky; top: 0; width:2.5%"></th>
+                            {% for header in columnNames %}
+                                <th style="position: sticky; top: 0;">{{header}}</th>
+                            {% endfor %}
+                            <th style="position: sticky; top: 0; width:4%"></th>
+                            <th style="position: sticky; top: 0; width:2.5%"></th>
+                            <th  style="position: sticky; top: 0; width:2.5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody style="overflow-y: scroll">
+                        {% for row in dataList %}
                         <tr>
                             <td></td>
                             {% for data in row['data'] %}
@@ -74,17 +76,18 @@
                             <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                             <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                             <td></td>
-                        </tr>   
-                    {% endfor %}
-                    <tr>
-                        <td></td>
-                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                        {% for data in dataList[0]['data'] %}
-                            <td></td>
+                        </tr>
                         {% endfor %}
-                        <td></td>
-                        <td></td>
-                    </tr>
+                        <tr>
+                            <td></td>
+                            <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
+                            {% for data in dataList[0]['data'] %}
+                                <td></td>
+                            {% endfor %}
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
                 </table>
         </div>
     </div>
@@ -99,7 +102,7 @@
                     </button>
                 </div>
                 <div id="history-modal-target" class="modal-body">
-                
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -124,8 +127,8 @@
                             </div>
                             <input type="text" class="form-control" id="edit_{{i}}">
                         </div>
-        
-                    {% endfor %}                
+
+                    {% endfor %}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -152,8 +155,8 @@
                             </div>
                             <input type="text" class="form-control" id="add_{{i}}">
                         </div>
-        
-                    {% endfor %}                
+
+                    {% endfor %}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
