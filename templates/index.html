@@ -52,13 +52,9 @@
                     </li>
                 </ul>
             </div>
-<<<<<<< HEAD
 
             <p style="margin-top: 5%">Logged in as {{username}}</p>
 
-=======
-            
->>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
         </div>
     </nav>
 
@@ -74,63 +70,27 @@
                 {% endif %}
             </ul>
         </div>
-<<<<<<< HEAD
         <div class="tableDiv" style="overflow-y: scroll">
+            {% if msg != "" %}
+                <b><font color="red">{{msg}}</font></b>
+            {% endif %}
+
+            {% if dataList != None %}
             <table class="dataTable" >
                     <thead>
                         <tr>
                             <th  style="position: sticky; top: 0; width:2.5%"></th>
-                            {% for header in columnNames %}
-                                <th style="position: sticky; top: 0;">{{header}}</th>
-                            {% endfor %}
+                            {% if columnNames != None %}
+                                {% for header in columnNames %}
+                                    <th style="position: sticky; top: 0;">{{header}}</th>
+                                {% endfor %}
+                            {% endif %}
                             <th style="position: sticky; top: 0; width:4%"></th>
                             <th style="position: sticky; top: 0; width:2.5%"></th>
                             <th  style="position: sticky; top: 0; width:2.5%"></th>
                         </tr>
                     </thead>
                     <tbody style="overflow-y: scroll">
-                        {% for row in dataList %}
-                        <tr>
-                            <td></td>
-                            {% for data in row['data'] %}
-                                <td>{{data}}</td>
-                            {% endfor %}
-                            <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                            <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                            <td></td>
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                            <td></td>
-                            <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                            {% for data in dataList[0]['data'] %}
-                                <td></td>
-                            {% endfor %}
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-=======
-        <div class="tableDiv">
-            {% if msg != "" %}
-                <b><font color="red">{{msg}}</font></b>
-            {% endif %}
-            
-            {% if dataList != None %}
-            <table class="dataTable" >
-                    <tr>
-                        <th  style="width:2.5%"></th>
-                        {% if columnNames != None %}
-                            {% for header in columnNames %}
-                                <th>{{header}}</th>
-                            {% endfor %}
-                        {% endif %}
-                        <th style="width:4%"></th>
-                        <th style="width:2.5%"></th>
-                        <th  style="width:2.5%"></th>
-                    </tr>
-                    
-                    
                         {% for row in dataList %}
                             <tr>
                                 <td></td>
@@ -140,26 +100,20 @@
                                 <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                                 <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                                 <td></td>
-                            </tr>   
+                            </tr>
                         {% endfor %}
-                    
-                    
-                    {% if category != None %}
-                    <tr>
-                        <td></td>
-                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                        {% if dataList != None %}    
-                            {% for data in dataList[0]['data'] %}
+                        {% if category != None %}
+                            <tr>
                                 <td></td>
-                            {% endfor %}
+                                <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
+                                {% for data in dataList[0]['data'] %}
+                                    <td></td>
+                                {% endfor %}
+                                <td></td>
+                                <td></td>
+                            </tr>
                         {% endif %}
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    {% endif %}
-
-                    
->>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
+                    </tbody>
                 </table>
             {% endif %}
 
@@ -218,16 +172,9 @@
                                 </div>
                                 <input type="text" class="form-control" id="edit_{{i}}">
                             </div>
-<<<<<<< HEAD
-                            <input type="text" class="form-control" id="edit_{{i}}">
-                        </div>
-
-                    {% endfor %}
-=======
         
                         {% endfor %}
                     {% endif %}
->>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -255,16 +202,9 @@
                                 </div>
                                 <input type="text" class="form-control" id="add_{{i}}">
                             </div>
-<<<<<<< HEAD
-                            <input type="text" class="form-control" id="add_{{i}}">
-                        </div>
-
-                    {% endfor %}
-=======
         
                         {% endfor %}
                     {% endif %}
->>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
