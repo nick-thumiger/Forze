@@ -3,8 +3,8 @@ from source.exceptions import *
 import time
 from datetime import datetime, timedelta
 
-# dbname = "Forze$default"
-dbname = "forze_inventory"
+dbname = "Forze$default"
+# dbname = "forze_inventory"
 import hashlib
 
 class System:
