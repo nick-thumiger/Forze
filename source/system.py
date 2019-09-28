@@ -82,7 +82,7 @@ class System:
         account = self.check_credentials(username, passwordHash)
 
         if account != None:
-            return remembermeHash
+            return [remembermeHash, account[3]]
 
         return None
 

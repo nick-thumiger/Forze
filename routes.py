@@ -41,12 +41,17 @@ def authenticate():
     username = req_data['username']
     password = req_data['password']
 
-    userToken = system.check_auth(username, password)
-    if userToken == None:
+    res = system.check_auth(username, password)
+
+    if res == None:
         return Response("Invalid username/password", status=400)
 
+    userToken = res[0]
+    userID = res[1]
+
     body = {
-        'token':userToken
+        'token':userToken,
+        'id':userID
     }
 
     return Response(json.dumps(body), status=200, mimetype='application/json')
