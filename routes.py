@@ -140,16 +140,27 @@ def edit_item():
         print(str(err))
         return ("Fail", "400 Error")
 
-@app.route('/get_item', methods=['GET'])
-def get_item():
+@app.route('/get_item_ID', methods=['GET'])
+def get_item(category, itemID):
     itemID = request.args.get('itemID')
     return itemID
 
     # res = {
-    #     "response" : system.get_entry_by_category_id(category, item_id)
+    #     "response" : system.get_entry_by_category_id(category, itemID)
     # }
 
     # return json.dumps(res)
+
+@app.route('/get_item/<category>/<itemID>', methods=['GET'])
+def get_item(category, itemID):
+    # itemID = request.args.get('itemID')
+    # return itemID
+
+    res = {
+        "response" : system.get_entry_by_category_id(category, itemID)
+    }
+
+    return json.dumps(res)
 
 @app.route('/get_columns/<category>', methods=['GET'])
 def get_columns(category):

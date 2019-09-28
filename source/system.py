@@ -148,7 +148,7 @@ class System:
         return result
 
     #gets the database entry given the item ID
-    def get_entry_by_id(self, table, itemID):
+    def get_entry_by_category_id(self, table, itemID):
         query = f"SELECT * FROM `{table}` WHERE `item_id`={itemID}"
         rawresult = makeQuerySingleItem(self, query)
         result = [asciiSeperator(x) for x in rawresult]
