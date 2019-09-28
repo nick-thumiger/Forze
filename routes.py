@@ -92,7 +92,7 @@ def update_quantity():
         diff_quantity = int(req_data['quantity'])
         user_id = req_data['user_id']
 
-        temp = system.get_entry_by_id(table, item_id)
+        temp = system.get_entry_by_category_id(table, item_id)
         total_weight = float(temp[-1])
         pp_weight = float(temp[-2])
         curr_quantity = int(total_weight/pp_weight)
@@ -140,13 +140,16 @@ def edit_item():
         print(str(err))
         return ("Fail", "400 Error")
 
-@app.route('/get_item/<category>/<item_id>', methods=['GET'])
-def get_item(category, item_id):
-    res = {
-        "response" : system.get_entry_by_id(category, item_id)
-    }
+@app.route('/get_item', methods=['GET'])
+def get_item():
+    itemID = request.args.get('itemID')
+    return itemID
 
-    return json.dumps(res)
+    # res = {
+    #     "response" : system.get_entry_by_category_id(category, item_id)
+    # }
+
+    # return json.dumps(res)
 
 @app.route('/get_columns/<category>', methods=['GET'])
 def get_columns(category):
