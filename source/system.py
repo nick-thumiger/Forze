@@ -147,7 +147,20 @@ class System:
         result = [listAsciiSeperator(x) for x in rawresult]
         return result
 
-    #gets the database entry given the item ID
+    #gets the database entry given the item ID and 
+    def get_entry_by_id(self, itemID):
+        categories = self.get_category_list()
+
+        for category in categories:
+            res = self.get_entry_by_category_id(category, itemID)
+            
+            print (res)
+            if len(res) == 0:
+                return res
+
+        return None
+
+    #gets the database entry given the item ID and table
     def get_entry_by_category_id(self, table, itemID):
         query = f"SELECT * FROM `{table}` WHERE `item_id`={itemID}"
         rawresult = makeQuerySingleItem(self, query)

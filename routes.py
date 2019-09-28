@@ -143,13 +143,15 @@ def edit_item():
 @app.route('/get_item_ID', methods=['GET'])
 def get_item_ID():
     itemID = request.args.get('itemID')
-    return itemID
 
-    # res = {
-    #     "response" : system.get_entry_by_category_id(category, itemID)
-    # }
+    if itemID == None:
+        return Response("itemID not passed in", status=400, mimetype='application/text')
 
-    # return json.dumps(res)
+    res = {
+        "response" : system.get_entry_by_id(itemID)
+    }
+
+    return Response(json.dumps(res), status=200, mimetype='application/json')
 
 @app.route('/get_item/<category>/<itemID>', methods=['GET'])
 def get_item(category, itemID):
