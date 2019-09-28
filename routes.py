@@ -42,10 +42,14 @@ def delete_item():
     password = req_data['password']
 
     userID = system.check_auth(username, password)
-    if userID != None:
+    if userID == None:
         return Response("Invalid username/password", status=400)
 
-    return Response(f"\{'id':'{userID}'\}", status=200, mimetype='application/json')
+    body = {
+        'id':userID
+    }
+
+    return Response(json.dumps(body), status=200, mimetype='application/json')
 
 @app.route('/delete_item', methods=['POST'])
 def delete_item():
