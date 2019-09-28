@@ -165,7 +165,7 @@ def get_history(item_id):
         "response" : system.get_user_changes(item_id)
     }
 
-    return "200 Ok"
+    return Response(json.dumps(res), status=200, mimetype='application/json')
 
 '''
 Dedicated page for "page not found"
