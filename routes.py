@@ -35,7 +35,7 @@ app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
 @app.route('/authenticate', methods=['POST'])
-def delete_item():
+def authenticate():
     req_data = request.get_json()
 
     username = req_data['username']
