@@ -2,7 +2,7 @@ from source.sql import *
 from source.exceptions import *
 import time
 from datetime import datetime, timedelta
-
+import hashlib
 
 class System:
     def __init__(self):
@@ -68,10 +68,23 @@ class System:
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
-    # userID = system.check_auth(username, password)
+    def check_auth(self, username, password, secret_key):
+        remembermeHash = username + password + secret_key
+        remembermeHash = hashlib.sha1(remembermeHash.encode())
+        remembermeHash = remembermeHash.hexdigest()
 
-    def check_auth(self, username, password):
-        return 1
+        # Check if account exists using MySQL
+
+        passwordHash = password + secret_key
+        passwordHash = hashlib.sha1(passwordHash.encode())
+        passwordHash = passwordHash.hexdigest()
+
+        account = self.check_credentials(username, passwordHash)
+
+        if account != None:
+            return remembermeHash
+
+        return None
 
     #Sorts the dataset of a given table by the columns given
     def sort_by_columns(self, table, order):
