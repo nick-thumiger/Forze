@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -30,11 +30,19 @@
             {% if username != None %}
             <p style="margin-top: 5%">Logged in as {{username}}</p>
             {% endif %}
+<<<<<<< HEAD
+            <button class="btn"  title="Search Entries"><i class="fa fa-search fa-2x"></i></button>
+            <button class="btn"  title="Edit Conditional Formatting" onclick="triggerEditCondFormatting()" data-toggle="modal" data-target="#editConditionalFormatting"><i class="fa fa-wrench fa-2x"></i></button>
+            <button class="btn"  title="Edit Profile"><i class="fa fa-user fa-2x"></i></button>
+            <a href="/logout"  title="Logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
+            
+=======
             <button class="btn"><i class="fa fa-search fa-2x"></i></button>
             <button class="btn"><i class="fa fa-gear fa-2x"></i></button>
             <button class="btn"><i class="fa fa-user fa-2x"></i></button>
             <a href="forze.pythonanywhere.com/logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
 
+>>>>>>> 83de1ac6fbbe552e1f70b7d353aa6fd0b7d183cc
             <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-grow: 0">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
@@ -74,33 +82,53 @@
 
             {% if dataList != None %}
             <table class="dataTable" >
-                    <thead>
-                        <tr>
-                            <th  style="position: sticky; top: 0; width:2.5%"></th>
-                            {% if columnNames != None %}
-                                {% for header in columnNames %}
-                                    <th style="position: sticky; top: 0;">{{header}}</th>
-                                {% endfor %}
-                            {% endif %}
-                            <th style="position: sticky; top: 0; width:4%"></th>
-                            <th style="position: sticky; top: 0; width:2.5%"></th>
-                            <th  style="position: sticky; top: 0; width:2.5%"></th>
-                        </tr>
-                    </thead>
-                    <tbody style="overflow-y: scroll">
+                <thead>
+                    <tr>
+                        <th style="position: sticky; top: 0; width:2.5%"></th>
+                        {% if columnNames != None %}
+                        {% set count = [ ] %}
+                        {% for header in columnNames %}
+                        <th style="position: sticky; top: 0;">{{header}}</th>
+                        {% set __ = count.append(1) %}
+                        {% endfor %}
+                        {% endif %}
+                        <th style="position: sticky; top: 0; width:4%"></th>
+                        <th style="position: sticky; top: 0; width:2.5%"></th>
+                        <th style="position: sticky; top: 0; width:2.5%"></th>
+                    </tr>
+                </thead>
+                <tbody style="overflow-y: scroll">
                         {% for row in dataList %}
                             <tr>
                                 <td></td>
+                                {% set count2 = [ ] %}
                                 {% for data in row['data'] %}
-                                    <td>{{data}}</td>
+                                    {% set __ = count2.append(1) %}
+                                    {% if count|length == count2|length and condForm[0] != 0 and condForm[1] != 0 and condForm[1] >= condForm[0] %}
+                                        {% if data <= condForm[0] %}
+                                            <td bgcolor="#EC7063">{{data}}</td>
+                                        {% elif data > condForm[1] %}
+                                            <td bgcolor="#2ECC71">{{data}}</td>
+                                        {% else %}
+                                            <td bgcolor="#F7DC6F">{{data}}</td>
+                                        {% endif %}
+                                    {% else %}
+                                        <td>{{data}}</td>
+                                    {% endif %}
                                 {% endfor %}
                                 <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                                 <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                                 <td></td>
                             </tr>
                         {% endfor %}
-                        {% if category != None %}
-                            <tr>
+
+
+                    {% if category != None %}
+                    <tr>
+                        <td></td>
+                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
+                        {% if dataList != None %}    
+                            {% for data in dataList[0]['data'] %}
                                 <td></td>
                                 <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
                                 {% for data in dataList[0]['data'] %}
@@ -210,6 +238,38 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for editing conditional formatting values for each data type -->
+        <div class="modal fade" id="editConditionalFormatting" tabindex="-1" role="dialog" aria-labelledby="editConditionalFormatting" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Conditional Formatting</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="edit-modal-target" class="modal-body"> 
+                        {% if columnNames != None %}
+                        {% for i in range(columnNames|length) %}
+                        <div class="input-group">
+                            <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                            </div>
+                            <input type="text" class="form-control" id="edit_{{i}}">
+                        </div>
+
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="submitEdit()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 

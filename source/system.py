@@ -11,6 +11,7 @@ class System:
     def __init__(self):
         self._connection = sqlConnect()
         self._cursor = sqlCursor(self._connection)
+        self.sync_type_tables()
 
     def __dest__(self):
         sqlDisconnect(self._cursor, self._connection)
@@ -171,15 +172,20 @@ class System:
     def add_entry(self, table, column, newValue):
         query = f"INSERT INTO `{table}` ("
 
+        iter = 0
         for i in column:
             query += f"`{i}`, "
+            if i == 'type':
+                system.add_to_type_table(newValue[iter])
+            iter += 1
 
         query = query[:-2]
 
         query += f") VALUES ("
 
         for i in newValue:
-            query += f"'{i}', "
+            j = i.upper()
+            query += f"'{j}', "
 
         query = query[:-2]
 
@@ -240,7 +246,10 @@ class System:
         query = f"UPDATE `{table}` SET "
 
         for i in range(len(column)):
-            query += f"`{column[i]}` = \"{newValue[i]}\", "
+            upperval = newValue[i].upper()
+            query += f"`{column[i]}` = \"{upperval}\", "
+            if column[i] == 'type':
+                self.add_to_type_table(upperval)
 
         query = query[:-2]
 
@@ -251,8 +260,16 @@ class System:
     ####EDIT ENTRY
 
     #Returns array of conditional formating values
-    def get_conditional_formatting(self, ):
-
+    def get_conditional_formatting(self, type):
+        query = f"SELECT `low`, `high` FROM `types` WHERE `name` = '{type}'"
+        rawresult = makeQuerySingleItem(self,query)
+        print(rawresult)
+        if rawresult != None and len(rawresult) != 0:
+            result = [asciiSeperator(x) for x in rawresult]
+            intresult = [int(result[0]), int(result[1])]
+            return intresult
+        else:
+            raise systemException(f"Invalid conditional formatting string returned for type: {type}")
         return
 
     #checks credentials
@@ -272,7 +289,39 @@ class System:
     def checkExistance(self, username):
         query = f"SELECT * FROM `users` WHERE `username` = '{username}'"
         result = makeQuerySingleItem(self, query)
-        if result == None:
+        if result == None or len(result) == 0:
             return 0
         else:
             return 1
+    
+    # Finds all of the types that are ACTUALLY in the database
+    def get_type_list_manually(self):
+        categories = self.get_category_list()
+        types = []
+        for cat in categories:
+            result = self.get_unique_column_items(cat, 'type')
+            types.extend(result)
+        return types
+
+    # Finds all of the types that SHOULD be in the database
+    def get_type_list_table(self):
+        query = f"SELECT `name` FROM `types`"
+        result = makeQuerySingleItem(self,query)
+        return result
+
+    #In the case of a discrepency between the types in the database, and the types that are expected, this function syncs them
+    def sync_type_tables(self):
+        manual = self.get_type_list_manually()
+        auto = self.get_type_list_table()
+        if auto != None:
+            for man in manual:
+                for aut in auto:
+                    if man == aut:
+                        manual.remove(man)
+        
+        for str in manual:
+            self.add_to_type_table(str)
+
+    def add_to_type_table(self, type):
+        query = f"INSERT INTO `types` VALUES (NULL, '{type}', NULL, '0', '0')"
+        makeCommit(self, query)
