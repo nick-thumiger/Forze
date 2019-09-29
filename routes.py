@@ -229,15 +229,19 @@ def view_table(category, item_type):
             if item_type == "*":
                 dataList = None
                 columnNames = None
+                condForm = None
             elif (len(dataList) == 0):
                 raise mixedException("Invalid SQL item_type routes query", "The item type requested is invalid. Please try again. Contact support if the issue persists.")
             else:
+                print(item_type)
+                condForm = system.get_conditional_formatting(item_type)
+                print(condForm)
                 for item in dataList:
                     quantity = round(float(item['data'][-1])/float(item['data'][-2]))
                     item['data'].append(quantity)
 
             print(f"Category {category}")
-            return render_template('index.html', category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="")
+            return render_template('index.html', category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
 
         except CustomException as err:
             return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log() )

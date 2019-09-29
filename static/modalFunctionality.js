@@ -1,10 +1,11 @@
-// let apiURL = 'http://127.0.0.1:5100';
-let apiURL = 'https://forze.pythonanywhere.com';
+let apiURL = 'http://127.0.0.1:5100';
+//let apiURL = 'https://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditID = null;
 let attributesLength = null;
 
+//open history modal
 let triggerHistoryModal = (id) => {
     let modal_container = document.getElementById('history-modal-target');
 
@@ -53,6 +54,7 @@ let triggerHistoryModal = (id) => {
 	.catch((e) => console.error(e));
 }
 
+//Opens the modal that enables the user to edit an entry
 let triggerEditModal = (category, id) => {
     currentEditCategory = category;
     currentEditID = id;
@@ -92,6 +94,7 @@ let triggerEditModal = (category, id) => {
     .catch((e) => console.error(e));
 }
 
+//Deletes the current thing that you are editing
 let submitDelete = () => {
     const payload = {
         'table' : currentEditCategory,
@@ -121,6 +124,7 @@ let submitDelete = () => {
     .catch((e) => console.error(e));
 }
 
+//Edits the entry
 let submitEdit = () => {
     let loop = true;
     let i = 0;
@@ -252,4 +256,46 @@ let submitAdd = () => {
         location.reload();
     })
     .catch((e) => console.error(e));
+}
+
+//Opens the modal that enables the user to edit an entry
+let triggerEditCondFormatting = () => {
+	console.log("Tester");
+	/* currentEditCategory = category;
+	currentEditID = id;
+
+	let url = apiURL + `/get_item/${category}/${id}`;
+
+	fetch(url)
+		.then((e) => {
+			if (e.status === 200) {
+				return e.text();
+			} else {
+				throw new Error("An error has occured");
+			}
+		})
+		.then(e => {
+			return JSON.parse(e);
+		})
+		.then(e => {
+			// console.log('yeet');
+			i = 0;
+			e.response.shift();
+
+			e.response.map(k => {
+				let t = document.getElementById(`edit_${i}`);
+				t.setAttribute('value', k);
+
+				i += 1;
+			})
+
+			let num1 = parseFloat(e.response[e.response.length - 1]);
+			let num2 = parseFloat(e.response[e.response.length - 2]);
+
+			let quantity = parseInt(num1 / num2);
+
+			document.getElementById(`edit_${i}`).setAttribute('value', quantity);
+		})
+		.catch((e) => console.error(e));
+	*/
 }
