@@ -1,12 +1,12 @@
-html, body { 
+html, body {
     height: 100%;
-}  
+}
 
 #root {
     flex-direction: row;
     display: flex;
     flex: 1;
-    height: 100%;
+    height: 90%;
 }
 
 th {
@@ -23,19 +23,20 @@ th, td {
 .tableDiv {
     display: flex;
     flex: 1;
-    justify-content: center
+    justify-content: center;
 }
 
 .dataTable {
     width: 100%;
     align-self: 'center';
+
 }
 
 .navigationDiv {
     width: 20%;
     height: 100%;
 }
-  
+
 .sideNav {
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;
@@ -58,6 +59,8 @@ th, td {
     background-color: #555;
     color: white;
 }
+<<<<<<< HEAD
+=======
 
 .btn {
     background-color: #f8f9fa;
@@ -73,3 +76,4 @@ th, td {
         background-color: #7c7c7d;
     }
   
+>>>>>>> 4c5ce136fe75aaafee675c139b4495983c1017d2
