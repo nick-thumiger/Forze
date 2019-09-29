@@ -147,15 +147,15 @@ class System:
         result = [listAsciiSeperator(x) for x in rawresult]
         return result
 
-    #gets the database entry given the item ID and 
+    #gets the database entry given the item ID and
     def get_entry_by_id(self, itemID):
         categories = self.get_category_list()
 
         for category in categories:
             res = self.get_entry_by_category_id(category, itemID)
-            
-            print (res)
-            if len(res) == 0:
+
+            if len(res) != 0:
+                res.append(category)
                 return res
 
         return None
@@ -210,7 +210,7 @@ class System:
     #     return
 
     def add_user_entry(self, table, userID, itemID, newValues):
-        entry = self.get_entry_by_id(table, itemID)
+        entry = self.get_entry_by_category_id(table, itemID)
         curr_weight_total = entry[-1]
         curr_weight_pp = entry[-2]
         curr_quantity = float(curr_weight_total)/float(curr_weight_pp)
