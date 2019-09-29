@@ -30,19 +30,11 @@
             {% if username != None %}
             <p style="margin-top: 5%">Logged in as {{username}}</p>
             {% endif %}
-<<<<<<< HEAD
             <button class="btn"  title="Search Entries"><i class="fa fa-search fa-2x"></i></button>
             <button class="btn"  title="Edit Conditional Formatting" onclick="triggerEditCondFormatting()" data-toggle="modal" data-target="#editConditionalFormatting"><i class="fa fa-wrench fa-2x"></i></button>
             <button class="btn"  title="Edit Profile"><i class="fa fa-user fa-2x"></i></button>
             <a href="/logout"  title="Logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
-            
-=======
-            <button class="btn"><i class="fa fa-search fa-2x"></i></button>
-            <button class="btn"><i class="fa fa-gear fa-2x"></i></button>
-            <button class="btn"><i class="fa fa-user fa-2x"></i></button>
-            <a href="forze.pythonanywhere.com/logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
 
->>>>>>> 83de1ac6fbbe552e1f70b7d353aa6fd0b7d183cc
             <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-grow: 0">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
@@ -127,17 +119,13 @@
                     <tr>
                         <td></td>
                         <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                        {% if dataList != None %}    
-                            {% for data in dataList[0]['data'] %}
-                                <td></td>
-                                <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
                                 {% for data in dataList[0]['data'] %}
                                     <td></td>
                                 {% endfor %}
                                 <td></td>
                                 <td></td>
                             </tr>
-                        {% endif %}
+                    {% endif %}
                     </tbody>
                 </table>
             {% endif %}
