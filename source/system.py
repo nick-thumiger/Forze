@@ -246,7 +246,7 @@ class System:
         query = f"UPDATE `{table}` SET "
 
         for i in range(len(column)):
-            upperval = newValue[i].upper()
+            upperval = str(newValue[i]).upper()
             query += f"`{column[i]}` = \"{upperval}\", "
             if column[i] == 'type':
                 self.add_to_type_table(upperval)

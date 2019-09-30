@@ -135,10 +135,10 @@ def edit_item():
             system.set_value(table,item_id,columns,values)
 
         return 'Success'
-
     except Exception as err:
         print(str(err))
-        return ("Fail", "400 Error")
+        # res = 
+        return Response(str(err), status=400, mimetype='application/text')
 
 @app.route('/get_item_ID', methods=['GET'])
 def get_item_ID():

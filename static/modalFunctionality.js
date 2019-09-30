@@ -182,14 +182,17 @@ let submitEdit = () => {
         if (e.status === 200) {
             return e.text();
         } else {
-            throw new Error("An error has occured");
+            // document.getElementById(`edit_error_message`).textContent = e;
+    
+            throw new Error(e);
         }
     })
     .then(e => {
         console.log(e);
         location.reload();
     })
-    .catch((e) => {
+    .catch(e => e.text())
+    .then(e => {
         document.getElementById(`edit_error_message`).textContent = e;
         console.error(e)
     });
