@@ -272,12 +272,14 @@ def view_table(category, item_type):
                     quantity = round(float(item['data'][-1])/float(item['data'][-2]))
                     item['data'].append(quantity)
 
+
             addModalColumnNames = columnNames
-            addModalColumnNames.remove('Quantity')
-            addModalColumnNames.remove('Type')
 
+            if columnNames != None:
+                addModalColumnNames.remove('Quantity')
+                addModalColumnNames.remove('Type')
 
-            print(f"Category {category}")
+            print(f"This One??? Category {category}")
             return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
 
         except CustomException as err:
