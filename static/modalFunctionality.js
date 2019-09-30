@@ -91,7 +91,10 @@ let triggerEditModal = (category, id) => {
 
         document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
-    .catch((e) => console.error(e));
+    .catch((e) => {
+        console.error(e);
+        document.getElementById(`edit_error_message`).textContent = e;
+    });
 }
 
 //Deletes the current thing that you are editing
