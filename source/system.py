@@ -35,6 +35,11 @@ class System:
     def disconnectDB(self):
         sqlDisconnect(self.cursor, self.connection)
 
+    def add_type(self, category, item_type):
+        print("System Class: Need to implement add_type")
+        print("System Class {39}: "+category)
+        print("System Class {40}: "+item_type)
+
     #Gets all of the column names and prettifies them...
     #RETURNS: list of the column names
     def get_pretty_column_names(self, table):

@@ -144,6 +144,8 @@ let submitEdit = () => {
 
         let numberColumns = ['Weight Per Piece','Weight Total', 'Storage'];
 
+        let temp = k.textContent;
+
         if (numberColumns.includes(temp) && !isNaN(t.value)) {
             errormessage = "Error: "+temp+" attribute should contain a number"
             document.getElementById(`edit_error_message`).textContent = errormessage;
@@ -151,7 +153,6 @@ let submitEdit = () => {
             return;
         }
 
-        let temp = k.textContent;
         temp = temp.replace(new RegExp(' ', 'g'),"_");
         temp = temp.toLowerCase();
 
@@ -313,4 +314,38 @@ let triggerEditCondFormatting = () => {
 		})
 		.catch((e) => console.error(e));
 	*/
+}
+
+let submitAddType = () => {
+    var e = document.getElementById("addTypeSelector");
+    var category = e.options[e.selectedIndex].value;
+
+    var type = document.getElementById("addType").value;
+
+    const payload = {
+        'category' : category,
+        'type' : type
+    }
+
+    const settings = {
+        'method' : "POST",
+        'headers' : { "Content-Type" : "application/json" },
+        'body' : JSON.stringify(payload)
+    }
+
+    let url = apiURL+`/add_type`;
+
+    fetch(url, settings)
+    .then(e => {
+        if (e.status === 200) {
+            return e.text();
+        } else {
+            throw new Error("An error has occured");
+        }
+    })
+    .then(e => {
+        console.log(e);
+        location.reload();
+    })
+    .catch((e) => console.error(e));
 }
