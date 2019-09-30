@@ -256,14 +256,19 @@ def view_table(category, item_type):
                     quantity = round(float(item['data'][-1])/float(item['data'][-2]))
                     item['data'].append(quantity)
 
+            addModalColumnNames = columnNames
+            addModalColumnNames.remove('Quantity')
+            addModalColumnNames.remove('Type')
+
+
             print(f"Category {category}")
-            return render_template('index.html', category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
 
         except CustomException as err:
-            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log() )
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log() )
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log())
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log())
     return redirect(url_for('login'))
 
 '''
