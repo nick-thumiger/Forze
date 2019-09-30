@@ -142,6 +142,15 @@ let submitEdit = () => {
             break;
         }
 
+        let numberColumns = ['Weight Per Piece','Weight Total', 'Storage'];
+
+        if (numberColumns.includes(temp) && !isNaN(t.value)) {
+            errormessage = "Error: "+temp+" attribute should contain a number"
+            document.getElementById(`edit_error_message`).textContent = errormessage;
+            console.error(errormessage);
+            return;
+        }
+
         let temp = k.textContent;
         temp = temp.replace(new RegExp(' ', 'g'),"_");
         temp = temp.toLowerCase();
@@ -149,13 +158,6 @@ let submitEdit = () => {
         console.log(temp);
         console.log(t.value);
 
-        let numberColumns = ['weight_per_piece','weight_total', 'storage'];
-
-        if (numberColumns.includes(temp) && !isNaN(t.value)) {
-            document.getElementById(`edit_error_message`).textContent = "Error: "+temp+" attribute should contain a number";
-            console.error(e);
-            return;
-        }
 
         values.push(t.value);
         columns.push(temp);
