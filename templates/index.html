@@ -185,9 +185,12 @@
                                 </div>
                                 <input type="text" class="form-control" id="edit_{{i}}">
                             </div>
-
                         {% endfor %}
                     {% endif %}
+                    <div class="input-group">
+                        <span id="edit_error_message" style="width:100%">
+                        </span>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -248,10 +251,6 @@
                                 </div>
                             {% endfor %}
                         {% endif %}
-                        <div class="input-group">
-                            <span id="edit_error_message" style="width:100%">
-                            </span>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

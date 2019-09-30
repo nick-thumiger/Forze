@@ -95,6 +95,8 @@ let triggerEditModal = (category, id) => {
         console.error(e);
         document.getElementById(`edit_error_message`).textContent = e;
     });
+
+    document.getElementById(`edit_error_message`).textContent = 'yeet';
 }
 
 //Deletes the current thing that you are editing
