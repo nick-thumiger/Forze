@@ -93,10 +93,7 @@ let triggerEditModal = (category, id) => {
     })
     .catch((e) => {
         console.error(e);
-        document.getElementById(`edit_error_message`).textContent = e;
     });
-
-    document.getElementById(`edit_error_message`).textContent = 'yeet';
 }
 
 //Deletes the current thing that you are editing
@@ -192,7 +189,10 @@ let submitEdit = () => {
         console.log(e);
         location.reload();
     })
-    .catch((e) => console.error(e));
+    .catch((e) => {
+        document.getElementById(`edit_error_message`).textContent = e;
+        console.error(e)
+    });
 }
 
 let triggerAddModal = (category) => {
