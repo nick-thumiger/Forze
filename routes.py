@@ -34,6 +34,22 @@ app = Flask(__name__)
 app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
+@app.route('/add_type', methods=['POST'])
+def add_type():
+    req_data = request.get_json()
+
+    category = req_data['category']
+    item_type = req_data['type']
+
+    try:
+        system.add_type(category, item_type)
+    except Exception as e:
+        print(str(e))
+        return Response("Failure", status=400, mimetype='application/text')
+
+    return Response("Success", status=200, mimetype='application/text')
+
+
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
     req_data = request.get_json()
@@ -137,7 +153,7 @@ def edit_item():
         return 'Success'
     except Exception as err:
         print(str(err))
-        # res = 
+        # res =
         return Response(str(err), status=400, mimetype='application/text')
 
 @app.route('/get_item_ID', methods=['GET'])
@@ -365,7 +381,6 @@ def register():
                 address = email
                 email = Message('Account Activation Required', sender = 'forze.inventory@gmail.com', recipients = [email])
                 # change yourdomain.com to your website, to test locally you can go to: http://localhost:5000/pythonlogin/activate/<email>/<code>
-                ######################################################################################################
                 activate_link = 'http://yourdomain.com/pythonlogin/activate/' + str(address) + '/' + str(activation_code)
                 # change the email body below
                 email.body = 'Welcome to the forze inventory management system! Please click the following link to activate your account: ' + str(activate_link)
