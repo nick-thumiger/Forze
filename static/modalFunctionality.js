@@ -149,6 +149,14 @@ let submitEdit = () => {
         console.log(temp);
         console.log(t.value);
 
+        let numberColumns = ['weight_per_piece','weight_total', 'storage'];
+
+        if (numberColumns.includes(temp) && !isNaN(t.value)) {
+            document.getElementById(`edit_error_message`).textContent = "Error: "+temp+" attribute should contain a number";
+            console.error(e);
+            return;
+        }
+
         values.push(t.value);
         columns.push(temp);
 
@@ -182,17 +190,14 @@ let submitEdit = () => {
         if (e.status === 200) {
             return e.text();
         } else {
-            // document.getElementById(`edit_error_message`).textContent = e;
-    
-            throw new Error(e);
+            throw new Error("An untraceable error has occurred on our backend.");
         }
     })
     .then(e => {
         console.log(e);
         location.reload();
     })
-    .catch(e => e.text())
-    .then(e => {
+    .catch(e => {
         document.getElementById(`edit_error_message`).textContent = e;
         console.error(e)
     });
