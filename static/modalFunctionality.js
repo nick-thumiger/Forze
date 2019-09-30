@@ -1,5 +1,5 @@
-let apiURL = 'http://127.0.0.1:5100';
-//let apiURL = 'https://forze.pythonanywhere.com';
+//let apiURL = 'http://127.0.0.1:5100';
+let apiURL = 'https://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditID = null;
@@ -148,7 +148,7 @@ let submitEdit = () => {
         console.log(t.value);
 
         values.push(t.value);
-        columns.push(temp);    
+        columns.push(temp);
 
         i += 1;
     }

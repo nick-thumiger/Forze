@@ -3,8 +3,8 @@ from source.exceptions import *
 import time
 from datetime import datetime, timedelta
 
-#dbname = "Forze$default"
-dbname = "forze_inventory"
+dbname = "Forze$default"
+#dbname = "forze_inventory"
 import hashlib
 
 class System:
@@ -176,7 +176,7 @@ class System:
         for i in column:
             query += f"`{i}`, "
             if i == 'type':
-                system.add_to_type_table(newValue[iter])
+                self.add_to_type_table(newValue[iter])
             iter += 1
 
         query = query[:-2]
@@ -184,7 +184,7 @@ class System:
         query += f") VALUES ("
 
         for i in newValue:
-            j = i.upper()
+            j = str(i).upper()
             query += f"'{j}', "
 
         query = query[:-2]
@@ -293,7 +293,7 @@ class System:
             return 0
         else:
             return 1
-    
+
     # Finds all of the types that are ACTUALLY in the database
     def get_type_list_manually(self):
         categories = self.get_category_list()
@@ -318,7 +318,7 @@ class System:
                 for aut in auto:
                     if man == aut:
                         manual.remove(man)
-        
+
         for str in manual:
             self.add_to_type_table(str)
 
