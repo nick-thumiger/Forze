@@ -115,17 +115,18 @@
                             </tr>
                         {% endfor %}
 
-
                     {% if category != None %}
-                    <tr>
-                        <td></td>
-                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                                {% for data in dataList[0]['data'] %}
-                                    <td></td>
-                                {% endfor %}
-                                <td></td>
-                                <td></td>
-                            </tr>
+                    <tfoot>
+                        <tr>
+                            <td class="footer_data"></td>
+                            <td class="footer_data" data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a style="color:white;" href="#">Click to add more...</a></td>
+                            {% for data in dataList[0]['data'] %}
+                                <td class="footer_data"></td>
+                            {% endfor %}
+                            <td class="footer_data"></td>
+                            <td class="footer_data"></td>
+                        </tr>
+                    </tfoot>
                     {% endif %}
                     </tbody>
                 </table>
@@ -168,6 +169,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="editModalCenter" tabindex="-1" role="dialog" aria-labelledby="editModalCenter" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -179,12 +181,23 @@
                 </div>
                 <div id="edit-modal-target" class="modal-body">
                     {% if columnNames != None %}
-                        {% for i in range(columnNames|length) %}
+                        {% for i in range(columnNames|length - 1) %}
                             <div class="input-group">
                                 <div class="input-group-prepend" style="width:30%; padding-bottom: 2.5%">
                                     <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
                                 </div>
-                                <input type="text" class="form-control" id="edit_{{i}}">
+
+                                {% if columnNames[i] != "Type" %}
+                                    <input type="text" class="form-control" id="edit_{{i}}">
+                                {% else %}
+                                    <select id="edit_{{i}}" style="height:38px; width:68%; margin-left:2%;">
+                                        {% for unique_type in unique_types %}
+                                           <option value={{unique_type}}>
+                                              {{unique_type}}
+                                           </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     {% endif %}
@@ -248,9 +261,9 @@
                             {% for i in range(columnNames|length) %}
                                 <div class="input-group">
                                     <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
-                                        <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                                        <span class="input-group-text" id="edit_formating_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
                                     </div>
-                                    <input type="text" class="form-control" id="edit_{{i}}">
+                                    <input type="text" class="form-control" id="edit_formating_{{i}}">
                                 </div>
                             {% endfor %}
                         {% endif %}

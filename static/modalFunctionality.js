@@ -83,13 +83,6 @@ let triggerEditModal = (category, id) => {
 
             i += 1;
         })
-
-        let num1 = parseFloat(e.response[e.response.length-1]);
-        let num2 = parseFloat(e.response[e.response.length-2]);
-
-        let quantity = parseInt(num1/num2);
-
-        document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
     .catch((e) => {
         console.error(e);
@@ -142,36 +135,38 @@ let submitEdit = () => {
             break;
         }
 
-        let numberColumns = ['Weight Per Piece','Weight Total', 'Storage'];
+        let numberColumns = ['Weight Per Piece','Weight Total', 'Storage', 'Quantity'];
 
-        let temp = k.textContent;
+        let columnName = k.textContent;
+        let columnValue;
 
-        if (numberColumns.includes(temp) && !isNaN(t.value)) {
+        try {
+            columnValue = t.value;
+        } catch {
+            columnValue = t.options[t.selectedIndex].value;
+        }
+
+        if (numberColumns.includes(columnName) && isNaN(columnValue)) {
             errormessage = "Error: "+temp+" attribute should contain a number"
             document.getElementById(`edit_error_message`).textContent = errormessage;
             console.error(errormessage);
             return;
         }
 
-        temp = temp.replace(new RegExp(' ', 'g'),"_");
-        temp = temp.toLowerCase();
+        columnName = columnName.replace(new RegExp(' ', 'g'),"_");
+        columnName = columnName.toLowerCase();
 
-        console.log(temp);
-        console.log(t.value);
+        console.log(columnName);
+        console.log(columnValue);
 
-
-        values.push(t.value);
-        columns.push(temp);
+        columns.push(columnName);
+        values.push(columnValue);
 
         i += 1;
     }
 
-    let quantityValue  = values[values.length-1];
-    values.pop();
-    columns.pop();
-
-    let totalValue = values[values.length-2]*quantityValue;
-    values[values.length-1] = totalValue;
+    // values.pop();
+    // columns.pop();
 
     const payload = {
         'columns' : columns,
