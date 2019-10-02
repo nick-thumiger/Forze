@@ -300,10 +300,10 @@ def view_table(category, item_type):
             return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
 
         except CustomException as err:
-            return render_template('index.html', addModalColumnNames=addModalColumnNames, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
+            return render_template('index.html', addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', addModalColumnNames=addModalColumnNames, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
+            return render_template('index.html', addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
     return redirect(url_for('login'))
 
 '''
