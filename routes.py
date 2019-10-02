@@ -156,6 +156,33 @@ def edit_item():
         # res =
         return Response(str(err), status=400, mimetype='application/text')
 
+'''
+Get the user history for a particular entry
+'''
+@app.route('/condF', methods=['POST'])
+def cond_formatting():
+    req_data = request.get_json()
+
+    try:
+        types = req_data['type']
+        hvals = req_data['hvals']
+        lvals = req_data['lvals']
+
+        print(types)
+        print(hvals)
+        print(lvals)
+
+        if (len(types) != len(hvals)) or (len(types) != len(lvals)):
+            raise Exception('unequal line lengths')
+
+        update
+
+        return 'Success'
+    except Exception as err:
+        print(str(err))
+        # res =
+        return Response(str(err), status=400, mimetype='application/text')
+
 @app.route('/get_item_ID', methods=['GET'])
 def get_item_ID():
     itemID = request.args.get('itemID')

@@ -247,7 +247,7 @@
                     </div>
                     <div id="edit-modal-target" class="modal-body">
                         <div class="input-group" style="width:100%;">
-                            <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
+                            <div class="input-group-prepend" style="width:34%; padding-bottom: 2.5%">
                                 <span class="input-group-text" value="Item Type" style="width:100%">Item Type</span>
                             </div>
                             <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
@@ -260,7 +260,7 @@
                         {% if type_data != None %}
                         {% for i in range(type_data|length) %}
                         <div class="input-group" style="width:100%;">
-                            <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
+                            <div class="input-group-prepend" style="width:34%; padding-bottom: 2.5%">
                                 <span class="input-group-text" id="add_target_{{i}}" value="{{type_data[i][0]}}" style="width:100%">{{type_data[i][0]}}</span>
                             </div>
                             <input type="text" class="form-control" id="addL_{{i}}" value="{{type_data[i][1]}}">
@@ -269,16 +269,14 @@
 
                         {% endfor %}
                         {% endif %}
+                        <div class="input-group">
+                            <span id="cond_error_message" style="width:100%; color:orangered;">
+                            </span>
+                        </div>
                     </div>
-
-
-                    
-
-
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" onclick="submitEdit()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                        <button type="button" onclick="submitCondChange()" class="btn btn-primary" data-dismiss="modal">Submit</button>
                     </div>
                 </div>
             </div>

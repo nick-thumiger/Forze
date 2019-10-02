@@ -269,47 +269,125 @@ let submitAdd = () => {
     .catch((e) => console.error(e));
 }
 
-//Opens the modal that enables the user to edit an entry
-let triggerEditCondFormatting = () => {
-	console.log("Tester");
-	/* currentEditCategory = category;
-	currentEditID = id;
 
-	let url = apiURL + `/get_item/${category}/${id}`;
 
-	fetch(url)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+let submitCondChange = () => {
+	let loop = true;
+	let i = 0;
+
+	let columns = [];
+	let hvals = [];
+	let lvals = [];
+
+	while (loop) {
+		//t
+		let L = document.getElementById(`addL_${i}`);
+		let H = document.getElementById(`addH_${i}`);
+		let k = document.getElementById(`add_target_${i}`);
+
+		if (L === null || H === null) {
+			break;
+		}
+
+		let lowVal;
+		let highVal;
+
+		try {
+			lowVal = L.value;
+		} catch {
+			lowVal = L.options[L.selectedIndex].value;
+		}
+
+		try {
+			highVal = H.value;
+		} catch {
+			highVal = H.options[H.selectedIndex].value;
+		}
+
+		if (L.value === 0 || H.value === 0) {
+			continue;
+		}
+		
+		let columnName = k.textContent;
+
+		if (isNaN(highVal) || isNaN(lowVal)) {
+			errormessage = "Error: all fields should contain a number";
+			document.getElementById(`edit_error_message`).textContent = errormessage;
+			console.error(errormessage);
+			return;
+		} else if (highVal < lowVal) {
+			errormessage = "Error: all 'high' values must be greater than or equal to their 'low' values";
+			document.getElementById(`cond_error_message`).textContent = errormessage;
+			console.error(errormessage);
+			return;
+		}
+
+		//columnName = columnName.replace(new RegExp(' ', 'g'), "_");
+		//columnName = columnName.toLowerCase();
+
+		//console.log(columnName);
+		//console.log(columnValue);
+
+		columns.push(columnName);
+		hvals.push(highVal);
+		lvals.push(lowVal);
+
+		i += 1;
+	}
+
+	// values.pop();
+	// columns.pop();
+
+	const payload = {
+		'hvals': hvals,
+		'lvals': lvals,
+		'type': columns,
+	}
+
+	const settings = {
+		'method': "POST",
+		'headers': { "Content-Type": "application/json" },
+		'body': JSON.stringify(payload)
+	}
+
+	let url = apiURL + `/edit_condF`;
+
+	fetch(url, settings)
 		.then((e) => {
 			if (e.status === 200) {
 				return e.text();
 			} else {
-				throw new Error("An error has occured");
+				throw new Error("An untraceable error has occurred on our backend.");
 			}
 		})
 		.then(e => {
-			return JSON.parse(e);
+			console.log(e);
+			location.reload();
 		})
-		.then(e => {
-			// console.log('yeet');
-			i = 0;
-			e.response.shift();
-
-			e.response.map(k => {
-				let t = document.getElementById(`edit_${i}`);
-				t.setAttribute('value', k);
-
-				i += 1;
-			})
-
-			let num1 = parseFloat(e.response[e.response.length - 1]);
-			let num2 = parseFloat(e.response[e.response.length - 2]);
-
-			let quantity = parseInt(num1 / num2);
-
-			document.getElementById(`edit_${i}`).setAttribute('value', quantity);
-		})
-		.catch((e) => console.error(e));
-	*/
+		.catch(e => {
+			document.getElementById(`cond_error_message`).textContent = e;
+			console.error(e)
+		});
 }
+
+
+
+
 
 let submitAddType = () => {
     var e = document.getElementById("addTypeSelector");
