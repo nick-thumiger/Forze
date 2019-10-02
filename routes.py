@@ -196,6 +196,7 @@ Home Page
 '''
 @app.route('/', methods=['GET'])
 def home():
+    type_data = None
     if 'username' in session.keys():
         user=session['username']
     else:
@@ -203,15 +204,20 @@ def home():
 
     if loggedin() or autoLog:
         try:
+            try:
+                type_data = system.get_type_table()
+            except:
+                type_data = None
+                raise systemException("SQL error upon retrieving conditional formatting shit")
             category_list = system.get_category_list()
 
-            return render_template('index.html', category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="")
+            return render_template('index.html', category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="", type_data=type_data)
 
         except CustomException as err:
-            return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log() )
+            return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data)
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log())
+            return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
     return redirect(url_for('login'))
 
 '''
@@ -223,7 +229,7 @@ def view_table(category, item_type):
         user=session['username']
     else:
         user = None
-
+    type_data = None
     if loggedin() or autoLog:
         try:
             try:
@@ -231,6 +237,12 @@ def view_table(category, item_type):
             except:
                 category_list = None
                 raise systemException("SQL error upon generating list of categories")
+
+            try:
+                type_data = system.get_type_table()
+            except:
+                type_data = None
+                raise systemException("SQL error upon retrieving conditional formatting shit")
 
             try:
                 dataList = system.get_category_table(category, item_type, ['type'])
@@ -257,13 +269,13 @@ def view_table(category, item_type):
                     item['data'].append(quantity)
 
             print(f"Category {category}")
-            return render_template('index.html', category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
+            return render_template('index.html', category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
 
         except CustomException as err:
-            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log() )
+            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log())
+            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
     return redirect(url_for('login'))
 
 '''
@@ -479,6 +491,7 @@ def loggedin():
         # check if remembered, cookie has to match the "rememberme" field
         rawresult = makeQuery(system, f"SELECT * FROM `users` WHERE `rememberme` = '{request.cookies['rememberme']}'")
         account = [asciiSeperator(x) for x in rawresult]
+        print(account)
         if len(account) > 0:
             # update session variables
             session['loggedin'] = True

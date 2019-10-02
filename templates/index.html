@@ -238,17 +238,22 @@
                         </button>
                     </div>
                     <div id="edit-modal-target" class="modal-body"> 
-                        {% if columnNames != None %}
-                        {% for i in range(columnNames|length) %}
-                        <div class="input-group">
-                            <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
-                                <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
-                            </div>
-                            <input type="text" class="form-control" id="edit_{{i}}">
-                        </div>
-
-                        {% endfor %}
-                        {% endif %}
+                        <table>
+                            <tr>
+                                <th>Type Name</th>
+                                <th>Low Value</th>
+                                <th>High Value</th>
+                            </tr>
+                            {% if type_data != None %}
+                            {% for i in type_data %}
+                            <tr>
+                                <td>{{i[0]}}</td>
+                                <td>{{i[1]}}</td>
+                                <td>{{i[2]}}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

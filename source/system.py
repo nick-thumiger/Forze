@@ -77,6 +77,7 @@ class System:
     def get_unique_column_items(self, table, columnName):
         query = f"SELECT DISTINCT `{columnName}` FROM `{table}`"
         rawresult = makeQuery(self, query)
+        print(rawresult)
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
@@ -175,7 +176,8 @@ class System:
         iter = 0
         for i in column:
             query += f"`{i}`, "
-            if i == 'type':
+            if i == 'type' and not system.check_if_type_exists(newValue[iter]):
+                print("adding in 'add entry (L179)")
                 system.add_to_type_table(newValue[iter])
             iter += 1
 
@@ -204,6 +206,7 @@ class System:
         query = f"SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema` ='{dbname}'"
         rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
+        print(result)
         result.remove('user_changes')
         result.remove('users')
         result.remove('types')
@@ -248,7 +251,8 @@ class System:
         for i in range(len(column)):
             upperval = newValue[i].upper()
             query += f"`{column[i]}` = \"{upperval}\", "
-            if column[i] == 'type':
+            if column[i] == 'type' and not system.check_if_type_exists(upperval):
+                print("adding in setValue")
                 self.add_to_type_table(upperval)
 
         query = query[:-2]
@@ -299,29 +303,55 @@ class System:
         categories = self.get_category_list()
         types = []
         for cat in categories:
+            print(cat)
             result = self.get_unique_column_items(cat, 'type')
-            types.extend(result)
+            #types.extend(result)
         return types
 
     # Finds all of the types that SHOULD be in the database
     def get_type_list_table(self):
         query = f"SELECT `name` FROM `types`"
-        result = makeQuerySingleItem(self,query)
+        rawresult = makeQuery(self,query)
+        result = [asciiSeperator(x) for x in rawresult]
         return result
 
     #In the case of a discrepency between the types in the database, and the types that are expected, this function syncs them
     def sync_type_tables(self):
+        final_list = []
         manual = self.get_type_list_manually()
+        print("MANUAL:")
+        print(manual)
         auto = self.get_type_list_table()
+        print("Auto:")
+        print(auto)
+        
         if auto != None:
             for man in manual:
-                for aut in auto:
-                    if man == aut:
-                        manual.remove(man)
+                if man not in auto:
+                    final_list.append(man)
+                else:
+                    auto.remove(man)
         
-        for str in manual:
+        for str in final_list:
+            print("adding in sync")
             self.add_to_type_table(str)
+        return
 
     def add_to_type_table(self, type):
         query = f"INSERT INTO `types` VALUES (NULL, '{type}', NULL, '0', '0')"
         makeCommit(self, query)
+
+    def get_type_table(self):
+        query = f"SELECT `name`, `high`, `low` FROM `types`"
+        result = makeQuery(self,query)
+        print(result)
+        return result
+
+    def check_if_type_exists(self, type):
+        print(f"adding {type}")
+        query = f"SELECT * FROM `types` WHERE `name`='{type}'"
+        result = makeQuerySingleItem(self,query)
+        if result == None or len(result) == 0:
+            return True
+        else:
+            return False
