@@ -267,12 +267,12 @@
 
                     {% if type_data != None %}
                     {% for i in range(type_data|length) %}
-                    <div class="input-group">
-                        <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                    <div class="input-group" style="width:100%;">
+                        <div class="input-group-prepend" style="width:30%; padding-bottom: 2.5%">
                             <span class="input-group-text" id="add_target_{{i}}" value="{{type_data[i][0]}}" style="width:100%">{{type_data[i][0]}}</span>
                         </div>
                         <input type="text" class="form-control" id="addL_{{i}}" value="{{type_data[i][1]}}">
-                        <input type="text" class="form-control" id="addH_{{i}}" value="{{type_data[i][2]}}>
+                        <input type="text" class="form-control" id="addH_{{i}}" value="{{type_data[i][2]}}">
                     </div>
 
                     {% endfor %}
