@@ -1,5 +1,5 @@
-let apiURL = 'http://127.0.0.1:5100';
-//let apiURL = 'https://forze.pythonanywhere.com';
+//let apiURL = 'http://127.0.0.1:5100';
+let apiURL = 'https://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditID = null;
@@ -83,15 +83,10 @@ let triggerEditModal = (category, id) => {
 
             i += 1;
         })
-
-        let num1 = parseFloat(e.response[e.response.length-1]);
-        let num2 = parseFloat(e.response[e.response.length-2]);
-
-        let quantity = parseInt(num1/num2);
-
-        document.getElementById(`edit_${i}`).setAttribute('value', quantity);
     })
-    .catch((e) => console.error(e));
+    .catch((e) => {
+        console.error(e);
+    });
 }
 
 //Deletes the current thing that you are editing
@@ -140,25 +135,38 @@ let submitEdit = () => {
             break;
         }
 
-        let temp = k.textContent;
-        temp = temp.replace(new RegExp(' ', 'g'),"_");
-        temp = temp.toLowerCase();
+        let numberColumns = ['Weight Per Piece','Weight Total', 'Storage', 'Quantity'];
 
-        console.log(temp);
-        console.log(t.value);
+        let columnName = k.textContent;
+        let columnValue;
 
-        values.push(t.value);
-        columns.push(temp);    
+        try {
+            columnValue = t.value;
+        } catch {
+            columnValue = t.options[t.selectedIndex].value;
+        }
+
+        if (numberColumns.includes(columnName) && isNaN(columnValue)) {
+            errormessage = "Error: "+temp+" attribute should contain a number"
+            document.getElementById(`edit_error_message`).textContent = errormessage;
+            console.error(errormessage);
+            return;
+        }
+
+        columnName = columnName.replace(new RegExp(' ', 'g'),"_");
+        columnName = columnName.toLowerCase();
+
+        console.log(columnName);
+        console.log(columnValue);
+
+        columns.push(columnName);
+        values.push(columnValue);
 
         i += 1;
     }
 
-    let quantityValue  = values[values.length-1];
-    values.pop();
-    columns.pop();
-
-    let totalValue = values[values.length-2]*quantityValue;
-    values[values.length-1] = totalValue;
+    // values.pop();
+    // columns.pop();
 
     const payload = {
         'columns' : columns,
@@ -180,14 +188,17 @@ let submitEdit = () => {
         if (e.status === 200) {
             return e.text();
         } else {
-            throw new Error("An error has occured");
+            throw new Error("An untraceable error has occurred on our backend.");
         }
     })
     .then(e => {
         console.log(e);
         location.reload();
     })
-    .catch((e) => console.error(e));
+    .catch(e => {
+        document.getElementById(`edit_error_message`).textContent = e;
+        console.error(e)
+    });
 }
 
 let triggerAddModal = (category) => {
@@ -298,4 +309,38 @@ let triggerEditCondFormatting = () => {
 		})
 		.catch((e) => console.error(e));
 	*/
+}
+
+let submitAddType = () => {
+    var e = document.getElementById("addTypeSelector");
+    var category = e.options[e.selectedIndex].value;
+
+    var type = document.getElementById("addType").value;
+
+    const payload = {
+        'category' : category,
+        'type' : type
+    }
+
+    const settings = {
+        'method' : "POST",
+        'headers' : { "Content-Type" : "application/json" },
+        'body' : JSON.stringify(payload)
+    }
+
+    let url = apiURL+`/add_type`;
+
+    fetch(url, settings)
+    .then(e => {
+        if (e.status === 200) {
+            return e.text();
+        } else {
+            throw new Error("An error has occured");
+        }
+    })
+    .then(e => {
+        console.log(e);
+        location.reload();
+    })
+    .catch((e) => console.error(e));
 }

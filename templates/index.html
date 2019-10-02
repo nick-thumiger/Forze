@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; border-bottom: 1px solid #ddd;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; border-bottom: 1px solid #ddd; height:10%;">
         <div>
             <a class="navbar-brand" href={{ url_for('home') }} >
                 <img src="../static/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
@@ -31,6 +31,7 @@
             <p style="margin-top: 5%">Logged in as {{username}}</p>
             {% endif %}
             <button class="btn"  title="Search Entries"><i class="fa fa-search fa-2x"></i></button>
+            <button class="btn"  title="Add Type" data-toggle="modal" data-target="#addTypeModal"><i class="fa fa-plus fa-2x"></i></button>
             <button class="btn"  title="Edit Conditional Formatting" onclick="triggerEditCondFormatting()" data-toggle="modal" data-target="#editConditionalFormatting"><i class="fa fa-wrench fa-2x"></i></button>
             <button class="btn"  title="Edit Profile"><i class="fa fa-user fa-2x"></i></button>
             <a href="/logout"  title="Logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
@@ -114,17 +115,18 @@
                             </tr>
                         {% endfor %}
 
-
                     {% if category != None %}
-                    <tr>
-                        <td></td>
-                        <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                                {% for data in dataList[0]['data'] %}
-                                    <td></td>
-                                {% endfor %}
-                                <td></td>
-                                <td></td>
-                            </tr>
+                    <tfoot>
+                        <tr>
+                            <td class="footer_data"></td>
+                            <td class="footer_data" data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a style="color:white;" href="#">Click to add more...</a></td>
+                            {% for data in dataList[0]['data'] %}
+                                <td class="footer_data"></td>
+                            {% endfor %}
+                            <td class="footer_data"></td>
+                            <td class="footer_data"></td>
+                        </tr>
+                    </tfoot>
                     {% endif %}
                     </tbody>
                 </table>
@@ -167,6 +169,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="editModalCenter" tabindex="-1" role="dialog" aria-labelledby="editModalCenter" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -178,25 +181,41 @@
                 </div>
                 <div id="edit-modal-target" class="modal-body">
                     {% if columnNames != None %}
-                        {% for i in range(columnNames|length) %}
+                        {% for i in range(columnNames|length - 1) %}
                             <div class="input-group">
-                                <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                <div class="input-group-prepend" style="width:30%; padding-bottom: 2.5%">
                                     <span class="input-group-text" id="edit_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
                                 </div>
-                                <input type="text" class="form-control" id="edit_{{i}}">
-                            </div>
 
+                                {% if columnNames[i] != "Type" %}
+                                    <input type="text" class="form-control" id="edit_{{i}}">
+                                {% else %}
+                                    <select id="edit_{{i}}" style="height:38px; width:68%; margin-left:2%;">
+                                        {% for unique_type in unique_types %}
+                                           <option value={{unique_type}}>
+                                              {{unique_type}}
+                                           </option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
                         {% endfor %}
                     {% endif %}
+                    <div class="input-group">
+                        <span id="edit_error_message" style="width:100%; color:orangered;">
+                        </span>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                     <button type="button" onclick="submitDelete()" class="btn btn-danger" data-dismiss="modal">Delete</button>
-                    <button type="button" onclick="submitEdit()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    <button type="button" onclick="submitEdit()" class="btn btn-primary">Submit</button>
                 </div>
                 </div>
             </div>
         </div>
+
+        <!-- Modal for adding item to a category and type -->
         <div class="modal fade" id="addModalCenter" tabindex="-1" role="dialog" aria-labelledby="addModalCenter" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -207,11 +226,11 @@
                     </button>
                 </div>
                 <div id="add-modal-target" class="modal-body">
-                    {% if columnNames != None %}
-                        {% for i in range(columnNames|length) %}
+                    {% if addModalColumnNames != None %}
+                        {% for i in range(addModalColumnNames|length) %}
                             <div class="input-group">
                                 <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
-                                    <span class="input-group-text" id="add_target_{{i}}" value="{{columnNames[i]}}" style="width:100%">{{columnNames[i]}}</span>
+                                    <span class="input-group-text" id="add_target_{{i}}" value="{{addModalColumnNames[i]}}" style="width:100%">{{addModalColumnNames[i]}}</span>
                                 </div>
                                 <input type="text" class="form-control" id="add_{{i}}">
                             </div>
@@ -221,7 +240,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" onclick="submitAdd()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    <button type="button" onclick="submitAdd()" class="btn btn-primary">Submit</button>
                 </div>
                 </div>
             </div>
@@ -263,6 +282,45 @@
             </div>
         </div>
 
+        <!-- Modal for adding types -->
+        <div class="modal fade" id="addTypeModal" tabindex="-1" role="dialog" aria-labelledby="addTypeModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Type</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="edit-modal-target" class="modal-body">
+                        <div class="input-group">
+                            <div class="input-group-prepend" style="width:25%">
+                                <span class="input-group-text" id="edit_target_{{i}}" style="width:100%">Category</span>
+                           </div>
+                           <select id="addTypeSelector" style="width:75%; height:38px;">
+                                {% for category in category_list %}
+                                   <option value={{category}}>
+                                      {{category}}
+                                   </option>
+                                {% endfor %}
+                           </select>
+                        </div>
+                    </div>
+                    <div id="edit-modal-target" class="modal-body">
+                        <div class="input-group">
+                            <div class="input-group-prepend" style="width:25%;">
+                                <span class="input-group-text" style="width:100%">Type</span>
+                            </div>
+                            <input type="text" class="form-control" id="addType">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="submitAddType()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

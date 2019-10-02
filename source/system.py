@@ -3,8 +3,8 @@ from source.exceptions import *
 import time
 from datetime import datetime, timedelta
 
-#dbname = "Forze$default"
-dbname = "forze_inventory"
+dbname = "Forze$default"
+#dbname = "forze_inventory"
 import hashlib
 
 class System:
@@ -34,6 +34,11 @@ class System:
 
     def disconnectDB(self):
         sqlDisconnect(self.cursor, self.connection)
+
+    def add_type(self, category, item_type):
+        print("System Class: Need to implement add_type")
+        print("System Class {39}: "+category)
+        print("System Class {40}: "+item_type)
 
     #Gets all of the column names and prettifies them...
     #RETURNS: list of the column names
@@ -186,7 +191,7 @@ class System:
         query += f") VALUES ("
 
         for i in newValue:
-            j = i.upper()
+            j = str(i).upper()
             query += f"'{j}', "
 
         query = query[:-2]
@@ -249,7 +254,7 @@ class System:
         query = f"UPDATE `{table}` SET "
 
         for i in range(len(column)):
-            upperval = newValue[i].upper()
+            upperval = str(newValue[i]).upper()
             query += f"`{column[i]}` = \"{upperval}\", "
             if column[i] == 'type' and not system.check_if_type_exists(upperval):
                 print("adding in setValue")
@@ -297,7 +302,7 @@ class System:
             return 0
         else:
             return 1
-    
+
     # Finds all of the types that are ACTUALLY in the database
     def get_type_list_manually(self):
         categories = self.get_category_list()

@@ -34,6 +34,22 @@ app = Flask(__name__)
 app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
+@app.route('/add_type', methods=['POST'])
+def add_type():
+    req_data = request.get_json()
+
+    category = req_data['category']
+    item_type = req_data['type']
+
+    try:
+        system.add_type(category, item_type)
+    except Exception as e:
+        print(str(e))
+        return Response("Failure", status=400, mimetype='application/text')
+
+    return Response("Success", status=200, mimetype='application/text')
+
+
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
     req_data = request.get_json()
@@ -135,10 +151,10 @@ def edit_item():
             system.set_value(table,item_id,columns,values)
 
         return 'Success'
-
     except Exception as err:
         print(str(err))
-        return ("Fail", "400 Error")
+        # res =
+        return Response(str(err), status=400, mimetype='application/text')
 
 @app.route('/get_item_ID', methods=['GET'])
 def get_item_ID():
@@ -252,7 +268,7 @@ def view_table(category, item_type):
             # dataList = system.sort_by_columns(category)
             columnNames = system.get_pretty_column_names(category)
             unique_types = system.get_unique_column_items(category,'type')
-            columnNames.append("Quantity")
+            columnNames.append('Quantity')
 
             if item_type == "*":
                 dataList = None
@@ -268,14 +284,26 @@ def view_table(category, item_type):
                     quantity = round(float(item['data'][-1])/float(item['data'][-2]))
                     item['data'].append(quantity)
 
+
+
+            if columnNames != None:
+                addModalColumnNames = columnNames.copy()
+                addModalColumnNames.remove('Quantity')
+                addModalColumnNames.remove('Type')
+            else:
+                addModalColumnNames = None
+
+
+            print("Columns")
+            print(addModalColumnNames)
             print(f"Category {category}")
-            return render_template('index.html', category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
 
         except CustomException as err:
-            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
     return redirect(url_for('login'))
 
 '''
@@ -372,7 +400,6 @@ def register():
                 address = email
                 email = Message('Account Activation Required', sender = 'forze.inventory@gmail.com', recipients = [email])
                 # change yourdomain.com to your website, to test locally you can go to: http://localhost:5000/pythonlogin/activate/<email>/<code>
-                ######################################################################################################
                 activate_link = 'http://yourdomain.com/pythonlogin/activate/' + str(address) + '/' + str(activation_code)
                 # change the email body below
                 email.body = 'Welcome to the forze inventory management system! Please click the following link to activate your account: ' + str(activate_link)
