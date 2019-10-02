@@ -131,22 +131,6 @@
                 </table>
             {% endif %}
 
-            {% if dataList == None and item_type != "*" and item_type != None%}
-            <table class="dataTable" >
-                <tr>
-                    <td></td>
-                    <td data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a href="#">Click to add more...</a></td>
-                    {% if dataList != None %}
-                    {% for data in dataList[0]['data'] %}
-                    <td></td>
-                    {% endfor %}
-                    {% endif %}
-                    <td></td>
-                    <td></td>
-                </tr>
-            </table>
-            {% endif %}
-
         </div>
     </div>
     <div>
