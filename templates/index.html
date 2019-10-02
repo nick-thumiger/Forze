@@ -245,28 +245,22 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="edit-modal-target" class="modal-body"> 
-                        <table>
-                            <tr>
-                                <th>Type Name</th>
-                                <th>Low Value</th>
-                                <th>High Value</th>
-                            </tr>
-                            {% if type_data != None %}
-                            {% for i in type_data %}
-                            <tr>
-                                <td>{{i[0]}}</td>
-                                <td>{{i[1]}}</td>
-                                <td>{{i[2]}}</td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-                        </table>
-
+                    <div id="edit-modal-target" class="modal-body">
+                        <div class="input-group" style="width:100%;">
+                            <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
+                                <span class="input-group-text" value="Item Type" style="width:100%">Item Type</span>
+                            </div>
+                            <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
+                                <span class="input-group-text" value="Low Value" style="width:100%">Low Value</span>
+                            </div>
+                            <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
+                                <span class="input-group-text" value="High Value" style="width:100%">High Value</span>
+                            </div>
+                        </div>
                         {% if type_data != None %}
                         {% for i in range(type_data|length) %}
                         <div class="input-group" style="width:100%;">
-                            <div class="input-group-prepend" style="width:30%; padding-bottom: 2.5%">
+                            <div class="input-group-prepend" style="width:33%; padding-bottom: 2.5%">
                                 <span class="input-group-text" id="add_target_{{i}}" value="{{type_data[i][0]}}" style="width:100%">{{type_data[i][0]}}</span>
                             </div>
                             <input type="text" class="form-control" id="addL_{{i}}" value="{{type_data[i][1]}}">
