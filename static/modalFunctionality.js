@@ -365,7 +365,7 @@ let submitCondChange = () => {
 		'body': JSON.stringify(payload)
 	}
 
-	let url = apiURL + `/edit_condF`;
+	let url = apiURL + `/condF`;
 
 	fetch(url, settings)
 		.then((e) => {
