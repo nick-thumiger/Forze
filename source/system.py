@@ -310,7 +310,7 @@ class System:
         for cat in categories:
             print(cat)
             result = self.get_unique_column_items(cat, 'type')
-            #types.extend(result)
+            types.extend(result)
         return types
 
     # Finds all of the types that SHOULD be in the database
@@ -322,6 +322,7 @@ class System:
 
     #In the case of a discrepency between the types in the database, and the types that are expected, this function syncs them
     def sync_type_tables(self):
+        print("SYNCING THE TABLE")
         final_list = []
         manual = self.get_type_list_manually()
         print("MANUAL:")
@@ -343,6 +344,7 @@ class System:
         return
 
     def add_to_type_table(self, type):
+        print("WHY AM I ADDING")
         query = f"INSERT INTO `types` VALUES (NULL, '{type}', NULL, '0', '0')"
         makeCommit(self, query)
 
