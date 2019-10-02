@@ -130,7 +130,10 @@
                     {% endif %}
                 </table>
             {% endif %}
-            <img src="../static/washout.png" style="max-width: 100%;">
+            
+            {% if dataList == None %}
+            <img src="../static/washout.png" style="width: 80%; object-fit: contain;">
+            {% endif %}
         </div>
 
         
