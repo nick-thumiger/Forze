@@ -369,5 +369,5 @@ class System:
         for i in range(len(type)):
             print(f"updating: {type[i]}")
             query = f"UPDATE `types` SET `low` = '{low[i]}', `high` = '{high[i]}' WHERE `types`.`name` = '{type[i]}';"
-            self.makeCommit(query)
+            makeCommit(self,query)
         return
