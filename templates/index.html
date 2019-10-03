@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; border-bottom: 1px solid #ddd;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; border-bottom: 1px solid #ddd; height: 10%;">
         <div>
             <a class="navbar-brand" href={{ url_for('home') }} >
                 <img src="../static/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
@@ -110,7 +110,7 @@
                                     {% endif %}
                                 {% endfor %}
                                 <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                                <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', {{ row['id'] }})" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                                <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', '{{ row['id'] }}', '{{item_type}}')" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
                                 <td></td>
                             </tr>
                         {% endfor %}
@@ -119,7 +119,7 @@
                     <tfoot>
                         <tr>
                             <td class="footer_data"></td>
-                            <td class="footer_data" data-toggle="modal" onclick="triggerAddModal('{{category}}')" data-target="#addModalCenter"><a style="color:white;" href="#">Click to add more...</a></td>
+                            <td class="footer_data" data-toggle="modal" onclick="triggerAddModal('{{category}}', '{{item_type}}')" data-target="#addModalCenter"><a style="color:white;" href="#">Click to add more...</a></td>
                             {% for data in dataList[0]['data'] %}
                                 <td class="footer_data"></td>
                             {% endfor %}
@@ -130,13 +130,13 @@
                     {% endif %}
                 </table>
             {% endif %}
-            
+
             {% if dataList == None %}
             <img src="../static/wash.PNG" style="width: 80%; object-fit: contain;">
             {% endif %}
         </div>
 
-        
+
 
     </div>
     <div>
@@ -181,9 +181,15 @@
                                 {% else %}
                                     <select id="edit_{{i}}" style="height:38px; width:68%; margin-left:2%;">
                                         {% for unique_type in unique_types %}
-                                           <option value={{unique_type}}>
-                                              {{unique_type}}
-                                           </option>
+                                            {% if item_type == unique_type %}
+                                              <option selected value={{unique_type}}>
+                                                  {{unique_type}}
+                                               </option>
+                                           {% else %}
+                                              <option value={{unique_type}}>
+                                                  {{unique_type}}
+                                               </option>
+                                           {% endif %}
                                         {% endfor %}
                                     </select>
                                 {% endif %}
@@ -226,6 +232,11 @@
 
                         {% endfor %}
                     {% endif %}
+
+                    <div class="input-group">
+                        <span id="add_error_message" style="width:100%; color:orangered;"></span>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -282,7 +293,7 @@
             </div>
         </div>
 
-       
+
         <!-- Modal for adding types -->
         <div class="modal fade" id="addTypeModal" tabindex="-1" role="dialog" aria-labelledby="addTypeModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
