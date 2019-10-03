@@ -270,6 +270,7 @@ class System:
 
     #Returns array of conditional formating values
     def get_conditional_formatting(self, type):
+        print(f"Name = {type}")
         query = f"SELECT `low`, `high` FROM `types` WHERE `name` = '{type}'"
         rawresult = makeQuerySingleItem(self,query)
         print(rawresult)
