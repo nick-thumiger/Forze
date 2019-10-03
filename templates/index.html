@@ -54,7 +54,6 @@
                             <a class="dropdown-item" href="/{{cat}}/*">{{cat}}</a>
                             {% endfor %}
                             {% endif %}
-
                         </div>
                     </li>
                 </ul>
@@ -76,7 +75,8 @@
         </div>
         <div class="tableDiv" style="overflow-y: scroll">
             {% if msg != "" %}
-                <b><font color="red">{{msg}}</font></b>
+                <p><b><font color="red">{{msg}}</font></b></p>
+            <br />
             {% endif %}
 
             {% if dataList != None %}
