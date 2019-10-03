@@ -175,8 +175,6 @@ def cond_formatting():
         if (len(types) != len(hvals)) or (len(types) != len(lvals)):
             raise Exception('unequal line lengths')
 
-        update
-
         return 'Success'
     except Exception as err:
         print(str(err))
