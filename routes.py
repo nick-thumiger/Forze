@@ -325,10 +325,17 @@ def view_table(category, item_type):
                 addModalColumnNames = None
 
 
+<<<<<<< Updated upstream
             print("Columns")
             print(addModalColumnNames)
             print(f"Category {category}")
             return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
+=======
+            print(columnNames)
+
+            print(f"This One??? Category {category}")
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
+>>>>>>> Stashed changes
 
         except CustomException as err:
             return render_template('index.html', addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
