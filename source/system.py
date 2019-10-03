@@ -11,7 +11,7 @@ class System:
     def __init__(self):
         self._connection = sqlConnect()
         self._cursor = sqlCursor(self._connection)
-        #self.sync_type_tables()
+        self.sync_type_tables()
 
     def __dest__(self):
         sqlDisconnect(self._cursor, self._connection)
