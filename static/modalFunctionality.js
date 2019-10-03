@@ -343,7 +343,7 @@ let submitCondChange = () => {
 			document.getElementById(`edit_error_message`).textContent = errormessage;
 			console.error(errormessage);
 			return;
-		} else if (highVal < lowVal) {
+		} else if (parseInt(highVal) < parseInt(lowVal)) {
 			errormessage = "Error: all 'high' values must be greater than or equal to their 'low' values";
 			document.getElementById(`cond_error_message`).textContent = errormessage;
 			console.error(errormessage);
