@@ -324,7 +324,8 @@ let submitCondChange = () => {
 		}
 		
 		let columnName = k.textContent;
-
+		console.error(lowVal);
+		console.error(highVal);
 		if (isNaN(highVal) || isNaN(lowVal)) {
 			errormessage = "Error: all fields should contain a number";
 			document.getElementById(`edit_error_message`).textContent = errormessage;
