@@ -308,7 +308,11 @@ def view_table(category, item_type):
                 condForm = system.get_conditional_formatting(item_type)
                 print(condForm)
                 for item in dataList:
-                    quantity = round(float(item['data'][-1])/float(item['data'][-2]))
+                    temp = float(item['data'][-2])
+                    if temp == 0:
+                        quantity = 0
+                    else:
+                        quantity = round(float(item['data'][-1])/float(item['data'][-2]))
                     item['data'].append(quantity)
 
 

@@ -181,9 +181,9 @@ class System:
         iter = 0
         for i in column:
             query += f"`{i}`, "
-            if i == 'type' and not system.check_if_type_exists(newValue[iter]):
-                print("adding in 'add entry (L179)")
-                system.add_to_type_table(newValue[iter])
+            # if i == 'type' and not self.check_if_type_exists(newValue[iter]):
+            #     print("adding in 'add entry (L179)")
+            #     system.add_to_type_table(newValue[iter])
             iter += 1
 
         query = query[:-2]
@@ -256,9 +256,9 @@ class System:
         for i in range(len(column)):
             upperval = str(newValue[i]).upper()
             query += f"`{column[i]}` = \"{upperval}\", "
-            if column[i] == 'type' and not system.check_if_type_exists(upperval):
-                print("adding in setValue")
-                self.add_to_type_table(upperval)
+            # if column[i] == 'type' and not system.check_if_type_exists(upperval):
+            #     print("adding in setValue")
+            #     self.add_to_type_table(upperval)
 
         query = query[:-2]
 
@@ -330,14 +330,14 @@ class System:
         auto = self.get_type_list_table()
         print("Auto:")
         print(auto)
-        
+
         if auto != None:
             for man in manual:
                 if man not in auto:
                     final_list.append(man)
                 else:
                     auto.remove(man)
-        
+
         for str in final_list:
             print("adding in sync")
             self.add_to_type_table(str)

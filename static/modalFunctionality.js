@@ -2,6 +2,7 @@
 let apiURL = 'https://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
+let currentEditType = null;
 let currentEditID = null;
 let attributesLength = null;
 
@@ -55,8 +56,9 @@ let triggerHistoryModal = (id) => {
 }
 
 //Opens the modal that enables the user to edit an entry
-let triggerEditModal = (category, id) => {
+let triggerEditModal = (category, id, type) => {
     currentEditCategory = category;
+    currentEditType = type;
     currentEditID = id;
 
     let url = apiURL+`/get_item/${category}/${id}`;
@@ -121,6 +123,8 @@ let submitDelete = () => {
 
 //Edits the entry
 let submitEdit = () => {
+    console.log(currentEditType);
+
     let loop = true;
     let i = 0;
 
@@ -135,8 +139,6 @@ let submitEdit = () => {
             break;
         }
 
-        let numberColumns = ['Weight Per Piece','Weight Total', 'Storage', 'Quantity'];
-
         let columnName = k.textContent;
         let columnValue;
 
@@ -146,10 +148,7 @@ let submitEdit = () => {
             columnValue = t.options[t.selectedIndex].value;
         }
 
-        if (numberColumns.includes(columnName) && isNaN(columnValue)) {
-            errormessage = "Error: "+temp+" attribute should contain a number"
-            document.getElementById(`edit_error_message`).textContent = errormessage;
-            console.error(errormessage);
+        if (checkInput(columnName, columnValue, `edit_error_message`)) {
             return;
         }
 
@@ -201,8 +200,10 @@ let submitEdit = () => {
     });
 }
 
-let triggerAddModal = (category) => {
+let triggerAddModal = (category, type) => {
+    console.log(type);
     currentEditCategory = category;
+    currentEditType = type;
 }
 
 let submitAdd = () => {
@@ -220,12 +221,24 @@ let submitAdd = () => {
             break;
         }
 
+        let columnName = k.textContent;
+        let columnValue;
+
+        try {
+            columnValue = t.value;
+        } catch {
+            columnValue = t.options[t.selectedIndex].value;
+        }
+
+        if (checkInput(columnName, columnValue, `add_error_message`)) {
+            return;
+        }
+
         let temp = k.textContent;
         var re = new RegExp(" ", 'g');
 
         temp = temp.replace(re,"_");
         temp = temp.toLowerCase();
-        // console.log(temp)
 
         values.push(t.value);
         columns.push(temp);
@@ -233,12 +246,11 @@ let submitAdd = () => {
         i += 1;
     }
 
-    let quantityValue  = values[values.length-1];
-    values.pop();
-    columns.pop();
+    columns.push("type");
+    values.push(currentEditType);
 
-    let totalValue = values[values.length-2]*quantityValue;
-    values[values.length-1] = totalValue;
+    console.log(columns);
+    console.log(values);
 
     const payload = {
         'columns' : columns,
@@ -322,7 +334,7 @@ let submitCondChange = () => {
 		if (L.value === 0 || H.value === 0) {
 			continue;
 		}
-		
+
 		let columnName = k.textContent;
 
 		if (isNaN(highVal) || isNaN(lowVal)) {
@@ -385,10 +397,6 @@ let submitCondChange = () => {
 		});
 }
 
-
-
-
-
 let submitAddType = () => {
     var e = document.getElementById("addTypeSelector");
     var category = e.options[e.selectedIndex].value;
@@ -422,3 +430,44 @@ let submitAddType = () => {
     })
     .catch((e) => console.error(e));
 }
+
+let checkInput = (columnName, columnValue, error_message_id) => {
+    let numberColumns = ['Weight Per Piece','Weight Total', 'Storage', 'Quantity'];
+
+    // console.log(columnValue);
+    // console.log(isNumber(columnValue));
+
+    let errormessage = null;
+
+    if (columnValue.length === 0) {
+        errormessage = "Error: "+columnName+" attribute should not be empty";
+    }
+
+    if (numberColumns.includes(columnName)) {
+       if (isNaN(columnValue)) {
+        errormessage = "Error: "+columnName+" attribute should contain a number";
+        } else if (parseInt(columnValue) < 0) {
+            errormessage = "Error: "+columnName+" attribute should be positive";
+        } else if (parseInt(columnValue) >= 100000) {
+            errormessage = "Error: "+columnName+" attribute should be less than 100000";
+        }
+    } else {
+        if (columnValue.length > 20) {
+            errormessage = "Error: "+columnName+" attribute should be less than 20 characters";
+        }
+    }
+
+    if (errormessage != null) {
+        document.getElementById(error_message_id).textContent = errormessage;
+        console.error(errormessage);
+        return true;
+    }
+
+    return false;
+}
+
+
+
+
+
+
