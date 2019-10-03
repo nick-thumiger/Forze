@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -329,6 +329,41 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" onclick="submitAddType()" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal for searching -->
+        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Search</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="edit-modal-target" class="modal-body">
+                        <div class="input-group">
+                            <div class="input-group-prepend" style="width:25%">
+                                <span class="input-group-text" id="edit_target_{{i}}" style="width:100%">Category</span>
+                            </div>
+                            <select onchange="changedType()" id="searchTypeSelector" style="width:75%; height:38px;">
+                                {% for category in category_list %}
+                                    <option value={{category}}>
+                                        {{category}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div id="searchCriteriaGroup">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="submitSearch()" class="btn btn-primary" data-dismiss="modal">Search</button>
                     </div>
                 </div>
             </div>

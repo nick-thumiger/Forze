@@ -58,7 +58,6 @@ class System:
 
         return pretty_columns
 
-
     #Gets all of the column names
     #RETURNS: list of the column names
     def get_column_names(self, table):
@@ -366,3 +365,27 @@ class System:
     def edit_type_table(self, type, low, high):
         for i in range(len(type)):
             query(f"UPDATE `types` SET `low` = '{low(i)}', `high` = '{high(i)}' WHERE `types`.`name` = '{type(i)}';")
+
+    def search(self, category, searchDict):
+        query = f"SELECT * FROM `{category}` WHERE"
+        for key in searchDict.keys():
+            query += f" {key} = {searchDict[key]} AND"
+            # print("Dict["+key+"]: "+ searchDict.get(key))
+
+        query = query[:-4]+";"
+
+        print(query)
+
+        rawresult = makeQuery(self, query)
+        result = [listAsciiSeperator(x) for x in rawresult]
+
+        new_res = []
+
+        for item in result:
+            new_res.append({
+                'id': item[0],
+                'data': item[1:]
+            })
+
+        return new_res
+        # return query

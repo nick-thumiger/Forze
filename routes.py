@@ -34,6 +34,14 @@ app = Flask(__name__)
 app.secret_key = 'very-secret-123'  # Used to add entropy
 system = bootstrap_system()
 
+@app.route('/search/<category>', methods=['GET'])
+def search(category):
+    dataList = system.search(category, request.args)
+
+    columnNames = system.get_pretty_column_names(category)
+
+    return render_template('search.html', dataList=dataList, columnNames=columnNames)
+    
 @app.route('/add_type', methods=['POST'])
 def add_type():
     req_data = request.get_json()
@@ -325,17 +333,11 @@ def view_table(category, item_type):
                 addModalColumnNames = None
 
 
-<<<<<<< Updated upstream
             print("Columns")
             print(addModalColumnNames)
             print(f"Category {category}")
-            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
-=======
-            print(columnNames)
 
-            print(f"This One??? Category {category}")
-            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm)
->>>>>>> Stashed changes
+            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
 
         except CustomException as err:
             return render_template('index.html', addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
@@ -565,9 +567,6 @@ def loggedin():
             return True
     # account not logged in return false
     return False
-
-
-
 
 
 @app.route('/discon')
