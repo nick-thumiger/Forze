@@ -350,12 +350,6 @@ let submitCondChange = () => {
 			return;
 		}
 
-		//columnName = columnName.replace(new RegExp(' ', 'g'), "_");
-		//columnName = columnName.toLowerCase();
-
-		//console.log(columnName);
-		//console.log(columnValue);
-
 		columns.push(columnName);
 		hvals.push(highVal);
 		lvals.push(lowVal);
