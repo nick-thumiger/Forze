@@ -310,7 +310,7 @@ let submitCondChange = () => {
 		//t
 		let L = document.getElementById(`addL_${i}`);
 		let H = document.getElementById(`addH_${i}`);
-		let k = document.getElementById(`add_target_${i}`);
+		let k = document.getElementById(`cond_target_${i}`);
 
 		if (L === null || H === null) {
 			break;
