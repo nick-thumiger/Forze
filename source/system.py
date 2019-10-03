@@ -365,6 +365,7 @@ class System:
             return False
 
     def edit_type_table(self, type, low, high):
+        print("1234353")
         for i in range(len(type)):
             print(f"updating: {type(i)}")
             query = f"UPDATE `types` SET `low` = '{low(i)}', `high` = '{high(i)}' WHERE `types`.`name` = '{type(i)}';"

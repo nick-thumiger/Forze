@@ -175,6 +175,7 @@ def cond_formatting():
         if (len(types) != len(hvals)) or (len(types) != len(lvals)):
             raise Exception('unequal line lengths')
 
+        print("1233")
         system.edit_type_table(types, lvals, hvals)
 
         return 'Success'
