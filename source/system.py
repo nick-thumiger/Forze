@@ -366,5 +366,6 @@ class System:
 
     def edit_type_table(self, type, low, high):
         for i in range(len(type)):
-            query(f"UPDATE `types` SET `low` = '{low(i)}', `high` = '{high(i)}' WHERE `types`.`name` = '{type(i)}';")
+            query = f"UPDATE `types` SET `low` = '{low(i)}', `high` = '{high(i)}' WHERE `types`.`name` = '{type(i)}';"
+            self.makeCommit(query)
         return
