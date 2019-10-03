@@ -236,6 +236,13 @@ def page_not_found(e=None):
     return render_template('404.html', errorStr = e), 404
 
 '''
+Dedicated page for "page not found"
+'''
+@app.route('/mobile.html')
+def mob():
+    return render_template('mobile.html')
+
+'''
 Home Page
 '''
 @app.route('/', methods=['GET'])
