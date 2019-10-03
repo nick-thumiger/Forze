@@ -183,7 +183,8 @@ def cond_formatting():
         if (len(types) != len(hvals)) or (len(types) != len(lvals)):
             raise Exception('unequal line lengths')
 
-        update
+        print("1233")
+        system.edit_type_table(types, lvals, hvals)
 
         return 'Success'
     except Exception as err:
@@ -240,7 +241,35 @@ Dedicated page for "page not found"
 @app.route('/404')
 @app.errorhandler(404)
 def page_not_found(e=None):
-    return render_template('404.html', errorStr = e), 404
+    type_data = None
+    if 'username' in session.keys():
+        user=session['username']
+    else:
+        user = None
+
+    try:
+        try:
+            type_data = system.get_type_table()
+        except:
+            type_data = None
+            raise systemException("SQL error upon retrieving conditional formatting shit")
+        category_list = system.get_category_list()
+
+        return render_template('index.html', category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="ERROR 404: Page not found", type_data=type_data)
+
+    except CustomException as err:
+        return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg="ERROR 404: Page not found", type_data=type_data)
+    except Exception as err:
+        syserr = builtInException(err)
+        return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg="ERROR 404: Page not found", type_data=type_data)
+    return redirect(url_for('login'))
+
+'''
+Dedicated page for mobile
+'''
+@app.route('/mobile.html')
+def mob():
+    return render_template('mobile.html')
 
 '''
 Home Page

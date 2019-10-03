@@ -11,7 +11,7 @@ class System:
     def __init__(self):
         self._connection = sqlConnect()
         self._cursor = sqlCursor(self._connection)
-        #self.sync_type_tables()
+        self.sync_type_tables()
 
     def __dest__(self):
         sqlDisconnect(self._cursor, self._connection)
@@ -269,6 +269,7 @@ class System:
 
     #Returns array of conditional formating values
     def get_conditional_formatting(self, type):
+        print(f"Name = {type}")
         query = f"SELECT `low`, `high` FROM `types` WHERE `name` = '{type}'"
         rawresult = makeQuerySingleItem(self,query)
         print(rawresult)
@@ -364,7 +365,9 @@ class System:
 
     def edit_type_table(self, type, low, high):
         for i in range(len(type)):
-            query(f"UPDATE `types` SET `low` = '{low(i)}', `high` = '{high(i)}' WHERE `types`.`name` = '{type(i)}';")
+            query = f"UPDATE `types` SET `low` = '{low[i]}', `high` = '{high[i]}' WHERE `types`.`name` = '{type[i]}';"
+            makeCommit(self,query)
+        return
 
     def search(self, category, searchDict):
         query = f"SELECT * FROM `{category}` WHERE"

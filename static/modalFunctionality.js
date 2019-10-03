@@ -310,7 +310,7 @@ let submitCondChange = () => {
 		//t
 		let L = document.getElementById(`addL_${i}`);
 		let H = document.getElementById(`addH_${i}`);
-		let k = document.getElementById(`add_target_${i}`);
+		let k = document.getElementById(`cond_target_${i}`);
 
 		if (L === null || H === null) {
 			break;
@@ -343,18 +343,12 @@ let submitCondChange = () => {
 			document.getElementById(`edit_error_message`).textContent = errormessage;
 			console.error(errormessage);
 			return;
-		} else if (highVal < lowVal) {
+		} else if (parseInt(highVal) < parseInt(lowVal)) {
 			errormessage = "Error: all 'high' values must be greater than or equal to their 'low' values";
 			document.getElementById(`cond_error_message`).textContent = errormessage;
 			console.error(errormessage);
 			return;
 		}
-
-		//columnName = columnName.replace(new RegExp(' ', 'g'), "_");
-		//columnName = columnName.toLowerCase();
-
-		//console.log(columnName);
-		//console.log(columnValue);
 
 		columns.push(columnName);
 		hvals.push(highVal);
