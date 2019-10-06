@@ -24,6 +24,7 @@
 
             {% if dataList != None %}
             <table class="dataTable" >
+                {% if dataList != 0 %}
                 <thead>
                     <tr>
                         <th style="position: sticky; top: 0; width:2.5%"></th>
@@ -65,6 +66,9 @@
                         {% endfor %}
                     </tbody>
                     {% if category != None %}
+                {% endif %}
+
+
                     <tfoot>
                         <tr>
                             <td class="footer_data"></td>

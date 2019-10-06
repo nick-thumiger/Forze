@@ -123,7 +123,10 @@ def add_item():
     if len(columns) != len(values):
         raise Exception('unequal line lengths')
 
-    system.add_entry(table, columns,values)
+    try:
+        system.add_entry(table, columns,values)
+    except Exception as err:
+        return ("Fail", "400 Error")
 
     return 'Success'
 
@@ -348,28 +351,29 @@ def view_table(category, item_type):
                 traceback.print_exc()
                 raise mixedException("Invalid SQL category routes query", "The category requested is invalid. Please try again. Contact support if the issue persists.")
 
-            # dataList = system.sort_by_columns(category)
+            ## dataList = system.sort_by_columns(category)
             columnNames = system.get_pretty_column_names(category)
-            unique_types = system.get_unique_column_items(category,'type')
+            unique_types = system.get_types_in_cat(category)
             columnNames.append('Quantity')
 
             if item_type == "*":
                 dataList = None
                 columnNames = None
                 condForm = None
-            elif (len(dataList) == 0):
+            elif (item_type not in unique_types):
                 raise mixedException("Invalid SQL item_type routes query", "The item type requested is invalid. Please try again. Contact support if the issue persists.")
             else:
-                print(item_type)
                 condForm = system.get_conditional_formatting(item_type)
-                print(condForm)
-                for item in dataList:
-                    temp = float(item['data'][-2])
-                    if temp == 0:
-                        quantity = 0
-                    else:
-                        quantity = round(float(item['data'][-1])/float(item['data'][-2]))
-                    item['data'].append(quantity)
+                if len(dataList) == 0:
+                    dataList = 0
+                else:
+                    for item in dataList:
+                        temp = float(item['data'][-2])
+                        if temp == 0:
+                            quantity = 0
+                        else:
+                            quantity = round(float(item['data'][-1])/float(item['data'][-2]))
+                        item['data'].append(quantity)
 
             if columnNames != None:
                 addModalColumnNames = columnNames.copy()
