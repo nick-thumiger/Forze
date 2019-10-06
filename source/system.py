@@ -189,6 +189,8 @@ class System:
         for i in column:
             query += f"`{i}`, "
             if i == 'type':
+                if type_id == -1:
+                    raise systemException("WTF DID YOU DO JAIKI")
                 type_id = self.getTypeID(i)
             iter += 1
 

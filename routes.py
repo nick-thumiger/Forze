@@ -332,7 +332,7 @@ def view_table(category, item_type):
             except Exception as err:
                 raise mixedException("Invalid SQL category routes query", "The category requested is invalid. Please try again. Contact support if the issue persists.")
 
-            # dataList = system.sort_by_columns(category)
+            ## dataList = system.sort_by_columns(category)
             columnNames = system.get_pretty_column_names(category)
             unique_types = system.get_types_in_cat(category)
             columnNames.append('Quantity')
@@ -341,9 +341,11 @@ def view_table(category, item_type):
                 dataList = None
                 columnNames = None
                 condForm = None
-            elif (len(dataList) == 0):
+            elif (item_type not in unique_types):
                 raise mixedException("Invalid SQL item_type routes query", "The item type requested is invalid. Please try again. Contact support if the issue persists.")
             else:
+                if len(dataList) == 0:
+                    dataList = 0
                 print(item_type)
                 condForm = system.get_conditional_formatting(item_type)
                 print(condForm)
@@ -355,15 +357,12 @@ def view_table(category, item_type):
                         quantity = round(float(item['data'][-1])/float(item['data'][-2]))
                     item['data'].append(quantity)
 
-
-
             if columnNames != None:
                 addModalColumnNames = columnNames.copy()
                 addModalColumnNames.remove('Quantity')
                 addModalColumnNames.remove('Type')
             else:
                 addModalColumnNames = None
-
 
             print("Columns")
             print(addModalColumnNames)
