@@ -1,5 +1,5 @@
-//let apiURL = 'http://127.0.0.1:5100';
-let apiURL = 'https://forze.pythonanywhere.com';
+let apiURL = 'http://127.0.0.1:5100';
+// let apiURL = 'https://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditType = null;
@@ -429,9 +429,6 @@ let submitAddType = () => {
 let checkInput = (columnName, columnValue, error_message_id) => {
     let numberColumns = ['Weight Per Piece','Weight Total', 'Storage', 'Quantity'];
 
-    // console.log(columnValue);
-    // console.log(isNumber(columnValue));
-
     let errormessage = null;
 
     if (columnValue.length === 0) {
@@ -461,8 +458,86 @@ let checkInput = (columnName, columnValue, error_message_id) => {
     return false;
 }
 
+let changedType = () => {
+    let searchRoot = document.getElementById('searchCriteriaGroup');
+    let e = document.getElementById('searchTypeSelector');
+    let category = e.options[e.selectedIndex].value;
 
+    var first = searchRoot.firstElementChild; 
+    while (first) {
+        first.remove(); 
+        first = searchRoot.firstElementChild; 
+    }
 
+    let url = apiURL+`/get_columns/${category}`;
 
+    fetch(url)
+    .then(e => {
+        if (e.status === 200) {
+            return e.json();
+        } else {
+            throw new Error("An error has occured");
+        }
+    })
+    .then(e => {
+        let i = 0;
+        e.response.map(k => {
+            addInputCriteria(searchRoot, i, k);
+            i ++;
+        })
+        // console.log(e);
+        // location.reload();
+    })
+    .catch((e) => console.error(e));
+}
 
+let addInputCriteria = (root, i, fieldName) => {
+    e = document.createElement('div');
+    e.setAttribute('style', "padding:0.5rem;");
+    e.classList.add('modal-body');
+    e.innerHTML = `
+    <div class="input-group">
+        <div class="input-group-prepend" style="width:25%;">
+            <span class="input-group-text" style="width:100%" id="search_criteria_field_${i}">${fieldName}</span>
+        </div>
+        <input type="text" class="form-control" id="search_criteria_target_${i}">
+    </div>
+    `
+    root.appendChild(e);
+}
 
+let submitSearch = () => {
+    let loop = true;
+    let i = 0;
+
+    let e = document.getElementById('searchTypeSelector');
+    let category = e.options[e.selectedIndex].value;
+
+    let newURL = apiURL+`/search/${category}?`;
+
+    while (loop) {
+        let t  = document.getElementById(`search_criteria_field_${i}`);
+        let k  = document.getElementById(`search_criteria_target_${i}`);
+
+        if (t === null) {
+            break;
+        }
+
+        let targetText = k.value;
+        let fieldText = t.innerText;
+        var re = new RegExp(" ", 'g');
+
+        fieldText = fieldText.replace(re,"_");
+        fieldText = fieldText.toLowerCase();
+
+        if (targetText.length > 0) {
+            newURL += `${fieldText}=${targetText}&`
+        }
+
+        i += 1;
+    }
+    	
+    newURL = newURL.slice(0, -1);
+
+    window.location.href = newURL
+}

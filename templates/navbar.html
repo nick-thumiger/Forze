@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Forze</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- You can add your styles and scripts here -->
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="styles/post.css" /> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='test.css') }}">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='modalFunctionality.js') }}"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+
+    <script type="text/javascript">
+        if (screen.width <= 699) {
+        document.location = "/mobile.html";
+        }
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style=" display : flex; flex-direction : row; justify-content : space-between; border-bottom: 1px solid #ddd; height: 10%;">
+        <div>
+            <a class="navbar-brand" href={{ url_for('home') }} >
+                <img src="../static/logo.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
+            </a>
+        </div>
+
+        <div style=" display : flex; flex-direction : row;">
+            {% if username != None %}
+            <p style="margin-top: 5%">Logged in as {{username}}</p>
+            {% endif %}
+            <button class="btn"  title="Search Entries" data-toggle="modal" data-target="#searchModal"><i class="fa fa-search fa-2x"></i></button>
+            <button class="btn" title="Add Type" data-toggle="modal" data-target="#addTypeModal"><i class="fa fa-plus fa-2x"></i></button>
+            <button class="btn"  title="Edit Conditional Formatting" data-toggle="modal" data-target="#editConditionalFormatting"><i class="fa fa-wrench fa-2x"></i></button>
+            <a href="/profile" title="Edit Profile" class="btn"><i class="fa fa-user fa-2xx"></i></a>
+            <a href="/logout"  title="Logout" class="btn"><i class="fas fa-sign-out-alt fa-2x"></i></a>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-grow: 0">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../static/hamburger_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            {% if category_list != None %}
+                            {% for cat in category_list %}
+                            <a class="dropdown-item" href="/{{cat}}/*">{{cat}}</a>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+</body>
+
+</html>

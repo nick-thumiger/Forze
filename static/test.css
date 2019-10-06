@@ -6,7 +6,7 @@ html, body {
     flex-direction: row;
     display: flex;
     flex: 1;
-    height: 90%;
+    height: 100%;
 }
 
 th {

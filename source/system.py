@@ -3,8 +3,8 @@ from source.exceptions import *
 import time
 from datetime import datetime, timedelta
 
-dbname = "Forze$default"
-#dbname = "forze_inventory"
+# dbname = "Forze$default"
+dbname = "forze_inventory"
 import hashlib
 
 class System:
@@ -59,7 +59,6 @@ class System:
             pretty_columns.append(k)
 
         return pretty_columns
-
 
     #Gets all of the column names
     #RETURNS: list of the column names
@@ -365,10 +364,31 @@ class System:
             return False
 
     def edit_type_table(self, type, low, high):
-        print("1234353")
         for i in range(len(type)):
-            print(f"updating: {type[i]}")
             query = f"UPDATE `types` SET `low` = '{low[i]}', `high` = '{high[i]}' WHERE `types`.`name` = '{type[i]}';"
-            print(query)
             makeCommit(self,query)
         return
+
+    def search(self, category, searchDict):
+        query = f"SELECT * FROM `{category}` WHERE"
+        for key in searchDict.keys():
+            query += f" {key} = {searchDict[key]} AND"
+            # print("Dict["+key+"]: "+ searchDict.get(key))
+
+        query = query[:-4]+";"
+
+        print(query)
+
+        rawresult = makeQuery(self, query)
+        result = [listAsciiSeperator(x) for x in rawresult]
+
+        new_res = []
+
+        for item in result:
+            new_res.append({
+                'id': item[0],
+                'data': item[1:]
+            })
+
+        return new_res
+        # return query
