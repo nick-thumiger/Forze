@@ -35,10 +35,12 @@ class System:
     def disconnectDB(self):
         sqlDisconnect(self.cursor, self.connection)
 
+    #Adds a type
     def add_type(self, category, item_type):
-        print("System Class: Need to implement add_type")
-        print("System Class {39}: "+category)
-        print("System Class {40}: "+item_type)
+        if self.can_I_add_type(item_type, category):
+            self.add_to_type_table(item_type,category)
+        else:
+            raise mixedException("Type was invalid somehow", "The type you selected was invalid. Try again, or contact support if the issue persists")
 
     #Gets all of the column names and prettifies them...
     #RETURNS: list of the column names
@@ -304,6 +306,12 @@ class System:
         else:
             return 1
 
+    def get_types_of_cat(self, cat):
+        query = f"SELECT `name` FROM `types` WHERE `cat`='{cat}'"
+        rawresult = makeQuery(self,query)
+        result = [listAsciiSeperator(x) for x in rawresult]
+        return
+        
     # Finds all of the types that are ACTUALLY in the database
     def get_type_list_manually(self):
         categories = self.get_category_list()
@@ -323,15 +331,9 @@ class System:
 
     #In the case of a discrepency between the types in the database, and the types that are expected, this function syncs them
     def sync_type_tables(self):
-        print("SYNCING THE TABLE")
         final_list = []
         manual = self.get_type_list_manually()
-        print("MANUAL:")
-        print(manual)
         auto = self.get_type_list_table()
-        print("Auto:")
-        print(auto)
-
         if auto != None:
             for man in manual:
                 if man not in auto:
@@ -340,13 +342,11 @@ class System:
                     auto.remove(man)
 
         for str in final_list:
-            print("adding in sync")
             self.add_to_type_table(str)
         return
-
-    def add_to_type_table(self, type):
-        print("WHY AM I ADDING")
-        query = f"INSERT INTO `types` VALUES (NULL, '{type}', NULL, '0', '0')"
+    
+    def add_to_type_table(self, type, cat):
+        query = f"INSERT INTO `types` VALUES (NULL, '{type}', '{cat}', '0', '0')"
         makeCommit(self, query)
 
     def get_type_table(self):
@@ -355,9 +355,9 @@ class System:
         print(result)
         return result
 
-    def check_if_type_exists(self, type):
+    def can_I_add_type(self, type, cat):
         print(f"adding {type}")
-        query = f"SELECT * FROM `types` WHERE `name`='{type}'"
+        query = f"SELECT * FROM `types` WHERE `name`='{type}' and `cat`='{cat}'"
         result = makeQuerySingleItem(self,query)
         if result == None or len(result) == 0:
             return True
