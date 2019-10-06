@@ -102,7 +102,10 @@ def add_item():
     if len(columns) != len(values):
         raise Exception('unequal line lengths')
 
-    system.add_entry(table, columns,values)
+    try:
+        system.add_entry(table, columns,values)
+    except Exception as err:
+        return ("Fail", "400 Error")
 
     return 'Success'
 

@@ -180,25 +180,21 @@ class System:
         query = f"INSERT INTO `{table}` ("
 
         iter = 0
+        type_id = -1
         for i in column:
             query += f"`{i}`, "
-            # if i == 'type' and not self.check_if_type_exists(newValue[iter]):
-            #     print("adding in 'add entry (L179)")
-            #     system.add_to_type_table(newValue[iter])
+            if i == 'type':
+                type_id = self.getTypeID(i)
             iter += 1
 
-        query = query[:-2]
-
-        query += f") VALUES ("
+        query += f"`type_id`) VALUES ("
 
         for i in newValue:
             j = str(i).upper()
             query += f"'{j}', "
 
-        query = query[:-2]
-
-        query += ");"
-
+        query += f"'{type_id}');"
+        print(query)
         makeCommit(self, query)
 
     #Delete an entry
@@ -356,7 +352,7 @@ class System:
 
     def can_I_add_type(self, type, cat):
         print(f"adding {type}")
-        query = f"SELECT * FROM `types` WHERE `name`='{type}' and `cat`='{cat}'"
+        query = f"SELECT * FROM `types` WHERE `name`='{type}' and `cat`='{cat}';"
         result = makeQuerySingleItem(self,query)
         if result == None or len(result) == 0:
             return True
@@ -392,3 +388,10 @@ class System:
 
         return new_res
         # return query
+
+    def getTypeID(self, type):
+        query = f"SELECT `type_id` FROM `types` WHERE `name` = '{type}';"
+        rawresult = makeQuerySingleItem(self,query)
+        result = [asciiSeperator(x) for x in rawresult]
+        return result(0)
+        
