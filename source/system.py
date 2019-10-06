@@ -61,13 +61,16 @@ class System:
     #Gets all of the column names
     #RETURNS: list of the column names
     def get_column_names(self, table):
-        query = f"select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='{table}'"
+        query = f"SHOW COLUMNS FROM {table}"
         rawresult = makeQuery(self, query)
-        result = [asciiSeperator(x) for x in rawresult]
+        rawresult = [listAsciiSeperator(x) for x in rawresult]
 
-        result.remove('item_id')
+        res = []
+        
+        for e in rawresult:
+            res.append(e[0])
 
-        return result
+        return res
 
     #Gets all the entries in a given column
     #RETURNS: List of entries in the given column
@@ -125,7 +128,10 @@ class System:
 
         return new_res
 
-    def get_category_table(self, category, item_type, orderBy):
+    def get_category_table(self, category, item_type):
+        orderBy = self.get_column_names(category)
+        orderBy.remove("item_id")
+
         columnStr = ""
         for element in orderBy:
             columnStr = columnStr + element + ", "
@@ -140,8 +146,7 @@ class System:
 
         for item in result:
             new_res.append({
-                'id': item[0],
-                'data': item[1:]
+                'data': item
             })
 
         return new_res
@@ -210,7 +215,7 @@ class System:
         query = f"SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema` ='{dbname}'"
         rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
-        print(result)
+
         result.remove('user_changes')
         result.remove('users')
         result.remove('types')
@@ -351,7 +356,6 @@ class System:
     def get_type_table(self):
         query = f"SELECT `name`, `high`, `low` FROM `types`"
         result = makeQuery(self,query)
-        print(result)
         return result
 
     def check_if_type_exists(self, type):
@@ -372,12 +376,9 @@ class System:
     def search(self, category, searchDict):
         query = f"SELECT * FROM `{category}` WHERE"
         for key in searchDict.keys():
-            query += f" {key} = {searchDict[key]} AND"
-            # print("Dict["+key+"]: "+ searchDict.get(key))
+            query += f" {key} = \"{searchDict[key]}\" AND"
 
         query = query[:-4]+";"
-
-        print(query)
 
         rawresult = makeQuery(self, query)
         result = [listAsciiSeperator(x) for x in rawresult]
@@ -391,4 +392,3 @@ class System:
             })
 
         return new_res
-        # return query
