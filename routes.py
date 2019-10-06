@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from source.exceptions import *
 from init import bootstrap_system
 import json
+import traceback
 
 autoLog = False
 
@@ -36,12 +37,32 @@ system = bootstrap_system()
 
 @app.route('/search/<category>', methods=['GET'])
 def search(category):
-    dataList = system.search(category, request.args)
+    if 'username' in session.keys():
+        user=session['username']
+    else:
+        user = None
 
-    columnNames = system.get_pretty_column_names(category)
+    if loggedin() or autoLog:
+        try:
+            dataList = system.search(category, request.args)
+            columnNames = system.get_pretty_column_names(category)
 
-    return render_template('search.html', dataList=dataList, columnNames=columnNames)
-    
+            unique_types = system.get_unique_column_items(category,'type')
+            columnNames = system.get_pretty_column_names(category)
+            category_list = system.get_category_list()
+            type_data = system.get_type_table()
+
+            if columnNames != None:
+                addModalColumnNames = columnNames.copy()
+                addModalColumnNames.remove('Type')
+
+            return render_template('search.html', columnNames=columnNames, unique_types=unique_types, addModalColumnNames=addModalColumnNames, category_list=category_list, username=user, dataList=dataList, type_data=type_data)
+        except Exception as err:
+            traceback.print_exc()
+            return redirect(url_for('home'))
+
+    return redirect(url_for('login'))
+
 @app.route('/add_type', methods=['POST'])
 def add_type():
     req_data = request.get_json()
@@ -149,9 +170,6 @@ def edit_item():
         values = req_data['values']
         table = req_data['table']
         item_id = req_data['item_id']
-
-        print(values)
-        print(columns)
 
         if len(columns) != len(values):
             raise Exception('unequal line lengths')
@@ -328,8 +346,9 @@ def view_table(category, item_type):
                 raise systemException("SQL error upon retrieving conditional formatting shit")
 
             try:
-                dataList = system.get_category_table(category, item_type, ['type'])
+                dataList = system.get_category_table(category, item_type)
             except Exception as err:
+                traceback.print_exc()
                 raise mixedException("Invalid SQL category routes query", "The category requested is invalid. Please try again. Contact support if the issue persists.")
 
             ## dataList = system.sort_by_columns(category)
@@ -586,9 +605,8 @@ def loggedin():
         return True
     elif 'rememberme' in request.cookies:
         # check if remembered, cookie has to match the "rememberme" field
-        rawresult = makeQuery(system, f"SELECT * FROM `users` WHERE `rememberme` = '{request.cookies['rememberme']}'")
+        rawresult = makeQuerySingleItem(system, f"SELECT * FROM `users` WHERE `rememberme` = '{request.cookies['rememberme']}'")
         account = [asciiSeperator(x) for x in rawresult]
-        print(account)
         if len(account) > 0:
             # update session variables
             session['loggedin'] = True

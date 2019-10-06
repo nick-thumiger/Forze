@@ -3,32 +3,36 @@
 {% block content %}
     <div id="root">
         <div class="tableDiv" style="overflow-y: scroll">
-            <table class="dataTable" >
-                <thead>
-                    <tr>
-                        <th style="position: sticky; top: 0; width:2.5%"></th>
-                        {% for header in columnNames %}
-                            <th style="position: sticky; top: 0;">{{header}}</th>
-                        {% endfor %}
-                        <th style="position: sticky; top: 0; width:4%"></th>
-                        <th style="position: sticky; top: 0; width:2.5%"></th>
-                        <th style="position: sticky; top: 0; width:2.5%"></th>
-                    </tr>
-                </thead>
-                <tbody style="overflow-y: scroll">
-                    {% for row in dataList %}
+            {% if dataList | length > 0 %}
+                <table class="dataTable" >
+                    <thead>
                         <tr>
-                            <td></td>
-                            {% for data in row['data'] %}
-                                <td>{{data}}</td>
+                            <th style="position: sticky; top: 0; width:2.5%"></th>
+                            {% for header in columnNames %}
+                                <th style="position: sticky; top: 0;">{{header}}</th>
                             {% endfor %}
-                            <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                            <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', '{{ row['id'] }}', '{{item_type}}')" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
-                            <td></td>
+                            <th style="position: sticky; top: 0; width:4%"></th>
+                            <th style="position: sticky; top: 0; width:2.5%"></th>
+                            <th style="position: sticky; top: 0; width:2.5%"></th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody style="overflow-y: scroll">
+                        {% for row in dataList %}
+                            <tr>
+                                <td></td>
+                                {% for data in row['data'] %}
+                                    <td>{{data}}</td>
+                                {% endfor %}
+                                <td><a href="#"><img data-toggle="modal" onclick="triggerHistoryModal({{ row['id'] }})" data-target="#historyModalCenter" src="../static/history_icon.png" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                                <td><a href="#"><img data-toggle="modal" onclick="triggerEditModal('{{category}}', '{{ row['id'] }}', '{{item_type}}')" data-target="#editModalCenter" src="../static/edit_icon.svg" class="d-inline-block align-top" alt="" style="max-height: 30px; max-width: 100%;"></a></td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+            <p>There are no results</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
