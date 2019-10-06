@@ -344,18 +344,17 @@ def view_table(category, item_type):
             elif (item_type not in unique_types):
                 raise mixedException("Invalid SQL item_type routes query", "The item type requested is invalid. Please try again. Contact support if the issue persists.")
             else:
+                condForm = system.get_conditional_formatting(item_type)
                 if len(dataList) == 0:
                     dataList = 0
-                print(item_type)
-                condForm = system.get_conditional_formatting(item_type)
-                print(condForm)
-                for item in dataList:
-                    temp = float(item['data'][-2])
-                    if temp == 0:
-                        quantity = 0
-                    else:
-                        quantity = round(float(item['data'][-1])/float(item['data'][-2]))
-                    item['data'].append(quantity)
+                else:
+                    for item in dataList:
+                        temp = float(item['data'][-2])
+                        if temp == 0:
+                            quantity = 0
+                        else:
+                            quantity = round(float(item['data'][-1])/float(item['data'][-2]))
+                        item['data'].append(quantity)
 
             if columnNames != None:
                 addModalColumnNames = columnNames.copy()
