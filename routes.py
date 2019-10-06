@@ -334,7 +334,7 @@ def view_table(category, item_type):
 
             # dataList = system.sort_by_columns(category)
             columnNames = system.get_pretty_column_names(category)
-            unique_types = system.get_unique_column_items(category,'type')
+            unique_types = system.get_types_in_cat(category)
             columnNames.append('Quantity')
 
             if item_type == "*":

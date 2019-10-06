@@ -11,7 +11,7 @@ class System:
     def __init__(self):
         self._connection = sqlConnect()
         self._cursor = sqlCursor(self._connection)
-        self.sync_type_tables()
+        # self.sync_type_tables()
 
     def __dest__(self):
         sqlDisconnect(self._cursor, self._connection)
@@ -83,7 +83,12 @@ class System:
     def get_unique_column_items(self, table, columnName):
         query = f"SELECT DISTINCT `{columnName}` FROM `{table}`"
         rawresult = makeQuery(self, query)
-        print(rawresult)
+        result = [asciiSeperator(x) for x in rawresult]
+        return result
+
+    def get_types_in_cat(self, cat):
+        query = f"SELECT `name` FROM `types` WHERE `cat`='{cat}'"
+        rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
         return result
 
