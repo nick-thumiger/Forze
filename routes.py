@@ -382,6 +382,7 @@ def view_table(category, item_type):
                 addModalColumnNames = columnNames.copy()
                 addModalColumnNames.remove('Quantity')
                 addModalColumnNames.remove('Type')
+                addModalColumnNames.remove('Type Id')
             else:
                 addModalColumnNames = None
 
