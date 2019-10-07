@@ -220,7 +220,7 @@ class System:
         query = f"SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema` ='{dbname}'"
         rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
-
+        print(result)
         result.remove('user_changes')
         result.remove('users')
         result.remove('types')
