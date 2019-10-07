@@ -55,6 +55,7 @@ def search(category):
             if columnNames != None:
                 addModalColumnNames = columnNames.copy()
                 addModalColumnNames.remove('Type')
+                addModalColumnNames.remove('Quantity')
 
             return render_template('search.html', columnNames=columnNames, unique_types=unique_types, addModalColumnNames=addModalColumnNames, category_list=category_list, username=user, dataList=dataList, type_data=type_data)
         except Exception as err:
