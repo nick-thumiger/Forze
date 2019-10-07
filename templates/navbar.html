@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -145,13 +145,12 @@
                 <div id="add-modal-target" class="modal-body">
                     {% if addModalColumnNames != None %}
                         {% for i in range(addModalColumnNames|length) %}
-                            <div class="input-group">
-                                <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
-                                    <span class="input-group-text" id="add_target_{{i}}" value="{{addModalColumnNames[i]}}" style="width:100%">{{addModalColumnNames[i]}}</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend" style="width:25%; padding-bottom: 2.5%">
+                                        <span class="input-group-text" id="add_target_{{i}}" value="{{addModalColumnNames[i]}}" style="width:100%">{{addModalColumnNames[i]}}</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="add_{{i}}">
                                 </div>
-                                <input type="text" class="form-control" id="add_{{i}}">
-                            </div>
-
                         {% endfor %}
                     {% endif %}
 

@@ -277,13 +277,13 @@ def page_not_found(e=None):
             raise systemException("SQL error upon retrieving conditional formatting shit")
         category_list = system.get_category_list()
 
-        return render_template('index.html', category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="ERROR 404: Page not found", type_data=type_data)
+        return render_template('index.html', g=0, category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="ERROR 404: Page not found", type_data=type_data)
 
     except CustomException as err:
-        return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg="ERROR 404: Page not found", type_data=type_data)
+        return render_template('index.html', g=0, category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg="ERROR 404: Page not found", type_data=type_data)
     except Exception as err:
         syserr = builtInException(err)
-        return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg="ERROR 404: Page not found", type_data=type_data)
+        return render_template('index.html', g=0, category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg="ERROR 404: Page not found", type_data=type_data)
     return redirect(url_for('login'))
 
 '''
@@ -313,13 +313,13 @@ def home():
                 raise systemException("SQL error upon retrieving conditional formatting shit")
             category_list = system.get_category_list()
 
-            return render_template('index.html', category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="", type_data=type_data)
+            return render_template('index.html', g=0, category=None, category_list=category_list, item_type=None, unique_types=None, dataList=None, columnNames=None, username=user, msg="", type_data=type_data)
 
         except CustomException as err:
-            return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data)
+            return render_template('index.html', g=0, category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data)
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
+            return render_template('index.html', g=0, category=None, category_list=None, item_type=None, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
     return redirect(url_for('login'))
 
 '''
@@ -361,13 +361,18 @@ def view_table(category, item_type):
                 dataList = None
                 columnNames = None
                 condForm = None
+                g = 0
             elif (item_type not in unique_types):
                 raise mixedException("Invalid SQL item_type routes query", "The item type requested is invalid. Please try again. Contact support if the issue persists.")
             else:
                 condForm = system.get_conditional_formatting(item_type)
                 if len(dataList) == 0:
-                    dataList = 0
+                    print("option1")
+                    g = 1
+                    dataList = None
                 else:
+                    print("option2")
+                    g = 1
                     for item in dataList:
                         temp = float(item['data'][-2])
                         if temp == 0:
@@ -380,6 +385,7 @@ def view_table(category, item_type):
                 addModalColumnNames = columnNames.copy()
                 addModalColumnNames.remove('Quantity')
                 addModalColumnNames.remove('Type')
+                addModalColumnNames.remove('Type Id')
             else:
                 addModalColumnNames = None
 
@@ -387,13 +393,13 @@ def view_table(category, item_type):
             print(addModalColumnNames)
             print(f"Category {category}")
 
-            return render_template('index.html', addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
+            return render_template('index.html', g=g, addModalColumnNames=addModalColumnNames, category=category, item_type=item_type, category_list=category_list, unique_types=unique_types, dataList=dataList, columnNames=columnNames, username=user, msg="", condForm=condForm, type_data=type_data)
 
         except CustomException as err:
-            return render_template('index.html', addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
+            return render_template('index.html', g=0, addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=err.log(), type_data=type_data )
         except Exception as err:
             syserr = builtInException(err)
-            return render_template('index.html', addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
+            return render_template('index.html', g=0, addModalColumnNames=None, item_type=item_type, category=None, category_list=category_list, unique_types=None, dataList=None, username=user, columnNames=None, msg=syserr.log(), type_data=type_data)
     return redirect(url_for('login'))
 
 '''

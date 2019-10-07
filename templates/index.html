@@ -19,9 +19,9 @@
             </ul>
         </div>
         <div class="tableDiv" style="overflow-y: scroll">
-            {% if dataList != None %}
+            {% if g == 1 %}
             <table class="dataTable" >
-                {% if dataList != 0 %}
+                {% if dataList != None %}
                 <thead>
                     <tr>
                         <th style="position: sticky; top: 0; width:2.5%"></th>
@@ -69,9 +69,11 @@
                         <tr>
                             <td class="footer_data"></td>
                             <td class="footer_data" data-toggle="modal" onclick="triggerAddModal('{{category}}', '{{item_type}}')" data-target="#addModalCenter"><a style="color:white;" href="#">Click to add more...</a></td>
+                            {% if dataList != None %}
                             {% for data in dataList[0]['data'] %}
                                 <td class="footer_data"></td>
                             {% endfor %}
+                            {% endif %}
                             <td class="footer_data"></td>
                             <td class="footer_data"></td>
                         </tr>
