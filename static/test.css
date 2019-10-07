@@ -64,6 +64,19 @@ a:hover {
     color: white;
 }
 
+.highlightedNavItem .highlightedNavItemText {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: #41b1f0;
+    color: white;
+}
+
+.highlightedNavItem .highlightedNavItemText:hover {
+    background-color: #555;
+    color: white;
+}
+
 .btn {
     background-color: #f8f9fa;
     border: none;

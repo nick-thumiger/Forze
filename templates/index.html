@@ -1,4 +1,4 @@
-{% extends 'navbar.html' %}
+﻿{% extends 'navbar.html' %}
 
 {% block content %}
 <div style="height:90%">
@@ -7,21 +7,18 @@
             <ul class="sideNav">
                 {% if unique_types != None %}
                     {% for type in unique_types %}
-                        <li class="navItem"><a href={{ url_for('view_table', category=category, item_type=type) }} class="navItemText">{{type}}</a></li>
+                        {% if type == item_type %}
+                            <li class="highlightedNavItem"><a href={{ url_for('view_table', category=category, item_type=type) }} class="highlightedNavItemText">{{type}}</a></li>
+                        {% else %}
+                            <li class="navItem"><a href={{ url_for('view_table', category=category, item_type=type) }} class="navItemText">{{type}}</a></li>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
-                <li class="navItem" align="center"><p style="text-align:center;">Select a type from the menu on the right to get started!</p></li>
+                    <li class="navItem" align="center"><p style="text-align:center;">Select a type from the menu on the right to get started!</p></li>
                 {% endif %}
             </ul>
         </div>
         <div class="tableDiv" style="overflow-y: scroll">
-            {% if msg != "" %}
-                <div style="display: flex; flex-direction: column; flex-wrap: wrap;">
-                    <p><b><font color="red">{{msg}}</font></b></p>
-                    <img src="../static/wash.PNG" style="width: 80%; object-fit: contain;">
-                </div>
-            {% endif %}
-
             {% if g == 1 %}
             <table class="dataTable" >
                 {% if dataList != None %}
@@ -65,11 +62,9 @@
                             </tr>
                         {% endfor %}
                     </tbody>
-                {% endif %}
+                {% endif %}    
+
                 {% if category != None %}
-
-
-
                     <tfoot>
                         <tr>
                             <td class="footer_data"></td>
@@ -85,6 +80,16 @@
                     </tfoot>
                     {% endif %}
                 </table>
+
+            {% else %}
+                {% if msg != "" %}
+                    <div style="display: flex; flex-direction: column; flex-wrap: wrap;">
+                        <p><b><font color="red">{{msg}}</font></b></p>
+                        <img src="../static/wash.PNG" style="width: 80%;object-fit: contain;margin-left: 10%;margin-right: 10%;margin-top: 15%;">    
+                    </div>
+                {% else %}
+                    <img src="../static/wash.PNG" style="width: 80%;object-fit: contain;margin-left: 10%;margin-right: 10%;">    
+                {% endif %}
             {% endif %}
         </div>
     </div>
