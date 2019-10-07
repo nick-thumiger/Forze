@@ -1,4 +1,4 @@
-﻿{% extends 'navbar.html' %}
+{% extends 'navbar.html' %}
 
 {% block content %}
 <div style="height:90%">
@@ -18,7 +18,7 @@
             {% if msg != "" %}
                 <div style="display: flex; flex-direction: column; flex-wrap: wrap;">
                     <p><b><font color="red">{{msg}}</font></b></p>
-                    <img src="../static/wash.PNG" style="width: 80%; object-fit: contain;">    
+                    <img src="../static/wash.PNG" style="width: 80%; object-fit: contain;">
                 </div>
             {% endif %}
 
@@ -65,18 +65,20 @@
                             </tr>
                         {% endfor %}
                     </tbody>
-                {% endif %}    
+                {% endif %}
                 {% if category != None %}
-               
+
 
 
                     <tfoot>
                         <tr>
                             <td class="footer_data"></td>
                             <td class="footer_data" data-toggle="modal" onclick="triggerAddModal('{{category}}', '{{item_type}}')" data-target="#addModalCenter"><a style="color:white;" href="#">Click to add more...</a></td>
+                            {% if dataList != None %}
                             {% for data in dataList[0]['data'] %}
                                 <td class="footer_data"></td>
                             {% endfor %}
+                            {% endif %}
                             <td class="footer_data"></td>
                             <td class="footer_data"></td>
                         </tr>

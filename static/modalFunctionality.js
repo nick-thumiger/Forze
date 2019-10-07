@@ -1,5 +1,5 @@
-let apiURL = 'http://127.0.0.1:5100';
-// let apiURL = 'https://forze.pythonanywhere.com';
+// let apiURL = 'http://127.0.0.1:5100';
+let apiURL = 'https://forze.pythonanywhere.com';
 
 let currentEditCategory = null;
 let currentEditType = null;
@@ -463,10 +463,10 @@ let changedType = () => {
     let e = document.getElementById('searchTypeSelector');
     let category = e.options[e.selectedIndex].value;
 
-    var first = searchRoot.firstElementChild; 
+    var first = searchRoot.firstElementChild;
     while (first) {
-        first.remove(); 
-        first = searchRoot.firstElementChild; 
+        first.remove();
+        first = searchRoot.firstElementChild;
     }
 
     let url = apiURL+`/get_columns/${category}`;
@@ -536,7 +536,7 @@ let submitSearch = () => {
 
         i += 1;
     }
-    	
+
     newURL = newURL.slice(0, -1);
 
     window.location.href = newURL

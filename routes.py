@@ -366,9 +366,11 @@ def view_table(category, item_type):
             else:
                 condForm = system.get_conditional_formatting(item_type)
                 if len(dataList) == 0:
+                    print("option1")
                     g = 1
                     dataList = None
                 else:
+                    print("option2")
                     g = 1
                     for item in dataList:
                         temp = float(item['data'][-2])
