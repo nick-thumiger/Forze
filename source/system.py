@@ -3,8 +3,8 @@ from source.exceptions import *
 import time
 from datetime import datetime, timedelta
 
-# dbname = "Forze$default"
-dbname = "forze_inventory"
+dbname = "Forze$default"
+# dbname = "forze_inventory"
 import hashlib
 
 class System:
@@ -220,7 +220,7 @@ class System:
         query = f"SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema` ='{dbname}'"
         rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
-
+        print(result)
         result.remove('user_changes')
         result.remove('users')
         result.remove('types')
@@ -318,7 +318,7 @@ class System:
         rawresult = makeQuery(self,query)
         result = [listAsciiSeperator(x) for x in rawresult]
         return
-        
+
     # Finds all of the types that are ACTUALLY in the database
     def get_type_list_manually(self):
         categories = self.get_category_list()
@@ -351,7 +351,7 @@ class System:
         for str in final_list:
             self.add_to_type_table(str)
         return
-    
+
     def add_to_type_table(self, type, cat):
         query = f"INSERT INTO `types` VALUES (NULL, '{type}', '{cat}', '0', '0')"
         makeCommit(self, query)
@@ -402,4 +402,3 @@ class System:
         rawresult = makeQuerySingleItem(self,query)
         result = [asciiSeperator(x) for x in rawresult]
         return result(0)
-        
