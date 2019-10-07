@@ -68,7 +68,7 @@ class System:
         rawresult = [listAsciiSeperator(x) for x in rawresult]
 
         res = []
-        
+
         for e in rawresult:
             res.append(e[0])
 
@@ -194,19 +194,15 @@ class System:
         for i in column:
             query += f"`{i}`, "
             if i == 'type':
-                if type_id == -1:
-                    raise systemException("WTF DID YOU DO JAIKI")
-                type_id = self.getTypeID(i)
+                type_id = self.getTypeID(newValue[iter])
             iter += 1
-
+        if type_id == -1:
         query += f"`type_id`) VALUES ("
-
         for i in newValue:
             j = str(i).upper()
             query += f"'{j}', "
 
         query += f"'{type_id}');"
-        print(query)
         makeCommit(self, query)
 
     #Delete an entry
@@ -220,7 +216,6 @@ class System:
         query = f"SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema` ='{dbname}'"
         rawresult = makeQuery(self, query)
         result = [asciiSeperator(x) for x in rawresult]
-        print(result)
         result.remove('user_changes')
         result.remove('users')
         result.remove('types')
@@ -401,4 +396,4 @@ class System:
         query = f"SELECT `type_id` FROM `types` WHERE `name` = '{type}';"
         rawresult = makeQuerySingleItem(self,query)
         result = [asciiSeperator(x) for x in rawresult]
-        return result(0)
+        return result[0]

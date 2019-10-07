@@ -124,8 +124,10 @@ def add_item():
         raise Exception('unequal line lengths')
 
     try:
+        print("JAIKI TEST 1")
         system.add_entry(table, columns,values)
     except Exception as err:
+        print(str(err))
         return ("Fail", "400 Error")
 
     return 'Success'
